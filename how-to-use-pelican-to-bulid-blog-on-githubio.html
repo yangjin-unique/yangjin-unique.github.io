@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>How to use Pelican to bulid blog on github.io - Great Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/how-to-use-pelican-to-bulid-blog-on-githubio.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="pelican blog python virtualenv githubio" />
+        <meta name="description" content="1. virtualenv的使用 python开发的常用工具，使用这个工具可以隔离本项目依赖的环境设置，这样就能避免干扰其他项目的环境变量设置。virtualenv的使用参考：http://docs.python-guide.org/en/latest/dev/virtualenvs/. 常用命令： virtualenv venv：建立一个虚拟环境，会在当前目录中建立一个venv的目录，里面包含了这个虚拟环境所有的配置信息； virtualenv -p /usr/bin/python2.7 venv：指定venv环境使用python解释器； source venv/bin/activate：激活该虚拟环境，每次使用该命令进入虚拟环境； deactivate：退出虚拟环境； 2. 安装pelican 这个可在虚拟环境下安装，也可以就在本机环境下安装， $: sudo pip install pelican 安装markdown $: sudo pip install Markdown 3 ..." />
+
+        <meta property="og:site_name" content="Great Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="How to use Pelican to bulid blog on github.io"/>
+        <meta property="og:url" content="/how-to-use-pelican-to-bulid-blog-on-githubio.html"/>
+        <meta property="og:description" content="1. virtualenv的使用 python开发的常用工具，使用这个工具可以隔离本项目依赖的环境设置，这样就能避免干扰其他项目的环境变量设置。virtualenv的使用参考：http://docs.python-guide.org/en/latest/dev/virtualenvs/. 常用命令： virtualenv venv：建立一个虚拟环境，会在当前目录中建立一个venv的目录，里面包含了这个虚拟环境所有的配置信息； virtualenv -p /usr/bin/python2.7 venv：指定venv环境使用python解释器； source venv/bin/activate：激活该虚拟环境，每次使用该命令进入虚拟环境； deactivate：退出虚拟环境； 2. 安装pelican 这个可在虚拟环境下安装，也可以就在本机环境下安装， $: sudo pip install pelican 安装markdown $: sudo pip install Markdown 3 ..."/>
+        <meta property="article:published_time" content="2015-11-13" />
+            <meta property="article:section" content="python" />
+            <meta property="article:tag" content="pelican blog python virtualenv githubio" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Great Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/life.html">Life</a>
+                        </li>
+                        <li class="active">
+                            <a href="/category/python.html">Python</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/how-to-use-pelican-to-bulid-blog-on-githubio.html"
+                       rel="bookmark"
+                       title="Permalink to How to use Pelican to bulid blog on github.io">
+                        How to use Pelican to bulid blog on github.io
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-13T00:00:00+08:00"> Fri 13 November 2015</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2>1. virtualenv的使用</h2>
+<p>python开发的常用工具，使用这个工具可以隔离本项目依赖的环境设置，这样就能避免干扰其他项目的环境变量设置。virtualenv的使用参考：http://docs.python-guide.org/en/latest/dev/virtualenvs/.
+常用命令：
+virtualenv venv：建立一个虚拟环境，会在当前目录中建立一个venv的目录，里面包含了这个虚拟环境所有的配置信息；
+virtualenv -p /usr/bin/python2.7 venv：指定venv环境使用python解释器；
+source venv/bin/activate：激活该虚拟环境，每次使用该命令进入虚拟环境；
+deactivate：退出虚拟环境；</p>
+<h2>2. 安装pelican</h2>
+<p>这个可在虚拟环境下安装，也可以就在本机环境下安装，
+    $: sudo pip install pelican
+安装markdown
+    $: sudo pip install Markdown</p>
+<h2>3. Run Pelican</h2>
+<p>第一次使用的话使用下面的命令
+    $: pelican-quickstart
+然后会出现一系列的问题，按照要求填好即可。此时会在当前目录生成下面几个文件：
+.
+├── Makefile
+├── content  #用于添加自己的内容
+├── develop_server.sh
+├── fabfile.py
+├── output  #这是pelican根据content生成的html文件等（用make html命令）
+├── pelicanconf.py   #配置文件
+└── publishconf.py</p>
+<h2>4. Use Pelican to Generate html</h2>
+<p>用markdonw语法写一篇blog：test.md，然后将其放在content中，使用下面命令让pelican生成对应的html文件，放在output目录中：
+    $: make  html 
+然后使用下面命令在本地观察bolg效果：
+    $: make serve
+在本地使用http://localhost:8000来访问，即可查看效果。
+修改页面时可使用make regegerate，也可以使用make devserve（相当于make regenerate &amp; make serve）。
+本地测试完毕后，使用下面命令来停止server：
+    $: ./develop_server.sh stop</p>
+<h2>5. Publish on github.io</h2>
+<p>先要在github上申请username.github.io，具体申请方法就不多说了，官网非常详细。那么到现在我们如何将pelican生成的blog放到github上呢？只需把output里面的内容push到username.github.io里面即可。所以一种方法就是在output建立repo，然后将remote repo设为username.github.io即可。如下：
+    $: cd output/
+    $: git init
+    $: git remote add origin https://github.com/username/username.github.io
+    $: git add -A
+    $: git commit -m 'first commit'
+    $: git push origin master
+现在大功告成，可以访问username.github.io查看效果。
+另外有些要注意的事项：
+在publishconf.py 中，将设置改为如下，否则使用pelican命令时会删除output目录：
+DELETE_OUTPUT_DIRECTORY = False</p>
+<p>参考官方文档：http://docs.getpelican.com/en/3.1.1/getting_started.html#installing-pelican</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="#"><i class="fa fa-you-can-add-links-in-your-config-file-square fa-lg"></i> You can add links in your config file</a></li>
+                <li class="list-group-item"><a href="#"><i class="fa fa-another-social-link-square fa-lg"></i> Another social link</a></li>
+              </ul>
+            </li>
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>
