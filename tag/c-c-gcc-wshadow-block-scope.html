@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Life - Great Greatwall</title>
+    <title>C C++ gcc Wshadow block scope - Great Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="Life" />
+    <meta name="keywords" content="C C++ gcc Wshadow block scope" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Great Greatwall" />
@@ -49,7 +49,7 @@ Great Greatwall            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                        <li class="active">
+                        <li >
                             <a href="/category/life.html">Life</a>
                         </li>
                         <li >
@@ -69,9 +69,21 @@ Great Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/test-blog.html">Test blog</a></h2>
-                <div class="summary"><h1>This blog is super cool!</h1>
-                    <a class="btn btn-default btn-xs" href="/test-blog.html">more ...</a>
+                <h2><a href="/gcc-wshdowxuan-xiang.html">gcc -Wshdow选项</a></h2>
+                <div class="summary"><p>今天写LRU算法时遇到一个crash问题，代码如下：elem自动变为NULL，看了一会没找到elem为什么会变成null（很简单的手误，一眼就能看出来），上gdb，反汇编看看，果然一下就看出问题了，是个重复定义的问题，（但是g++编译器怎么没报错？？？后面解释），最开始I定义的elem地址为[ebp-0x20]，后面定义的一个elem地址为[ebp-0x1c]（函数局部变量都是通过ebp基址寄存器加偏移来获取的，栈向低地址生长）。</p>
+<h2><img alt="img1" src="../images/1.png" /></h2>
+<p><img alt="img2" src="../images/2.png" /></p>
+<p>关于编译器为什么没报错，在stackoverflow上看到了答案：c89/90/99和c++标准都允许这么做（查了下c99标准，讲得比较晦涩）。标准把这个叫做块作用域（block scope），一个block是包含在一对{}符号里面的代码，可嵌套（一个block内可保护另一个block），在一个block内定义的变量，该变量在整个block（包括内部嵌套的block都是可见的accessible），但是block之外是不不可见的，下面的代码编译会出错的：</p>
+<div class="highlight"><pre>{
+    int  a = 10;
+    ....
+}
+a = 11; //Comple error，a not declared
+</pre></div>
+
+
+<p>但是如果内嵌的block里面有一个变量与当前block里面的变量名一样怎么办 ...</p>
+                    <a class="btn btn-default btn-xs" href="/gcc-wshdowxuan-xiang.html">more ...</a>
                 </div>
             </article>
             <hr/>
