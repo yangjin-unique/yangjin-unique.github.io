@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>ptmalloc内存管理解析 - Great Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/ptmallocnei-cun-guan-li-jie-xi.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="linux glibc malloc ptmalloc" />
+        <meta name="description" content="1. 简介 内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元， 如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的 sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始 是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的 支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。 2. 内存管理设计目标 衡量内存管理算法优劣的主要指标有如下几点： 分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性； 内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等； 回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等； 跨平台可移植性 ..." />
+
+        <meta property="og:site_name" content="Great Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="ptmalloc内存管理解析"/>
+        <meta property="og:url" content="/ptmallocnei-cun-guan-li-jie-xi.html"/>
+        <meta property="og:description" content="1. 简介 内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元， 如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的 sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始 是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的 支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。 2. 内存管理设计目标 衡量内存管理算法优劣的主要指标有如下几点： 分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性； 内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等； 回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等； 跨平台可移植性 ..."/>
+        <meta property="article:published_time" content="2015-11-15" />
+            <meta property="article:section" content="linux" />
+            <meta property="article:tag" content="linux glibc malloc ptmalloc" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Great Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="/category/life.html">Life</a>
+                        </li>
+                        <li class="active">
+                            <a href="/category/linux.html">Linux</a>
+                        </li>
+                        <li >
+                            <a href="/category/python.html">Python</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/ptmallocnei-cun-guan-li-jie-xi.html"
+                       rel="bookmark"
+                       title="Permalink to ptmalloc内存管理解析">
+                        ptmalloc内存管理解析
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-15T00:00:00+08:00"> Sun 15 November 2015</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h4>1. 简介</h4>
+<p>内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元，
+如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的
+sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始
+是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的
+支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。</p>
+<h4>2. 内存管理设计目标</h4>
+<p>衡量内存管理算法优劣的主要指标有如下几点：</p>
+<ul>
+<li>分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性；</li>
+<li>内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等；</li>
+<li>回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等；</li>
+<li>跨平台可移植性：内存分配算法要与os打交道；
+事实上，很难设计一种通用的内存分配算法，保证它的性能无论处于什么场景下都很好，这基本不可能。每一种内存分配算法都有它适用的场合，并且这种专用的内存分配算法比通用算法在特定环境中性能要更好，这就是为什么很多系统都有自己的专用内存管理机制，像
+apache，nginx等。</li>
+</ul>
+<h4>3. 内存结构组织</h4>
+<p>ptmalloc对空闲内存空间采用容器（bins）的组织方式，共有120个bins（外加10个fast bins），每个bins使用循环双向链表连接，
+每个bins包含一系列的chunk，共有4种类型的bins：fast bins（10个）、unsorted bin（1个）、small bins（64个）、large bins，如图示，其中：</p>
+<ul>
+<li>small bins：每个bins的chunk大小都是一样的，并且每个bins的chunk大小都小于512 bytes，相邻bins的chunk size差为8 bytes；</li>
+<li>large bins：每个bins的chunk大小不一样，并且chunk按照大小排序；</li>
+<li>
+<p>unsorted bin：只有一个这样的容器，这个容器的作用类似于作为small和large容器的缓存一样，当chunk分裂，
+或者chunk被free时，chunk会先放到这个容器中，然后malloc分配时先从这个里面获取可用的chunk，至于为什么要
+弄一个这样的容器，这主要是考虑到局部性原理。这个容器实际上是一个队列，由free将chunk放入，由malloc移除
+（用于再分配或者移到small-large容器中）；</p>
+</li>
+<li>
+<p>fast bins：这个容器里面的chunk采用单链表，因为这个容器工作方式与栈类似，只操作头部，所以采用单链表，无序的
+ ，LIFO，这个容器里面的chunks会一直设置inuse位，所以这些chunk不会被合并掉，而是由malloc_consolidate来进行处理
+ 和合并操作；
+<img alt="img1" src="../images/malloc.png" /></p>
+</li>
+</ul>
+<h4>4. 主要数据结构</h4>
+<p>1) struct malloc_state
+malloc_state结构包含了所有的bins，mutex用于协调多个线程访问同一个分配区，binmap用于表示每个bin是否有空闲的chunk.</p>
+<div class="highlight"><pre>struct malloc_state {
+    /* Serialize access.  */
+    mutex_t mutex;
+
+    /* Statistics for locking.  Only used if THREAD_STATS is defined.  */
+    long stat_lock_direct, stat_lock_loop, stat_lock_wait;
+    long pad0_[1]; /* try to give the mutex its own cacheline */
+
+    /* The maximum chunk size to be eligible for fastbin */
+    INTERNAL_SIZE_T  max_fast;   /* low 2 bits used as flags */
+
+    /* Fastbins */
+    mfastbinptr      fastbins[NFASTBINS];
+
+    /* Base of the topmost chunk -- not otherwise kept in a bin */
+    mchunkptr        top;
+
+    /* The remainder from the most recent split of a small request */
+    mchunkptr        last_remainder;
+
+    /* Normal bins packed as described above */
+    mchunkptr        bins[NBINS * 2];
+
+    /* Bitmap of bins */
+    unsigned int     binmap[BINMAPSIZE];
+
+    /* Linked list */
+    struct malloc_state *next;
+
+    /* Memory allocated from the system in this arena.  */
+    INTERNAL_SIZE_T system_mem;
+    INTERNAL_SIZE_T max_system_mem;
+};
+</pre></div>
+
+
+<p>每个进程都有如下一个全局变量，称为主分配区：
+static struct malloc_state main_arena;</p>
+<p>2) struct malloc_chunk
+malloc_chunk表示每个chunk的结构，要注意每个chunk有两种状态：inuse和free，两种状态下结构体有所不同，free状态下多了两个指针（双向链表），这个主要用于该空闲chunk加入到容器中。</p>
+<div class="highlight"><pre>struct malloc_chunk {
+
+    INTERNAL_SIZE_T      prev_size;  /* Size of previous chunk (if free).  */
+    INTERNAL_SIZE_T      size;       /* Size in bytes, including overhead. */
+
+    struct malloc_chunk* fd;         /* double links -- used only if free. */
+    struct malloc_chunk* bk;
+};
+</pre></div>
+
+
+<p>该结构体中size除了表示该chunk大小外，它的第三位用作其它用途：最低位的bit表示前一个chunk是否在使用中，倒数第一位
+表示该chunk是否是mmap生成的，倒数第二位bit表示该chunk是否是从主分区分配过来的，这三位分别对应源码中的：prev_inuse，
+chunk_is_mmapped，chunk_non_main_arena三个宏。
+一个已分配的（inuse）的chunk布局如下，注意这里有一个很tricky的地方，就是已分配的chunk会将自己的大小size同时放在头部和尾部，因为尾部这个size域并没有在malloc_chunk结构体中定义，这个尾部size实际上是下一个相邻chunk的prev_size，为什么要这么做呢？这是为了使合并两个相邻空闲chunk时更快，由于有这个trick，每个chunk既能很快找到写一个物理相邻chunk的地址，又能很快得到前一个物理相邻chunk的地址（注意这里的物理相邻表示两个chunk的内存地址是前后连续的，要与其两个指针区别开来，前者用于内存碎片的合并，后者用于空闲chunk的管理）。mem是malloc返回给用户的实际地址。</p>
+<div class="highlight"><pre>    chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of previous chunk, if allocated            | |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of chunk, in bytes                   |A||M||P|
+    mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             User data starts here...                          .
+            .                                                               .
+            .             (malloc_usable_space() bytes)                     .
+            .                                                               |
+nextchunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of chunk                                     |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre></div>
+
+
+<p>一个空闲的chunk结构如下：</p>
+<div class="highlight"><pre>    chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of previous chunk                            |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    `head:&#39; |             Size of chunk, in bytes                         |P|
+    mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Forward pointer to next chunk in list             |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Back pointer to previous chunk in list            |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Unused space (may be 0 bytes long)                .
+            .                                                               .
+            .                                                               |
+    nextchunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    &#39;foot:&#39; |             Size of chunk, in bytes                           |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre></div>
+
+
+<h4>5. 算法分析</h4>
+<p>ptmalloc算法的主要特点：</p>
+<ul>
+<li>对于large（request size &gt;= 512bytes）请求，采用best-fit分配方法，并且应用了LRU（least recently used）算法（如果存在大小相同的chunk可用，会采用FIFO算法），</li>
+<li>对于small （request size &lt;= 64 bytes）的请求，采用缓存caching分配，（采用unsorted bins）；</li>
+<li>对于small和large之间的请求，it does the best it can trying to meet both goals at once；</li>
+<li>对于very large（request size &gt;= 128 KB，默认DEFAULT_MMAP_THRESHOLD），则采用系统的mmap来实现；</li>
+</ul>
+<p>内存分配的主要函数是public_mALLOc(size_t bytes)，该函数先检查hook函数，如果有则调用并直接返回，
+这是为了进程创建时分配内存，同时也支持用户自定义分配函数；然后获取分配区指针，接着调用_int_malloc().
+_int_malloc()是整个内存分配的核心，根据内存大小，依次按顺序从fast bins，small bins，large bins选取chunk。</p>
+<h3>References:</h3>
+<ol>
+<li>dlmalloc: http://gee.cs.oswego.edu/dl/html/malloc.html;</li>
+<li>淘宝华庭：Glibc内存管理</li>
+</ol>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Great Greatwall</title>
+    <title>C&C++ - Great Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -9,8 +9,9 @@
 
 
 
-<link rel="canonical" href="">
-        <meta name="author" content="Jin" />
+
+    <meta name="author" content="Jin" />
+    <meta name="keywords" content="C&C++" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Great Greatwall" />
@@ -48,7 +49,7 @@ Great Greatwall            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                        <li >
+                        <li class="active">
                             <a href="/category/cc.html">C&c++</a>
                         </li>
                         <li >
@@ -89,51 +90,6 @@ a = 11; //Comple error，a not declared
 
 <p>但是如果内嵌的block里面有一个变量与当前block里面的变量名一样怎么办 ...</p>
                     <a class="btn btn-default btn-xs" href="/gcc-wshdowxuan-xiang.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a></h2>
-                <div class="summary"><h4>1. 简介</h4>
-<p>内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元，
-如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的
-sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始
-是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的
-支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。</p>
-<h4>2. 内存管理设计目标</h4>
-<p>衡量内存管理算法优劣的主要指标有如下几点：</p>
-<ul>
-<li>分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性；</li>
-<li>内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等；</li>
-<li>回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等；</li>
-<li>跨平台可移植性 ...</li></ul>
-                    <a class="btn btn-default btn-xs" href="/ptmallocnei-cun-guan-li-jie-xi.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/how-to-use-pelican-to-bulid-blog-on-githubio.html">How to use Pelican to bulid blog on github.io</a></h2>
-                <div class="summary"><p>一直想建立一个自己的blog，以前用过csdn，不过自从用了云笔记，就很久没更新blog了。看现在很流行用github搭建blog，所以决定玩一下，加上学过一点python，就选择了pelican这个python写的工具，顺便练练python。</p>
-<h4>1. virtualenv的使用</h4>
-<p>python开发的常用工具，使用这个工具可以隔离本项目依赖的环境设置，这样就能避免干扰其他项目的环境变量设置。virtualenv的使用参考：http://docs.python-guide.org/en/latest/dev/virtualenvs/.
-常用命令：</p>
-<ul>
-<li>virtualenv venv：建立一个虚拟环境，会在当前目录中建立一个venv的目录，里面包含了这个虚拟环境所有的配置信息；</li>
-<li>virtualenv -p /usr/bin/python2.7 venv：指定venv环境使用python解释器；</li>
-<li>source venv/bin/activate：激活该虚拟环境，每次使用该命令进入虚拟环境；</li>
-<li>deactivate：退出虚拟环境；</li>
-</ul>
-<h4>2. 安装pelican</h4>
-<p>这个可在虚拟环境下安装，也可以就在本机环境下安装，</p>
-<div class="highlight"><pre>$: sudo ...</pre></div>
-                    <a class="btn btn-default btn-xs" href="/how-to-use-pelican-to-bulid-blog-on-githubio.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/test-blog.html">Test blog</a></h2>
-                <div class="summary"><h1>This blog is super cool!</h1>
-                    <a class="btn btn-default btn-xs" href="/test-blog.html">more ...</a>
                 </div>
             </article>
             <hr/>
