@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>life - Great Greatwall</title>
+    <title>JOS - Great Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="life" />
+    <meta name="keywords" content="JOS" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Great Greatwall" />
@@ -78,9 +78,19 @@ Great Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/test-blog.html">Test blog</a></h2>
-                <div class="summary"><h1>This blog is super cool!</h1>
-                    <a class="btn btn-default btn-xs" href="/test-blog.html">more ...</a>
+                <h2><a href="/lab1-bootloader.html">lab1: bootloader</a></h2>
+                <div class="summary"><p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
+从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。</p>
+<h3>一、BIOS工作</h3>
+<h4>1. bios启动后会读取bootloader，而bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成：</h4>
+<ul>
+<li>主引导记录：也就是bootloader，大小占446字节；</li>
+<li>分区表：占64字节；</li>
+<li>硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。</li>
+</ul>
+<h4>2. 上电后的第一条指令地址为0xFFFFFFF0（也就是启动后的第一条执行指令，EPROM），而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动</h4>
+<p>设备（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00 ...</p>
+                    <a class="btn btn-default btn-xs" href="/lab1-bootloader.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -125,7 +135,7 @@ Great Greatwall            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
+         <div class="col-xs-10">&copy; 2013 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

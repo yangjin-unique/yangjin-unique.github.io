@@ -58,6 +58,9 @@ Great Greatwall            </a>
                             <a href="/category/linux.html">Linux</a>
                         </li>
                         <li >
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
                             <a href="/category/python.html">Python</a>
                         </li>
             </ul>
@@ -74,25 +77,6 @@ Great Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/gcc-wshdowxuan-xiang.html">gcc -Wshdow选项</a></h2>
-                <div class="summary"><p>今天写LRU算法时遇到一个crash问题，代码如下：elem自动变为NULL，看了一会没找到elem为什么会变成null（很简单的手误，一眼就能看出来），上gdb，反汇编看看，果然一下就看出问题了，是个重复定义的问题，（但是g++编译器怎么没报错？？？后面解释），最开始I定义的elem地址为[ebp-0x20]，后面定义的一个elem地址为[ebp-0x1c]（函数局部变量都是通过ebp基址寄存器加偏移来获取的，栈向低地址生长）。</p>
-<h2><img alt="img1" src="../images/1.png" /></h2>
-<p><img alt="img2" src="../images/2.png" /></p>
-<p>关于编译器为什么没报错，在stackoverflow上看到了答案：c89/90/99和c++标准都允许这么做（查了下c99标准，讲得比较晦涩）。标准把这个叫做块作用域（block scope），一个block是包含在一对{}符号里面的代码，可嵌套（一个block内可保护另一个block），在一个block内定义的变量，该变量在整个block（包括内部嵌套的block都是可见的accessible），但是block之外是不不可见的，下面的代码编译会出错的：</p>
-<div class="highlight"><pre>{
-    int  a = 10;
-    ....
-}
-a = 11; //Comple error，a not declared
-</pre></div>
-
-
-<p>但是如果内嵌的block里面有一个变量与当前block里面的变量名一样怎么办 ...</p>
-                    <a class="btn btn-default btn-xs" href="/gcc-wshdowxuan-xiang.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
                 <h2><a href="/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a></h2>
                 <div class="summary"><h4>1. 简介</h4>
 <p>内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元，
@@ -108,6 +92,25 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
 <li>回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等；</li>
 <li>跨平台可移植性 ...</li></ul>
                     <a class="btn btn-default btn-xs" href="/ptmallocnei-cun-guan-li-jie-xi.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/gcc-wshdowxuan-xiang.html">gcc -Wshdow选项</a></h2>
+                <div class="summary"><p>今天写LRU算法时遇到一个crash问题，代码如下：elem自动变为NULL，看了一会没找到elem为什么会变成null（很简单的手误，一眼就能看出来），上gdb，反汇编看看，果然一下就看出问题了，是个重复定义的问题，（但是g++编译器怎么没报错？？？后面解释），最开始I定义的elem地址为[ebp-0x20]，后面定义的一个elem地址为[ebp-0x1c]（函数局部变量都是通过ebp基址寄存器加偏移来获取的，栈向低地址生长）。</p>
+<h2><img alt="img1" src="../images/1.png" /></h2>
+<p><img alt="img2" src="../images/2.png" /></p>
+<p>关于编译器为什么没报错，在stackoverflow上看到了答案：c89/90/99和c++标准都允许这么做（查了下c99标准，讲得比较晦涩）。标准把这个叫做块作用域（block scope），一个block是包含在一对{}符号里面的代码，可嵌套（一个block内可保护另一个block），在一个block内定义的变量，该变量在整个block（包括内部嵌套的block都是可见的accessible），但是block之外是不不可见的，下面的代码编译会出错的：</p>
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="kt">int</span>  <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="p">....</span>
+<span class="p">}</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span> <span class="c1">//Comple error，a not declared</span>
+</pre></div>
+
+
+<p>但是如果内嵌的block里面有一个变量与当前block里面的变量名一样怎么办 ...</p>
+                    <a class="btn btn-default btn-xs" href="/gcc-wshdowxuan-xiang.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -134,6 +137,23 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
                 <h2><a href="/test-blog.html">Test blog</a></h2>
                 <div class="summary"><h1>This blog is super cool!</h1>
                     <a class="btn btn-default btn-xs" href="/test-blog.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/lab1-bootloader.html">lab1: bootloader</a></h2>
+                <div class="summary"><p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
+从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。</p>
+<h3>一、BIOS工作</h3>
+<h4>1. bios启动后会读取bootloader，而bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成：</h4>
+<ul>
+<li>主引导记录：也就是bootloader，大小占446字节；</li>
+<li>分区表：占64字节；</li>
+<li>硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。</li>
+</ul>
+<h4>2. 上电后的第一条指令地址为0xFFFFFFF0（也就是启动后的第一条执行指令，EPROM），而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动</h4>
+<p>设备（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00 ...</p>
+                    <a class="btn btn-default btn-xs" href="/lab1-bootloader.html">more ...</a>
                 </div>
             </article>
             <hr/>

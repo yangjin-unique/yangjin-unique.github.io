@@ -59,6 +59,9 @@ Great Greatwall            </a>
                             <a href="/category/linux.html">Linux</a>
                         </li>
                         <li >
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
                             <a href="/category/python.html">Python</a>
                         </li>
             </ul>
@@ -80,11 +83,11 @@ Great Greatwall            </a>
 <h2><img alt="img1" src="../images/1.png" /></h2>
 <p><img alt="img2" src="../images/2.png" /></p>
 <p>关于编译器为什么没报错，在stackoverflow上看到了答案：c89/90/99和c++标准都允许这么做（查了下c99标准，讲得比较晦涩）。标准把这个叫做块作用域（block scope），一个block是包含在一对{}符号里面的代码，可嵌套（一个block内可保护另一个block），在一个block内定义的变量，该变量在整个block（包括内部嵌套的block都是可见的accessible），但是block之外是不不可见的，下面的代码编译会出错的：</p>
-<div class="highlight"><pre>{
-    int  a = 10;
-    ....
-}
-a = 11; //Comple error，a not declared
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="kt">int</span>  <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="p">....</span>
+<span class="p">}</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span> <span class="c1">//Comple error，a not declared</span>
 </pre></div>
 
 

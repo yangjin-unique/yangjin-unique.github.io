@@ -64,6 +64,9 @@ Great Greatwall            </a>
                             <a href="/category/linux.html">Linux</a>
                         </li>
                         <li >
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
                             <a href="/category/python.html">Python</a>
                         </li>
             </ul>
@@ -112,24 +115,24 @@ Great Greatwall            </a>
 <h2><img alt="img1" src="../images/1.png" /></h2>
 <p><img alt="img2" src="../images/2.png" /></p>
 <p>关于编译器为什么没报错，在stackoverflow上看到了答案：c89/90/99和c++标准都允许这么做（查了下c99标准，讲得比较晦涩）。标准把这个叫做块作用域（block scope），一个block是包含在一对{}符号里面的代码，可嵌套（一个block内可保护另一个block），在一个block内定义的变量，该变量在整个block（包括内部嵌套的block都是可见的accessible），但是block之外是不不可见的，下面的代码编译会出错的：</p>
-<div class="highlight"><pre>{
-    int  a = 10;
-    ....
-}
-a = 11; //Comple error，a not declared
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="kt">int</span>  <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="p">....</span>
+<span class="p">}</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span> <span class="c1">//Comple error，a not declared</span>
 </pre></div>
 
 
 <p>但是如果内嵌的block里面有一个变量与当前block里面的变量名一样怎么办？这两个变量将互不影响，该变量是在本block起作用，对于内嵌的block，inner block里面的变量会屏蔽outer block的变量，下面代码是正确的（注意两个a是不同的变量，虽然名字一样）：</p>
-<div class="highlight"><pre>{
-     int a = 11; //在外面这个block起作用
-    {
-        int  a = 10;//这个a只在这个block里面起作用，并且把外面的a给屏蔽掉
-        ....
-        printf(&quot;a = %d\n&quot;, a); //本block的a, &#39;a = 10&#39;
-    }
-    printf(&quot;a = %d\n&quot;, a); //这个a是最开始的那个a, &#39;a = 11&#39;
-}
+<div class="highlight"><pre><span class="p">{</span>
+     <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span> <span class="c1">//在外面这个block起作用</span>
+    <span class="p">{</span>
+        <span class="kt">int</span>  <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span><span class="c1">//这个a只在这个block里面起作用，并且把外面的a给屏蔽掉</span>
+        <span class="p">....</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;a = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span> <span class="c1">//本block的a, &#39;a = 10&#39;</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;a = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span> <span class="c1">//这个a是最开始的那个a, &#39;a = 11&#39;</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -137,49 +140,49 @@ a = 11; //Comple error，a not declared
 另外，gcc编译器是可以发现这种问题的，有一选项叫-Wshadow，编译加上这个选项时，给出警告，提示：
     warning: declaration of ‘x’ shadows a previous local [-shadow]
 注意这个选项并不包括在-Wall中（https://gcc.gnu.org/onlinedocs/gcc-3.4.4/gcc/Warning-Options.html）。</p>
-<div class="highlight"><pre>void set(int key, int value) {
-    CacheElem_t *elem = NULL;
-    pair&lt;int, CacheElem_t*&gt; m(-1, NULL);
-    unordered_map&lt;int, CacheElem_t*&gt;::const_iterator got;
+<div class="highlight"><pre><span class="kt">void</span> <span class="nf">set</span><span class="p">(</span><span class="kt">int</span> <span class="n">key</span><span class="p">,</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">CacheElem_t</span> <span class="o">*</span><span class="n">elem</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">CacheElem_t</span><span class="o">*&gt;</span> <span class="n">m</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">CacheElem_t</span><span class="o">*&gt;::</span><span class="n">const_iterator</span> <span class="n">got</span><span class="p">;</span>
 
-    got = cache_map.find(key);
-    if (got == cache_map.end()) {
-        /* not found */
-        if (count &gt;= capacity) {
-            /* cache full, so select the head of list as the eviction */
-            elem = head.next;
-            cache_map.erase(elem-&gt;key); /* remove the evicted and deleted key */
-            elem-&gt;key = key;
-            elem-&gt;value = value;
-            assert(elem);
-            list_del(elem);
-            list_add_tail(&amp;head, elem);
-        }
-        else {
-            /* cache not full, alloc a new one */
-            CacheElem_t *elem = new CacheElem_t;
-            elem-&gt;key = key;
-            elem-&gt;value = value;
-            list_add_tail(&amp;head, elem);
-            count++;
-        }
-        /* add the new key map to cache_map */
-        m.first = key;  
-        m.second = elem; //elem总是为null,导致后面map查找时second为null后crash
-        cache_map.insert(m);
-    }
-    else {
-        /* found one, then update it, and move it to tail of list */ 
-        elem = got-&gt;second;
-        elem-&gt;value = value;
-        if (elem != head.prev) {
-            /* elem not in tail, move elem to tail of list */
-            assert(elem);
-            list_del(elem);
-            list_add_tail(&amp;head, elem);
-        }
-    }
-}
+    <span class="n">got</span> <span class="o">=</span> <span class="n">cache_map</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">got</span> <span class="o">==</span> <span class="n">cache_map</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+        <span class="cm">/* not found */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">&gt;=</span> <span class="n">capacity</span><span class="p">)</span> <span class="p">{</span>
+            <span class="cm">/* cache full, so select the head of list as the eviction */</span>
+            <span class="n">elem</span> <span class="o">=</span> <span class="n">head</span><span class="p">.</span><span class="n">next</span><span class="p">;</span>
+            <span class="n">cache_map</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">elem</span><span class="o">-&gt;</span><span class="n">key</span><span class="p">);</span> <span class="cm">/* remove the evicted and deleted key */</span>
+            <span class="n">elem</span><span class="o">-&gt;</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">;</span>
+            <span class="n">elem</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+            <span class="n">assert</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+            <span class="n">list_del</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+            <span class="n">list_add_tail</span><span class="p">(</span><span class="o">&amp;</span><span class="n">head</span><span class="p">,</span> <span class="n">elem</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="cm">/* cache not full, alloc a new one */</span>
+            <span class="n">CacheElem_t</span> <span class="o">*</span><span class="n">elem</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CacheElem_t</span><span class="p">;</span>
+            <span class="n">elem</span><span class="o">-&gt;</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">;</span>
+            <span class="n">elem</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+            <span class="n">list_add_tail</span><span class="p">(</span><span class="o">&amp;</span><span class="n">head</span><span class="p">,</span> <span class="n">elem</span><span class="p">);</span>
+            <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="cm">/* add the new key map to cache_map */</span>
+        <span class="n">m</span><span class="p">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">key</span><span class="p">;</span>  
+        <span class="n">m</span><span class="p">.</span><span class="n">second</span> <span class="o">=</span> <span class="n">elem</span><span class="p">;</span> <span class="c1">//elem总是为null,导致后面map查找时second为null后crash</span>
+        <span class="n">cache_map</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="cm">/* found one, then update it, and move it to tail of list */</span> 
+        <span class="n">elem</span> <span class="o">=</span> <span class="n">got</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        <span class="n">elem</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">elem</span> <span class="o">!=</span> <span class="n">head</span><span class="p">.</span><span class="n">prev</span><span class="p">)</span> <span class="p">{</span>
+            <span class="cm">/* elem not in tail, move elem to tail of list */</span>
+            <span class="n">assert</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+            <span class="n">list_del</span><span class="p">(</span><span class="n">elem</span><span class="p">);</span>
+            <span class="n">list_add_tail</span><span class="p">(</span><span class="o">&amp;</span><span class="n">head</span><span class="p">,</span> <span class="n">elem</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
             </div>
             <!-- /.entry-content -->

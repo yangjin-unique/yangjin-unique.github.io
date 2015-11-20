@@ -20,7 +20,7 @@
         <meta property="og:title" content="ptmalloc内存管理解析"/>
         <meta property="og:url" content="/ptmallocnei-cun-guan-li-jie-xi.html"/>
         <meta property="og:description" content="1. 简介 内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元， 如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的 sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始 是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的 支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。 2. 内存管理设计目标 衡量内存管理算法优劣的主要指标有如下几点： 分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性； 内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等； 回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等； 跨平台可移植性 ..."/>
-        <meta property="article:published_time" content="2015-11-15" />
+        <meta property="article:published_time" content="2015-11-18" />
             <meta property="article:section" content="linux" />
             <meta property="article:tag" content="linux glibc malloc ptmalloc" />
             <meta property="article:author" content="jin" />
@@ -64,6 +64,9 @@ Great Greatwall            </a>
                             <a href="/category/linux.html">Linux</a>
                         </li>
                         <li >
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
                             <a href="/category/python.html">Python</a>
                         </li>
             </ul>
@@ -96,7 +99,7 @@ Great Greatwall            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-11-15T00:00:00+08:00"> Sun 15 November 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-11-18T00:00:00+08:00"> Wed 18 November 2015</time>
     </span>
 
 
@@ -246,6 +249,101 @@ nextchunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 <p>内存分配的主要函数是public_mALLOc(size_t bytes)，该函数先检查hook函数，如果有则调用并直接返回，
 这是为了进程创建时分配内存，同时也支持用户自定义分配函数；然后获取分配区指针，接着调用_int_malloc().
 _int_malloc()是整个内存分配的核心，根据内存大小，依次按顺序从fast bins，small bins，large bins选取chunk。</p>
+<h4>6. malloc钩子函数</h4>
+<p>前面提到public_mALLOc中有一个钩子函数hook，这是Glibc允许用户修改mallc/realloc/free的行为，可以在钩子函数
+中加入debug功能，主要的钩子函数如下(摘自glibc manual手册)：</p>
+<div class="highlight"><pre><span class="n">Variable</span><span class="o">:</span> <span class="n">__malloc_hook</span>
+<span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="k">this</span> <span class="n">variable</span> <span class="k">is</span> <span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">the</span> <span class="kd">function</span> <span class="n">that</span> <span class="n">malloc</span> <span class="n">uses</span> <span class="n">whenever</span> <span class="n">it</span> <span class="k">is</span> <span class="n">called</span><span class="o">.</span> <span class="n">You</span> <span class="n">should</span> <span class="n">define</span> <span class="k">this</span> <span class="kd">function</span> <span class="n">to</span> <span class="n">look</span> <span class="n">like</span> <span class="n">malloc</span><span class="o">;</span> <span class="n">that</span> <span class="k">is</span><span class="o">,</span> <span class="n">like</span><span class="o">:</span>
+
+<span class="kc">void</span> <span class="o">*</span><span class="kd">function</span> <span class="o">(</span><span class="n">size_t</span> <span class="n">size</span><span class="o">,</span> <span class="kd">const</span> <span class="kc">void</span> <span class="o">*</span><span class="n">caller</span><span class="o">)</span>
+<span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="n">caller</span> <span class="k">is</span> <span class="n">the</span> <span class="k">return</span> <span class="n">address</span> <span class="n">found</span> <span class="n">on</span> <span class="n">the</span> <span class="n">stack</span> <span class="n">when</span> <span class="n">the</span> <span class="n">malloc</span> <span class="kd">function</span> <span class="n">was</span> <span class="n">called</span><span class="o">.</span> <span class="n">This</span> <span class="n">value</span> <span class="n">allows</span> <span class="n">you</span> <span class="n">to</span> <span class="nf">trace</span> <span class="n">the</span> <span class="n">memory</span> <span class="n">consumption</span> <span class="n">of</span> <span class="n">the</span> <span class="n">program</span><span class="o">.</span>
+
+<span class="n">Variable</span><span class="o">:</span> <span class="n">__realloc_hook</span>
+<span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="k">this</span> <span class="n">variable</span> <span class="k">is</span> <span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="kd">function</span> <span class="n">that</span> <span class="n">realloc</span> <span class="n">uses</span> <span class="n">whenever</span> <span class="n">it</span> <span class="k">is</span> <span class="n">called</span><span class="o">.</span> <span class="n">You</span> <span class="n">should</span> <span class="n">define</span> <span class="k">this</span> <span class="kd">function</span> <span class="n">to</span> <span class="n">look</span> <span class="n">like</span> <span class="n">realloc</span><span class="o">;</span> <span class="n">that</span> <span class="k">is</span><span class="o">,</span> <span class="n">like</span><span class="o">:</span>
+
+<span class="kc">void</span> <span class="o">*</span><span class="kd">function</span> <span class="o">(</span><span class="kc">void</span> <span class="o">*</span><span class="n">ptr</span><span class="o">,</span> <span class="n">size_t</span> <span class="n">size</span><span class="o">,</span> <span class="kd">const</span> <span class="kc">void</span> <span class="o">*</span><span class="n">caller</span><span class="o">)</span>
+<span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="n">caller</span> <span class="k">is</span> <span class="n">the</span> <span class="k">return</span> <span class="n">address</span> <span class="n">found</span> <span class="n">on</span> <span class="n">the</span> <span class="n">stack</span> <span class="n">when</span> <span class="n">the</span> <span class="n">realloc</span> <span class="kd">function</span> <span class="n">was</span> <span class="n">called</span><span class="o">.</span> <span class="n">This</span> <span class="n">value</span> <span class="n">allows</span> <span class="n">you</span> <span class="n">to</span> <span class="nf">trace</span> <span class="n">the</span> <span class="n">memory</span> <span class="n">consumption</span> <span class="n">of</span> <span class="n">the</span> <span class="n">program</span><span class="o">.</span>
+
+<span class="n">Variable</span><span class="o">:</span> <span class="n">__free_hook</span>
+<span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="k">this</span> <span class="n">variable</span> <span class="k">is</span> <span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="kd">function</span> <span class="n">that</span> <span class="n">free</span> <span class="n">uses</span> <span class="n">whenever</span> <span class="n">it</span> <span class="k">is</span> <span class="n">called</span><span class="o">.</span> <span class="n">You</span> <span class="n">should</span> <span class="n">define</span> <span class="k">this</span> <span class="kd">function</span> <span class="n">to</span> <span class="n">look</span> <span class="n">like</span> <span class="n">free</span><span class="o">;</span> <span class="n">that</span> <span class="k">is</span><span class="o">,</span> <span class="n">like</span><span class="o">:</span>
+
+<span class="kc">void</span> <span class="kd">function</span> <span class="o">(</span><span class="kc">void</span> <span class="o">*</span><span class="n">ptr</span><span class="o">,</span> <span class="kd">const</span> <span class="kc">void</span> <span class="o">*</span><span class="n">caller</span><span class="o">)</span>
+<span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="n">caller</span> <span class="k">is</span> <span class="n">the</span> <span class="k">return</span> <span class="n">address</span> <span class="n">found</span> <span class="n">on</span> <span class="n">the</span> <span class="n">stack</span> <span class="n">when</span> <span class="n">the</span> <span class="n">free</span> <span class="kd">function</span> <span class="n">was</span> <span class="n">called</span><span class="o">.</span> <span class="n">This</span> <span class="n">value</span> <span class="n">allows</span> <span class="n">you</span> <span class="n">to</span> <span class="nf">trace</span> <span class="n">the</span> <span class="n">memory</span> <span class="n">consumption</span> <span class="n">of</span> <span class="n">the</span> <span class="n">program</span><span class="o">.</span>
+
+<span class="n">Variable</span><span class="o">:</span> <span class="n">__memalign_hook</span>
+<span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="k">this</span> <span class="n">variable</span> <span class="k">is</span> <span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="kd">function</span> <span class="n">that</span> <span class="n">aligned_alloc</span><span class="o">,</span> <span class="n">memalign</span><span class="o">,</span> <span class="n">posix_memalign</span> <span class="n">and</span> <span class="n">valloc</span> <span class="n">use</span> <span class="n">whenever</span> <span class="n">they</span> <span class="n">are</span> <span class="n">called</span><span class="o">.</span> <span class="n">You</span> <span class="n">should</span> <span class="n">define</span> <span class="k">this</span> <span class="kd">function</span> <span class="n">to</span> <span class="n">look</span> <span class="n">like</span> <span class="n">aligned_alloc</span><span class="o">;</span> <span class="n">that</span> <span class="k">is</span><span class="o">,</span> <span class="n">like</span><span class="o">:</span>
+
+<span class="kc">void</span> <span class="o">*</span><span class="kd">function</span> <span class="o">(</span><span class="n">size_t</span> <span class="n">alignment</span><span class="o">,</span> <span class="n">size_t</span> <span class="n">size</span><span class="o">,</span> <span class="kd">const</span> <span class="kc">void</span> <span class="o">*</span><span class="n">caller</span><span class="o">)</span>
+<span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="n">caller</span> <span class="k">is</span> <span class="n">the</span> <span class="k">return</span> <span class="n">address</span> <span class="n">found</span> <span class="n">on</span> <span class="n">the</span> <span class="n">stack</span> <span class="n">when</span> <span class="n">the</span> <span class="n">aligned_alloc</span><span class="o">,</span> <span class="n">memalign</span><span class="o">,</span> <span class="n">posix_memalign</span> <span class="n">or</span> <span class="n">valloc</span> <span class="n">functions</span> <span class="n">are</span> <span class="n">called</span><span class="o">.</span> <span class="n">This</span> <span class="n">value</span> <span class="n">allows</span> <span class="n">you</span> <span class="n">to</span> <span class="nf">trace</span> <span class="n">the</span> <span class="n">memory</span> <span class="n">consumption</span> <span class="n">of</span> <span class="n">the</span> <span class="n">program</span><span class="o">.</span>
+</pre></div>
+
+
+<p>Mannual手册同时提供了一个简单例子如何定制自己的malloc钩子：</p>
+<div class="highlight"><pre><span class="cm">/* Prototypes for __malloc_hook, __free_hook */</span>
+<span class="cp">#include &lt;malloc.h&gt;</span>
+
+<span class="cm">/* Prototypes for our hooks.  */</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">my_init_hook</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="nf">my_malloc_hook</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">my_free_hook</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+
+<span class="cm">/* Override initializing hook from the C library. */</span>
+<span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">__malloc_initialize_hook</span><span class="p">)</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="n">my_init_hook</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">my_init_hook</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">old_malloc_hook</span> <span class="o">=</span> <span class="n">__malloc_hook</span><span class="p">;</span>
+  <span class="n">old_free_hook</span> <span class="o">=</span> <span class="n">__free_hook</span><span class="p">;</span>
+  <span class="n">__malloc_hook</span> <span class="o">=</span> <span class="n">my_malloc_hook</span><span class="p">;</span>
+  <span class="n">__free_hook</span> <span class="o">=</span> <span class="n">my_free_hook</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="o">*</span>
+<span class="nf">my_malloc_hook</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">caller</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">void</span> <span class="o">*</span><span class="n">result</span><span class="p">;</span>
+  <span class="cm">/* Restore all old hooks */</span>
+  <span class="n">__malloc_hook</span> <span class="o">=</span> <span class="n">old_malloc_hook</span><span class="p">;</span>
+  <span class="n">__free_hook</span> <span class="o">=</span> <span class="n">old_free_hook</span><span class="p">;</span>
+  <span class="cm">/* Call recursively */</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">size</span><span class="p">);</span>
+  <span class="cm">/* Save underlying hooks */</span>
+  <span class="n">old_malloc_hook</span> <span class="o">=</span> <span class="n">__malloc_hook</span><span class="p">;</span>
+  <span class="n">old_free_hook</span> <span class="o">=</span> <span class="n">__free_hook</span><span class="p">;</span>
+  <span class="cm">/* printf might call malloc, so protect it too. */</span>
+  <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;malloc (%u) returns %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span> <span class="n">size</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
+  <span class="cm">/* Restore our own hooks */</span>
+  <span class="n">__malloc_hook</span> <span class="o">=</span> <span class="n">my_malloc_hook</span><span class="p">;</span>
+  <span class="n">__free_hook</span> <span class="o">=</span> <span class="n">my_free_hook</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">my_free_hook</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">caller</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="cm">/* Restore all old hooks */</span>
+  <span class="n">__malloc_hook</span> <span class="o">=</span> <span class="n">old_malloc_hook</span><span class="p">;</span>
+  <span class="n">__free_hook</span> <span class="o">=</span> <span class="n">old_free_hook</span><span class="p">;</span>
+  <span class="cm">/* Call recursively */</span>
+  <span class="n">free</span> <span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+  <span class="cm">/* Save underlying hooks */</span>
+  <span class="n">old_malloc_hook</span> <span class="o">=</span> <span class="n">__malloc_hook</span><span class="p">;</span>
+  <span class="n">old_free_hook</span> <span class="o">=</span> <span class="n">__free_hook</span><span class="p">;</span>
+  <span class="cm">/* printf might call free, so protect it too. */</span>
+  <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;freed pointer %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ptr</span><span class="p">);</span>
+  <span class="cm">/* Restore our own hooks */</span>
+  <span class="n">__malloc_hook</span> <span class="o">=</span> <span class="n">my_malloc_hook</span><span class="p">;</span>
+  <span class="n">__free_hook</span> <span class="o">=</span> <span class="n">my_free_hook</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">main</span> <span class="p">()</span>
+<span class="p">{</span>
+  <span class="err">…</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h3>References:</h3>
 <ol>
 <li>dlmalloc: http://gee.cs.oswego.edu/dl/html/malloc.html;</li>

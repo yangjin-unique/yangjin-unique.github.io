@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>lab1: bootloader - Great Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/lab1-bootloader.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="os,bootloader,JOS,BIOS" />
+        <meta name="description" content="非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好， 从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。 一、BIOS工作 1. bios启动后会读取bootloader，而bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成： 主引导记录：也就是bootloader，大小占446字节； 分区表：占64字节； 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。 2. 上电后的第一条指令地址为0xFFFFFFF0（也就是启动后的第一条执行指令，EPROM），而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动 设备（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00 ..." />
+
+        <meta property="og:site_name" content="Great Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="lab1: bootloader"/>
+        <meta property="og:url" content="/lab1-bootloader.html"/>
+        <meta property="og:description" content="非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好， 从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。 一、BIOS工作 1. bios启动后会读取bootloader，而bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成： 主引导记录：也就是bootloader，大小占446字节； 分区表：占64字节； 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。 2. 上电后的第一条指令地址为0xFFFFFFF0（也就是启动后的第一条执行指令，EPROM），而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动 设备（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00 ..."/>
+        <meta property="article:published_time" content="2013-01-13" />
+            <meta property="article:section" content="OS" />
+            <meta property="article:tag" content="os" />
+            <meta property="article:tag" content="bootloader" />
+            <meta property="article:tag" content="JOS" />
+            <meta property="article:tag" content="BIOS" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Great Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="/category/life.html">Life</a>
+                        </li>
+                        <li >
+                            <a href="/category/linux.html">Linux</a>
+                        </li>
+                        <li class="active">
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="/category/python.html">Python</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/lab1-bootloader.html"
+                       rel="bookmark"
+                       title="Permalink to lab1: bootloader">
+                        lab1: bootloader
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2013-01-13T00:00:00+08:00"> Sun 13 January 2013</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/os.html">os</a>
+        /
+	<a href="/tag/bootloader.html">bootloader</a>
+        /
+	<a href="/tag/jos.html">JOS</a>
+        /
+	<a href="/tag/bios.html">BIOS</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
+从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。</p>
+<h3>一、BIOS工作</h3>
+<h4>1. bios启动后会读取bootloader，而bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成：</h4>
+<ul>
+<li>主引导记录：也就是bootloader，大小占446字节；</li>
+<li>分区表：占64字节；</li>
+<li>硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。</li>
+</ul>
+<h4>2. 上电后的第一条指令地址为0xFFFFFFF0（也就是启动后的第一条执行指令，EPROM），而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动</h4>
+<p>设备（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00；</p>
+<p>实时模式与保护模式的区别：
+<em> 实时模式寻址空间为1MB，16位，而保护模式寻址为32位，最大问4g；
+</em> 保护模式下使用虚拟地址；</p>
+<h3>二、bootloader工作</h3>
+<p>bootloader主要分为两个文件，bootasm.S, bootmain.c，前半部分由汇编完成，包括进入切换进入保护模式和设置好堆栈，后半部分由c文件加载内核；</p>
+<h4>1. bootloader工作：（由bootasm.S汇编来完成）</h4>
+<ul>
+<li>切换到保护模式，启用分段机制（由bootasm.S汇编来完成）；</li>
+<li>读取磁盘ELF执行文件格式的ucore到内存（后面都由bootmain.c完成）：读取内核映像的ELF header，这个header信息包括内核的大小，段分布等（见后面的饿ELF文件解释）；</li>
+<li>显示字符串信息；</li>
+<li>把控制权交给操作系统；</li>
+</ul>
+<h4>2. bootloader进入保护模式的过程（由bootasm.S汇编来完成）</h4>
+<ul>
+<li>开启A20；</li>
+<li>初始化GDT表;</li>
+<li>使能和进入保护模式；</li>
+</ul>
+<p>具体代码如下：</p>
+<div class="highlight"><pre><span class="x">lgdt    gdtdesc </span><span class="err">#</span><span class="x">将gdtdesc值加载给GDT</span>
+<span class="x">movl    %cr0, %eax</span>
+<span class="x">orl    </span><span class="p">$</span><span class="nv">CR0_PE_ON</span><span class="x">, %eax</span>
+<span class="x">movl    %eax, %cr0 </span><span class="err">#</span><span class="x">上面3条指令用于将cr0寄存器的CR0_PE置1，从而打开保护模式；</span>
+</pre></div>
+
+
+<h4>3. bootloader设置栈（由bootasm.S汇编来完成）</h4>
+<p>bootloader选择0x7c00作为栈顶（bootloader自己所占的地址为0x7c00到0x7d00,栈是向低地址生长，所以不会破坏bootloader），
+代码：</p>
+<div class="highlight"><pre><span class="x">movl    </span><span class="p">$</span><span class="nv">start</span><span class="x">, %esp</span>
+<span class="x">call bootmain</span>
+</pre></div>
+
+
+<h3>-----------------<em>分界线：上面都是由boot.S的工作，下面是bootmain.c的工作</em>------------</h3>
+<h4>4. bootmain加载内核</h4>
+<p>内核是个elf文件，位于磁盘的第二个扇区，bootmain先将elf文件的头4096个字节加载到地址0x10000处（64K），然后继续读取elf的内容。
+代码：</p>
+<div class="highlight"><pre>readseg(ELFHDR, SECTSIZE*8, 0):ELFHDR值为0x10000；
+</pre></div>
+
+
+<p>读取所有的内核img后，调用下面代码进入内核执行阶段：</p>
+<div class="highlight"><pre>(void *)(ELFHDR-&gt;e_entry)().
+</pre></div>
+
+
+<p>此后需要注意的地方：
+因为内核被链接到0xF0100000地址（xv6是0x80100000，疑问：为什么要链接到高端地址）,参考kernel.ld文件，所以当内核执行时，它需要启用分页机制来将起始于0xF0100000的高端地址映射到物理内存0x00100000（因为0xF0100000这个没有对应的物理地址，物理地址没那么大）；</p>
+<h4>5. bootloader如何加载ELF格式的OS？</h4>
+<p>bootloader存放在disk第一个扇区，kernel image放在第二个扇区。先读取硬盘第二个扇区的第一个page，也就是ELF header结构；然后在依次读取所有program header结构，从而完成对整个ELF文件的解析。最后执行ELF header中的entry，也就是跳到OS的入口（即kem_init）。</p>
+<h4>6. 保护模式和实时模式</h4>
+<p>实时模式：bootloader刚接收bios时处于实时模式下，16位，只能访问物理内存空间不超过1MB，并且每一个指针都是指向物理地址，通过修改A20地址线可完成实时模式到保护模式的转换；
+保护模式：32位，分段与分页机制，</p>
+<p>分段机涉及4个关键内容：逻辑地址、段描述符（描述段的属性）、段描述符表（包含多个段描述符的“数组”）、段选择子 （段寄存器，用于定位段描述符表中表项的索引）。
+转换逻辑地址到物理地址 分以下两步： 
+[1] 分段地址转换：CPU把逻辑地址（由段选择子selector和段偏移offset组成）中的段选择子的内容作为段描述符表的索引， 找到表中对应的段描述符，然后把段描述符中保存的段基址加上段偏移值，形成线性地址（Linear   Address）。如果不启动 分页存储管理机制，则线性地址等于物理地址。
+[2] 分页地址转换，这一步中把线性地址转换为物理地址。（注意：这一步 是可选的，由操作系统决定是否需要。在后续试验中会涉及，启用分页机制将线性地址转换为物理地址（没启用分页之前，线性地址等于物理地址）。</p>
+<h4>7. 函数调用堆栈</h4>
+<p>关键是要理解ebp指针，假设在main中调用函数foo，那么调用foo之前，会将main 的局部变量入栈，然后将传递给foo的参数依次入栈，最后将返回地址入栈（也就是main中调用foo后的第一条指令地址）。前面都是由main来做的，接下来的工作由foo完成。foo先将ebp（此时ebp是main的栈基址）入栈，然后将esp的值赋给ebp，注意esp是当前栈顶的地址，每次入栈出栈时会自动变化。也就是ebp此时保存的是foo的栈基址，而之前main的栈基址以保存在栈中。也就是在foo中，ebp执行栈顶，而此时栈顶的值恰好是main的栈基址。
+此 时ebp寄存器就已经处于一个非常重要的地位，该寄存器中存储着栈中的一个地址（原ebp入栈后的栈顶），从该地址为基 准，向上（栈底方向）能获取返回地址、参数值，向下（栈顶方向）能获取函数局部变量值，而该地址处又存储着上一层函数调用时的ebp值。</p>
+<h4>8. 中断异常</h4>
+<p>中断分为三类：外部中断（外设引起），异常（exception，CPU执行指令出错，如除0），陷阱（trap，软中断，系统调用，int n指令）。
+X86使用中断描述符表IDT，IDT有三类描述符：</p>
+<ul>
+<li>task-gate描述符；</li>
+<li>interrupt-gate；</li>
+<li>trap-gate；</li>
+</ul>
+<h4>9. JOS初始化时（kern_init）会初始化中断描述符表IDT，是如何进行初始化的？</h4>
+<p>中断描述符表共有256项，对应256个中断，每一个表项为8字节，包括段选择字、段偏移地址、门类型（中断门还是陷阱门）、DPL。idt_init中会调用SETGATE初始化这256项。注意IDT可以放在任意地址，因为初始化表项后，内核调用lidt指令来加载这个描述符表。
+每个中断处理程序的入口地址由每个表项中的段选择字和段偏移地址来决定。实际上每个入口函数都在vector.S中定义（由vector.c生成的），也就是全局变量__vector[]。每个入口函数内容基本一致，都是jump 到__alltraps中执行（trapentry.S中），这里会完成中断时所必须的堆栈操作（也就是保存当前任务的环境）。然后在调用trap函数，最后由trap_dispatch根据中断号来完成各个中断的任务。
+所以每次中断发生时，调用路线为：从IDT中调用对应的入口 --&gt; __alltraps --&gt; trap --&gt; trap_dispatch。</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>
