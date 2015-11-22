@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>linux - Living@Greatwall</title>
+    <title>elf - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="linux" />
+    <meta name="keywords" content="elf" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -52,7 +52,7 @@ Living@Greatwall            </a>
                         <li >
                             <a href="/category/cc.html">C&c++</a>
                         </li>
-                        <li class="active">
+                        <li >
                             <a href="/category/linux.html">Linux</a>
                         </li>
                         <li >
@@ -75,21 +75,29 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a></h2>
-                <div class="summary"><h4>1. 简介</h4>
-<p>内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元，
-如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的
-sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始
-是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的
-支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。</p>
-<h4>2. 内存管理设计目标</h4>
-<p>衡量内存管理算法优劣的主要指标有如下几点：</p>
+                <h2><a href="/elfwen-jian.html">ELF文件</a></h2>
+                <div class="summary"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
 <ul>
-<li>分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性；</li>
-<li>内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等；</li>
-<li>回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等；</li>
-<li>跨平台可移植性 ...</li></ul>
-                    <a class="btn btn-default btn-xs" href="/ptmallocnei-cun-guan-li-jie-xi.html">more ...</a>
+<li>
+<p>用于执行的可执行文件(executab   file)，用于提供程序的进程映像，加载的内存执行。  这也是本实验的OS文件类型。</p>
+</li>
+<li>
+<p>用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。</p>
+</li>
+<li>
+<p>共享目标文件(shared object  file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件，
+动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。</p>
+</li>
+</ul>
+<p>ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如：</p>
+<p>*.text</p>
+<p>*.rodata</p>
+<p>*.data</p>
+<p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
+控制结构，其定义在elf.h中：</p>
+<div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
+  <span class="n">uint</span>  <span class="n">magic</span><span class="p">;</span>   <span class="c1">// must    equal   ELF_MAGIC ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/elfwen-jian.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -134,7 +142,7 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
+         <div class="col-xs-10">&copy; 2013 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

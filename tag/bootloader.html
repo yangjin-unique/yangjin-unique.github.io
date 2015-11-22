@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>bootloader - Great Greatwall</title>
+    <title>bootloader - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -14,11 +14,11 @@
     <meta name="keywords" content="bootloader" />
 
     <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Great Greatwall" />
+        <meta property="og:site_name" content="Living@Greatwall" />
         <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Great Greatwall"/>
+        <meta property="og:title" content="Living@Greatwall"/>
         <meta property="og:url" content=""/>
-        <meta property="og:description" content="Great Greatwall"/>
+        <meta property="og:description" content="Living@Greatwall"/>
 
 
     <!-- Bootstrap -->
@@ -45,15 +45,12 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="/" class="navbar-brand">
-Great Greatwall            </a>
+Living@Greatwall            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
                             <a href="/category/cc.html">C&c++</a>
-                        </li>
-                        <li >
-                            <a href="/category/life.html">Life</a>
                         </li>
                         <li >
                             <a href="/category/linux.html">Linux</a>
@@ -78,19 +75,128 @@ Great Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="/lab1-exercise1.html">lab1 exercise1</a></h2>
+                <div class="summary"><p>lab1主要熟悉qemu x86使用环境，各种实验工具，包括qemu与gdb联合调试等，熟悉pc的bootstrap过程，包括BIOS和bootloader。
+该练习主要是实现一个backtrace函数，解析当前函数调用栈帧，并需要解析出当前函数的文件名、函数名、行号信息，如下面所示：</p>
+<div class="highlight"><pre>K&gt; backtrace
+Stack backtrace:
+  ebp f010ff78  eip f01008ae  args 00000001 f010ff8c 00000000 f0110580 00000000
+         kern/monitor.c:143: monitor+106
+  ebp f010ffd8  eip f0100193  args 00000000 00001aac 00000660 00000000 00000000
+         kern/init.c:49: i386_init+59
+  ebp f010fff8 ...</pre></div>
+                    <a class="btn btn-default btn-xs" href="/lab1-exercise1.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/elfwen-jian.html">ELF文件</a></h2>
+                <div class="summary"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
+<ul>
+<li>
+<p>用于执行的可执行文件(executab   file)，用于提供程序的进程映像，加载的内存执行。  这也是本实验的OS文件类型。</p>
+</li>
+<li>
+<p>用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。</p>
+</li>
+<li>
+<p>共享目标文件(shared object  file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件，
+动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。</p>
+</li>
+</ul>
+<p>ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如：</p>
+<p>*.text</p>
+<p>*.rodata</p>
+<p>*.data</p>
+<p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
+控制结构，其定义在elf.h中：</p>
+<div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
+  <span class="n">uint</span>  <span class="n">magic</span><span class="p">;</span>   <span class="c1">// must    equal   ELF_MAGIC ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/elfwen-jian.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/stabshi-yi.html">stab释疑</a></h2>
+                <div class="summary"><p>Reference: https://sourceware.org/gdb/onlinedocs/stabs.html</p>
+<h4>1. stabs简介</h4>
+<p>stabs代表一种信息格式，用来将程序的信息展示给调试器debugger。</p>
+<h4>1.2. Debugging information flow</h4>
+<p>一般编译流程：gcc把.c编译成.s，汇编器把.s转化成.o，链接器把.o和库文件组合生成可执行文件；
+当-g选项打开时，gcc会往.s文件中加入额外的调试信息，然后这些调试信息被加入到.o和可执行文件中。
+这个调试信息包括c源文件的一些信息，如文件名，行号，变量的类型和范围（type, scope），函数名字，
+参数和范围(function names, parameters,scopes)。在最后生成的可执行文件中，会生成一个symbol table
+和string table，debugger就是利用这两个表来获取程序的信息的。</p>
+<p>注意 ...</p>
+                    <a class="btn btn-default btn-xs" href="/stabshi-yi.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="/lab1-bootloader.html">lab1: bootloader</a></h2>
                 <div class="summary"><p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
 从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。</p>
 <h3>一、BIOS工作</h3>
-<h4>1. bios启动后会读取bootloader，而bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成：</h4>
-<ul>
-<li>主引导记录：也就是bootloader，大小占446字节；</li>
-<li>分区表：占64字节；</li>
-<li>硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。</li>
-</ul>
-<h4>2. 上电后的第一条指令地址为0xFFFFFFF0（也就是启动后的第一条执行指令，EPROM），而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动</h4>
-<p>设备（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00 ...</p>
+<h4>1. bios启动后会读取bootloader</h4>
+<p>bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成：
+<em> 主引导记录：也就是bootloader，大小占446字节；
+</em> 分区表：占64字节；
+* 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。</p>
+<h4>2.上电后的第一条指令地址为0xFFFFFFF0</h4>
+<p>这是启动后的第一条执行指令，EPROM，而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动设备
+（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00；</p>
+<p>实时模式与保护模式的区别 ...</p>
                     <a class="btn btn-default btn-xs" href="/lab1-bootloader.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/x86ji-cun-qi-ji-chu.html">x86寄存器基础</a></h2>
+                <div class="summary"><p>http://oss.org.cn/kernel-book/ch02/2.3.1.htm</p>
+<h3>1. i386寄存器</h3>
+<p>80386作为80X86系列中的一员，必须保证向后兼容，也就是说，既要支持16位的处理器，也要支持32位的处理器。在8086中，所有的寄存器都是16位的，
+下面我们来看一下80386中寄存器有何变化：</p>
+<ul>
+<li>
+<p>把16位的通用寄存器、标志寄存器以及指令指针寄存器扩充为32位的寄存器段寄存器仍然为16位</p>
+</li>
+<li>
+<p>增加4个32位的控制寄存器</p>
+</li>
+<li>
+<p>增加4个系统地址寄存器</p>
+</li>
+<li>
+<p>增加8个调式寄存器</p>
+</li>
+<li>
+<p>增加2个测试寄存器</p>
+</li>
+</ul>
+<h3>2. 通用寄存器</h3>
+<p>8个通用寄存器是8086寄存器的超集，它们的名称和用途分别为：</p>
+<ul>
+<li>
+<p>EAX  一般用作累加器</p>
+</li>
+<li>
+<p>EBX  一般用作基址寄存器（Base）</p>
+</li>
+<li>
+<p>ECX  一般用来计数（Count）</p>
+</li>
+<li>
+<p>EDX  一般用来存放数据（Data）</p>
+</li>
+<li>
+<p>ESP  一般用作堆栈指针（Stack Pointer）</p>
+</li>
+<li>
+<p>EBP  一般用作基址指针（Base Pointer）</p>
+</li>
+<li>
+<p>ESI ...</p></li></ul>
+                    <a class="btn btn-default btn-xs" href="/x86ji-cun-qi-ji-chu.html">more ...</a>
                 </div>
             </article>
             <hr/>

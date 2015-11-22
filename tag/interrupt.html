@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>linux - Living@Greatwall</title>
+    <title>interrupt - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="linux" />
+    <meta name="keywords" content="interrupt" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -52,7 +52,7 @@ Living@Greatwall            </a>
                         <li >
                             <a href="/category/cc.html">C&c++</a>
                         </li>
-                        <li class="active">
+                        <li >
                             <a href="/category/linux.html">Linux</a>
                         </li>
                         <li >
@@ -75,21 +75,19 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a></h2>
-                <div class="summary"><h4>1. 简介</h4>
-<p>内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元，
-如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的
-sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始
-是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的
-支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。</p>
-<h4>2. 内存管理设计目标</h4>
-<p>衡量内存管理算法优劣的主要指标有如下几点：</p>
-<ul>
-<li>分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性；</li>
-<li>内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等；</li>
-<li>回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等；</li>
-<li>跨平台可移植性 ...</li></ul>
-                    <a class="btn btn-default btn-xs" href="/ptmallocnei-cun-guan-li-jie-xi.html">more ...</a>
+                <h2><a href="/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h2>
+                <div class="summary"><h4>1、三种特殊的中断事件</h4>
+<p>异步中断(asynchronous   interrupt)也称外部中断,简称中断 (interrupt)：由CPU外部设备引起的外部事件如I/O中断、
+时钟中断、控制台中断等是异步产生的 （即产生的时刻不确定），与CPU的执行无关;</p>
+<p>异常(exception)：而把在CPU执行指令期间检测到不正常的或非法的条件(如除零错、地访问越界)所引起的内部事件称作
+同步中断(synchronous    interrupt);</p>
+<p>异常：把在程序中使用请求系统服务的系统调用而引发的事件， 称作陷入中断(trap    interrupt)，也称软中断(soft   interrupt)，
+系统调用(system call)简称trap。</p>
+<h4>2、保护模式下的中断处理过程</h4>
+<p>当CPU收到中断（通过8259A完成，有关8259A的信息请看附录A）或者异常的事件时，它会暂停执行当前的程序或任务，
+通过一定的机制跳转到负责处理这个信号的相关处理例程中，在完成对这个事件的处 理后再跳回到刚才被打断的程序或任务中。</p>
+<p>中断向量和中断服务例程的对应关系主要是由IDT（中断描述符表）负责。操作 系统在IDT中设置好各种中断向量对应的中断描述符 ...</p>
+                    <a class="btn btn-default btn-xs" href="/x86zhong-duan-yu-yi-chang.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -134,7 +132,7 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
+         <div class="col-xs-10">&copy; 2013 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
