@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>lab2-exercise1：physical memory management - Living@Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/lab2-exercise1physical-memory-management.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="os,physical memory management,page" />
+        <meta name="description" content="这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图， 前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制， 也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处， 所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数： boot_alloc() mem_init() (only up to the call to check_page_free_list(1)) page_init() page_alloc() page_free() 1. boot_alloc 是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。 static void * boot_alloc(uint32_t n) { static char *nextfree ..." />
+
+        <meta property="og:site_name" content="Living@Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="lab2-exercise1：physical memory management"/>
+        <meta property="og:url" content="/lab2-exercise1physical-memory-management.html"/>
+        <meta property="og:description" content="这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图， 前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制， 也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处， 所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数： boot_alloc() mem_init() (only up to the call to check_page_free_list(1)) page_init() page_alloc() page_free() 1. boot_alloc 是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。 static void * boot_alloc(uint32_t n) { static char *nextfree ..."/>
+        <meta property="article:published_time" content="2013-02-16" />
+            <meta property="article:section" content="os" />
+            <meta property="article:tag" content="os" />
+            <meta property="article:tag" content="physical memory management" />
+            <meta property="article:tag" content="page" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Living@Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="/category/linux.html">Linux</a>
+                        </li>
+                        <li class="active">
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="/category/python.html">Python</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/lab2-exercise1physical-memory-management.html"
+                       rel="bookmark"
+                       title="Permalink to lab2-exercise1：physical memory management">
+                        lab2-exercise1：physical memory management
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2013-02-16T00:00:00+08:00"> Sat 16 February 2013</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/os.html">os</a>
+        /
+	<a href="/tag/physical-memory-management.html">physical memory management</a>
+        /
+	<a href="/tag/page.html">page</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
+前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
+也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处，
+所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数：</p>
+<p>boot_alloc()</p>
+<p>mem_init() (only up to the call to check_page_free_list(1))</p>
+<p>page_init()</p>
+<p>page_alloc()</p>
+<p>page_free()</p>
+<h4>1. boot_alloc</h4>
+<p>是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span>
+<span class="nf">boot_alloc</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree</span><span class="p">;</span>    <span class="c1">// virtual address of next byte of free memory</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">result</span><span class="p">;</span>
+
+    <span class="c1">// Initialize nextfree if this is the first time.</span>
+    <span class="c1">// &#39;end&#39; is a magic symbol automatically generated by the linker,</span>
+    <span class="c1">// which points to the end of the kernel&#39;s bss segment:</span>
+    <span class="c1">// the first virtual address that the linker did *not* assign</span>
+    <span class="c1">// to any kernel code or global variables.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">nextfree</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">extern</span> <span class="kt">char</span> <span class="n">end</span><span class="p">[];</span>
+        <span class="n">nextfree</span> <span class="o">=</span> <span class="n">ROUNDUP</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">end</span><span class="p">,</span> <span class="n">PGSIZE</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Allocate a chunk large enough to hold &#39;n&#39; bytes, then update</span>
+    <span class="c1">// nextfree.  Make sure nextfree is kept aligned</span>
+    <span class="c1">// to a multiple of PGSIZE.</span>
+    <span class="c1">//</span>
+    <span class="c1">// LAB 2: Your code here.</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">nextfree</span><span class="p">;</span>
+    <span class="n">nextfree</span> <span class="o">+=</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">nextfree</span> <span class="o">=</span> <span class="n">ROUNDUP</span><span class="p">(</span><span class="n">nextfree</span><span class="p">,</span> <span class="n">PGSIZE</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4>2. mm_init</h4>
+<p>1）内核内存初始化函数，先检查物理内存大小（算出npages和npage_basemem）；</p>
+<p>2）创建页目录kern_pgdir = boot_alloc(PGSIZE)；</p>
+<p>在UVPT处创建一个virtual page table；</p>
+<p>3）分配pages数组：pages = boot_alloc(npages * sizeof(PageInfo)); 分配npages一个PageInfo结构，每个PageInfo对应一个物理页；
+4）调用page_init()来初始化pages数组：page_init主要将pages数组的每个元素加入到一个page_free_list链表中，并完成pages数组
+与物理内存的映射，注意由于可用的物理内存空间不是连续的，具体可用的内存如下图，左边是虚拟内存的角度来看，右边是从物理内存
+的角度看。</p>
+<p>5）接下来的任务是完成虚拟内存映射，exercise2的主要内容，见后文分析.</p>
+<h4>3. page_init</h4>
+<p>该函数完成pages[]数组与物理页的映射，所有的物理页对应这个数组的一项，物理地址的高20位就是pages数组的index。
+这个函数很关键，实现这个函数首先需要理解内核运行到这里的时候，整个物理地址空间与虚拟地址空间的映射是什么样的关系，
+如下图所示。
+这里再解释一下这个映射是怎么来的？
+在entry.S的结束部分我们启用了分页机制，此时所用的页目录是什么呢？答案是entry_pgdir，entry.S启用分页代码如下：</p>
+<div class="highlight"><pre>movl    $(RELOC(entry_pgdir)), %eax
+movl    %eax, %cr3
+#Turn on paging.
+movl    %cr0, %eax
+orl    $(CR0_PE|CR0_PG|CR0_WP), %eax
+movl    %eax, %cr0
+</pre></div>
+
+
+<p>这里将entry_pgdir指定为页目录，entry_pgdir定义如下：</p>
+<div class="highlight"><pre><span class="kt">pde_t</span> <span class="n">entry_pgdir</span><span class="p">[</span><span class="n">NPDENTRIES</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">// Map VA&#39;s [0, 4MB) to PA&#39;s [0, 4MB)</span>
+     <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="o">=</span> <span class="p">((</span><span class="kt">uintptr_t</span><span class="p">)</span><span class="n">entry_pgtable</span> <span class="o">-</span> <span class="n">KERNBASE</span><span class="p">)</span> <span class="o">+</span> <span class="n">PTE_P</span><span class="p">,</span>
+    <span class="c1">// Map VA&#39;s [KERNBASE, KERNBASE+4MB) to PA&#39;s [0, 4MB)</span>
+    <span class="p">[</span><span class="n">KERNBASE</span><span class="o">&gt;&gt;</span><span class="n">PDXSHIFT</span><span class="p">]</span>
+        <span class="o">=</span> <span class="p">((</span><span class="kt">uintptr_t</span><span class="p">)</span><span class="n">entry_pgtable</span> <span class="o">-</span> <span class="n">KERNBASE</span><span class="p">)</span> <span class="o">+</span> <span class="n">PTE_P</span> <span class="o">+</span> <span class="n">PTE_W</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>这个页目录所做的工作就是将虚拟地址空间[KERNBASE, KERNBASE+4MB]映射到物理地址空间[0, 4MB]，为什么要这么映射？因为内核的c代码部分被链接器加载到KERNBASE虚拟地址（高端地址空间），而内核的image的实际物理地址仍在[0,4MB]里，至于为什么只映射4MB的空间而不映射更多的？这是因为一个页表刚好能映射4MB空间，而且4MB已经足够用，所以就选择4MB，
+并且这个映射还只是暂时，只是一个过渡阶段。</p>
+<p>虚拟内存角度：左边图中标出的两个可用的就是可用的虚拟内存，需要将这部分对应的pages元素加入到page_free_list链表，而不可用的部分不能加入该链表，同时要设置其pp_ref为1，表示已被占用。
+物理内存角度：右边标出了对应的映射图，两个可用的部分加入到page_free_list。
+所以实现page_init有两种做法，第一是从虚拟内存的角度来做，但是左边图中有个小错误，没有将I/O映射的部分空间去除掉，也就是第一部分可用的空间为KERNBASE ~ （KERNBASE + 640K）；</p>
+<p>下面我们从物理内存的角度去实现，
+1）完成0 ~ 640K的初始化，加入到free_page_list：</p>
+<div class="highlight"><pre> for (i = 1; i &lt; npages_basemem; i++) {
+      pages[i].pp_ref = 0;
+      pages[i].pp_link = page_free_list;
+      page_free_list = &amp;pages[i];
+ }
+</pre></div>
+
+
+<p>2）将I/O space、kernel data &amp; text、kern_pgdir、pages[]所占的空间设为不可用：</p>
+<div class="highlight"><pre><span class="kt">char</span> <span class="o">*</span> <span class="n">first_page</span> <span class="o">=</span> <span class="n">boot_alloc</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>  <span class="c1">//这个first_page指向第二块可用空间的开始处，</span>
+                                <span class="c1">//也即page[]结尾处；但是这个值是虚拟地址空间的，需要将其映射到物理内存地址；</span>
+
+<span class="n">low_ppn</span> <span class="o">=</span> <span class="n">PADDR</span><span class="p">(</span><span class="n">first_page</span><span class="p">)</span><span class="o">/</span><span class="n">PGSIZE</span><span class="p">;</span> <span class="c1">//计算出first_page 对应的物理内存页；</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">npages_basemem</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">low_ppn</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">pages</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">pp_ref</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">pages</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">pp_link</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>3）将第二部分可用内存空间加入到page_free_list：</p>
+<div class="highlight"><pre>for (i = low_ppn; i &lt; npages; i++) {
+    pages[i].pp_ref = 0;
+    pages[i].pp_link = page_free_list;
+    page_free_list = &amp;pages[i];
+}
+</pre></div>
+
+
+<p><img alt="img3" src="../images/3.png" /></p>
+<h4>4. page_alloc</h4>
+<p>page_init完成后后面就很好做了，后面的物理内存分配都是采用page_alloc函数，前面的boot_alloc到这之后就不在用了。
+该函数从page_free_list中选一个空闲物理页，并初始化物理页。PageInfo结构体里面有一个pp_ref，表示该物理页的引用计数，
+因为我们可以将一个物理页映射到多个虚拟地址空间，也即多个虚拟地址空间映射到同一个物理页，这个pp_ref就是为了表示这个
+物理页被多少个虚拟页映射。</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span>
+<span class="nf">page_alloc</span><span class="p">(</span><span class="kt">int</span> <span class="n">alloc_flags</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">page_free_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="n">page_free_list</span><span class="p">;</span>
+    <span class="n">page_free_list</span> <span class="o">=</span> <span class="n">page</span><span class="o">-&gt;</span><span class="n">pp_link</span><span class="p">;</span> 
+    <span class="n">page</span><span class="o">-&gt;</span><span class="n">pp_link</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">alloc_flags</span> <span class="o">&amp;</span> <span class="n">ALLOC_ZERO</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">memset</span><span class="p">(</span><span class="n">page2kva</span><span class="p">(</span><span class="n">page</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PGSIZE</span><span class="p">);</span>    
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">page</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4>5. page_free</h4>
+<p>该函数主要完成物理页的释放，将释放后的物理页加入到page_free_list中。</p>
+<div class="highlight"><pre><span class="kt">void</span>
+<span class="nf">page_free</span><span class="p">(</span><span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">pp</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="c1">// Hint: You may want to panic if pp-&gt;pp_ref is nonzero or</span>
+    <span class="c1">// pp-&gt;pp_link is not NULL.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">pp_ref</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;page_free pp-&gt;pp_ref wrong&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">pp</span><span class="o">-&gt;</span><span class="n">pp_link</span> <span class="o">=</span> <span class="n">page_free_list</span><span class="p">;</span>
+    <span class="n">page_free_list</span> <span class="o">=</span> <span class="n">pp</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

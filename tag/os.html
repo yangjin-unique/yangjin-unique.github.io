@@ -75,6 +75,50 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
+                <div class="summary"><p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
+前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
+也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处，
+所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数：</p>
+<p>boot_alloc()</p>
+<p>mem_init() (only up to the call to check_page_free_list(1))</p>
+<p>page_init()</p>
+<p>page_alloc()</p>
+<p>page_free()</p>
+<h4>1. boot_alloc</h4>
+<p>是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span>
+<span class="nf">boot_alloc</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/lab2-exercise1physical-memory-management.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/x86-address-translation.html">x86 Address Translation</a></h2>
+                <div class="summary"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p>
+                    <a class="btn btn-default btn-xs" href="/x86-address-translation.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/entrys.html">entry.S</a></h2>
+                <div class="summary"><p>lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。</p>
+<p>这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB，
+进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。
+而且分页机制也没有使能，所以线性地址就是物理地址）。</p>
+<p>在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时，
+所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射：
+将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。</p>
+<p>内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）：</p>
+<div class="highlight"><pre><span class="x"> </span><span class="err">#</span><span class="x"> Load the physical address of entry_pgdir into cr3.  entry_pgdir</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> is defined in entrypgdir.c ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/entrys.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="/lab1-exercise1.html">lab1 exercise1</a></h2>
                 <div class="summary"><p>lab1主要熟悉qemu x86使用环境，各种实验工具，包括qemu与gdb联合调试等，熟悉pc的bootstrap过程，包括BIOS和bootloader。
 该练习主要是实现一个backtrace函数，解析当前函数调用栈帧，并需要解析出当前函数的文件名、函数名、行号信息，如下面所示：</p>
@@ -108,10 +152,11 @@ Stack backtrace:
 <p>*.text</p>
 <p>*.rodata</p>
 <p>*.data</p>
+<h4>1. Elf header结构</h4>
 <p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
 控制结构，其定义在elf.h中：</p>
 <div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
-  <span class="n">uint</span>  <span class="n">magic</span><span class="p">;</span>   <span class="c1">// must    equal   ELF_MAGIC ...</span></pre></div>
+  <span class="n">uint</span>  <span class="n">magic ...</span></pre></div>
                     <a class="btn btn-default btn-xs" href="/elfwen-jian.html">more ...</a>
                 </div>
             </article>

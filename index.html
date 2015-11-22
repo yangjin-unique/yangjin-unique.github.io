@@ -131,6 +131,50 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
             </article>
             <hr/>
             <article>
+                <h2><a href="/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
+                <div class="summary"><p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
+前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
+也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处，
+所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数：</p>
+<p>boot_alloc()</p>
+<p>mem_init() (only up to the call to check_page_free_list(1))</p>
+<p>page_init()</p>
+<p>page_alloc()</p>
+<p>page_free()</p>
+<h4>1. boot_alloc</h4>
+<p>是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span>
+<span class="nf">boot_alloc</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/lab2-exercise1physical-memory-management.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/x86-address-translation.html">x86 Address Translation</a></h2>
+                <div class="summary"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p>
+                    <a class="btn btn-default btn-xs" href="/x86-address-translation.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/entrys.html">entry.S</a></h2>
+                <div class="summary"><p>lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。</p>
+<p>这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB，
+进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。
+而且分页机制也没有使能，所以线性地址就是物理地址）。</p>
+<p>在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时，
+所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射：
+将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。</p>
+<p>内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）：</p>
+<div class="highlight"><pre><span class="x"> </span><span class="err">#</span><span class="x"> Load the physical address of entry_pgdir into cr3.  entry_pgdir</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> is defined in entrypgdir.c ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/entrys.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="/lab1-exercise1.html">lab1 exercise1</a></h2>
                 <div class="summary"><p>lab1主要熟悉qemu x86使用环境，各种实验工具，包括qemu与gdb联合调试等，熟悉pc的bootstrap过程，包括BIOS和bootloader。
 该练习主要是实现一个backtrace函数，解析当前函数调用栈帧，并需要解析出当前函数的文件名、函数名、行号信息，如下面所示：</p>
@@ -164,10 +208,11 @@ Stack backtrace:
 <p>*.text</p>
 <p>*.rodata</p>
 <p>*.data</p>
+<h4>1. Elf header结构</h4>
 <p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
 控制结构，其定义在elf.h中：</p>
 <div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
-  <span class="n">uint</span>  <span class="n">magic</span><span class="p">;</span>   <span class="c1">// must    equal   ELF_MAGIC ...</span></pre></div>
+  <span class="n">uint</span>  <span class="n">magic ...</span></pre></div>
                     <a class="btn btn-default btn-xs" href="/elfwen-jian.html">more ...</a>
                 </div>
             </article>
@@ -203,92 +248,16 @@ Stack backtrace:
                 </div>
             </article>
             <hr/>
-            <article>
-                <h2><a href="/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h2>
-                <div class="summary"><h4>1、三种特殊的中断事件</h4>
-<p>异步中断(asynchronous   interrupt)也称外部中断,简称中断 (interrupt)：由CPU外部设备引起的外部事件如I/O中断、
-时钟中断、控制台中断等是异步产生的 （即产生的时刻不确定），与CPU的执行无关;</p>
-<p>异常(exception)：而把在CPU执行指令期间检测到不正常的或非法的条件(如除零错、地访问越界)所引起的内部事件称作
-同步中断(synchronous    interrupt);</p>
-<p>异常：把在程序中使用请求系统服务的系统调用而引发的事件， 称作陷入中断(trap    interrupt)，也称软中断(soft   interrupt)，
-系统调用(system call)简称trap。</p>
-<h4>2、保护模式下的中断处理过程</h4>
-<p>当CPU收到中断（通过8259A完成，有关8259A的信息请看附录A）或者异常的事件时，它会暂停执行当前的程序或任务，
-通过一定的机制跳转到负责处理这个信号的相关处理例程中，在完成对这个事件的处 理后再跳回到刚才被打断的程序或任务中。</p>
-<p>中断向量和中断服务例程的对应关系主要是由IDT（中断描述符表）负责。操作 系统在IDT中设置好各种中断向量对应的中断描述符 ...</p>
-                    <a class="btn btn-default btn-xs" href="/x86zhong-duan-yu-yi-chang.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/lab1-bootloader.html">lab1: bootloader</a></h2>
-                <div class="summary"><p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
-从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。</p>
-<h3>一、BIOS工作</h3>
-<h4>1. bios启动后会读取bootloader</h4>
-<p>bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成：
-<em> 主引导记录：也就是bootloader，大小占446字节；
-</em> 分区表：占64字节；
-* 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。</p>
-<h4>2.上电后的第一条指令地址为0xFFFFFFF0</h4>
-<p>这是启动后的第一条执行指令，EPROM，而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动设备
-（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00；</p>
-<p>实时模式与保护模式的区别 ...</p>
-                    <a class="btn btn-default btn-xs" href="/lab1-bootloader.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/x86ji-cun-qi-ji-chu.html">x86寄存器基础</a></h2>
-                <div class="summary"><p>http://oss.org.cn/kernel-book/ch02/2.3.1.htm</p>
-<h3>1. i386寄存器</h3>
-<p>80386作为80X86系列中的一员，必须保证向后兼容，也就是说，既要支持16位的处理器，也要支持32位的处理器。在8086中，所有的寄存器都是16位的，
-下面我们来看一下80386中寄存器有何变化：</p>
-<ul>
-<li>
-<p>把16位的通用寄存器、标志寄存器以及指令指针寄存器扩充为32位的寄存器段寄存器仍然为16位</p>
-</li>
-<li>
-<p>增加4个32位的控制寄存器</p>
-</li>
-<li>
-<p>增加4个系统地址寄存器</p>
-</li>
-<li>
-<p>增加8个调式寄存器</p>
-</li>
-<li>
-<p>增加2个测试寄存器</p>
-</li>
-</ul>
-<h3>2. 通用寄存器</h3>
-<p>8个通用寄存器是8086寄存器的超集，它们的名称和用途分别为：</p>
-<ul>
-<li>
-<p>EAX  一般用作累加器</p>
-</li>
-<li>
-<p>EBX  一般用作基址寄存器（Base）</p>
-</li>
-<li>
-<p>ECX  一般用来计数（Count）</p>
-</li>
-<li>
-<p>EDX  一般用来存放数据（Data）</p>
-</li>
-<li>
-<p>ESP  一般用作堆栈指针（Stack Pointer）</p>
-</li>
-<li>
-<p>EBP  一般用作基址指针（Base Pointer）</p>
-</li>
-<li>
-<p>ESI ...</p></li></ul>
-                    <a class="btn btn-default btn-xs" href="/x86ji-cun-qi-ji-chu.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
 
+        <ul class="pagination">
+                <li class="prev disabled"><a href="#">&laquo;</a></li>
+                    <li class="active"><a
+                            href="/index.html">1</a></li>
+                    <li class=""><a
+                            href="/index2.html">2</a></li>
+                <li class="next"><a
+                        href="/index2.html">&raquo;</a></li>
+        </ul>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

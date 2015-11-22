@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Authors - Living@Greatwall</title>
+    <title>physical memory management - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,7 +10,8 @@
 
 
 
-        <meta name="author" content="Jin" />
+    <meta name="author" content="Jin" />
+    <meta name="keywords" content="physical memory management" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -73,8 +74,28 @@ Living@Greatwall            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-    <h1>Authors on Living@Greatwall</h1>
-        <li><a href="/author/jin.html">jin</a> (13)</li>
+            <article>
+                <h2><a href="/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
+                <div class="summary"><p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
+前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
+也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处，
+所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数：</p>
+<p>boot_alloc()</p>
+<p>mem_init() (only up to the call to check_page_free_list(1))</p>
+<p>page_init()</p>
+<p>page_alloc()</p>
+<p>page_free()</p>
+<h4>1. boot_alloc</h4>
+<p>是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span>
+<span class="nf">boot_alloc</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/lab2-exercise1physical-memory-management.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
@@ -115,7 +136,7 @@ Living@Greatwall            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
+         <div class="col-xs-10">&copy; 2013 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>entry.S - Living@Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/entrys.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="os,bootloader,entry.S" />
+        <meta name="description" content="lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。 这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB， 进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。 而且分页机制也没有使能，所以线性地址就是物理地址）。 在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时， 所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射： 将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。 内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）： # Load the physical address of entry_pgdir into cr3. entry_pgdir # is defined in entrypgdir.c ..." />
+
+        <meta property="og:site_name" content="Living@Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="entry.S"/>
+        <meta property="og:url" content="/entrys.html"/>
+        <meta property="og:description" content="lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。 这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB， 进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。 而且分页机制也没有使能，所以线性地址就是物理地址）。 在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时， 所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射： 将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。 内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）： # Load the physical address of entry_pgdir into cr3. entry_pgdir # is defined in entrypgdir.c ..."/>
+        <meta property="article:published_time" content="2013-01-16" />
+            <meta property="article:section" content="os" />
+            <meta property="article:tag" content="os" />
+            <meta property="article:tag" content="bootloader" />
+            <meta property="article:tag" content="entry.S" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Living@Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="/category/linux.html">Linux</a>
+                        </li>
+                        <li class="active">
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="/category/python.html">Python</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/entrys.html"
+                       rel="bookmark"
+                       title="Permalink to entry.S">
+                        entry.S
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2013-01-16T00:00:00+08:00"> Wed 16 January 2013</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/os.html">os</a>
+        /
+	<a href="/tag/bootloader.html">bootloader</a>
+        /
+	<a href="/tag/entrys.html">entry.S</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。</p>
+<p>这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB，
+进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。
+而且分页机制也没有使能，所以线性地址就是物理地址）。</p>
+<p>在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时，
+所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射：
+将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。</p>
+<p>内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）：</p>
+<div class="highlight"><pre><span class="x"> </span><span class="err">#</span><span class="x"> Load the physical address of entry_pgdir into cr3.  entry_pgdir</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> is defined in entrypgdir.c.</span>
+<span class="x"> movl   </span><span class="p">$(</span><span class="err">RELOC</span><span class="p">(</span><span class="err">entry_pgdir</span><span class="p">))</span><span class="x">, %eax      </span><span class="cp">#</span><span class="nf">entry_pgdir</span><span class="x">是定义在内核的c代码中，所以其地址是以0xF0100000为基础，</span>
+<span class="x">                                         </span><span class="err">#</span><span class="x">所以RELOC(entry_pgdir)是把它转化为对应的物理地址</span>
+<span class="x"> movl   %eax, %cr3</span>
+<span class="x"> movl   %cr0, %eax </span><span class="err">#</span><span class="x"> Turn on paging.</span>
+<span class="x"> orl    </span><span class="p">$(</span><span class="err">CR0_PE|CR0_PG|CR0_WP</span><span class="p">)</span><span class="x">, %eax</span>
+<span class="x"> movl   %eax, %cr0</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> Now paging is enabled, but we&#39;re still running at a low EIP</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> (why is this okay?).  Jump up above KERNBASE before entering</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> C code.</span>
+<span class="x"> mov    </span><span class="p">$</span><span class="nv">relocated</span><span class="x">, %eax</span>
+<span class="x"> jmp    *%eax</span>
+<span class="x">relocated:</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> Clear the frame pointer register (EBP)</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> so that once we get into debugging C code,</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> stack backtraces will be terminated properly.</span>
+<span class="x"> movl   </span><span class="p">$</span><span class="x">0x0,%ebp    </span><span class="err">#</span><span class="x"> nuke frame pointer，这个用于lab1解析栈帧用作循环结尾的条件</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> Set the stack pointer</span>
+<span class="x"> movl   </span><span class="p">$(</span><span class="err">bootstacktop</span><span class="p">)</span><span class="x">,%esp</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> now to C code</span>
+<span class="x"> call   i386_init</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> Should never get here, but in case we do, just spin.</span>
+<span class="x">spin:   jmp spin</span>
+</pre></div>
+
+
+<p>此后，内核进入main的c代码，在虚拟地址空间执行。</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>os - Living@Greatwall</title>
+    <title>Articles by jin - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,8 +10,7 @@
 
 
 
-    <meta name="author" content="Jin" />
-    <meta name="keywords" content="os" />
+        <meta name="author" content="Jin" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -55,7 +54,7 @@ Living@Greatwall            </a>
                         <li >
                             <a href="/category/linux.html">Linux</a>
                         </li>
-                        <li class="active">
+                        <li >
                             <a href="/category/os.html">Os</a>
                         </li>
                         <li >
@@ -74,124 +73,6 @@ Living@Greatwall            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-            <article>
-                <h2><a href="/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
-                <div class="summary"><p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
-前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
-也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处，
-所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数：</p>
-<p>boot_alloc()</p>
-<p>mem_init() (only up to the call to check_page_free_list(1))</p>
-<p>page_init()</p>
-<p>page_alloc()</p>
-<p>page_free()</p>
-<h4>1. boot_alloc</h4>
-<p>是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。</p>
-<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span>
-<span class="nf">boot_alloc</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/lab2-exercise1physical-memory-management.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/x86-address-translation.html">x86 Address Translation</a></h2>
-                <div class="summary"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p>
-                    <a class="btn btn-default btn-xs" href="/x86-address-translation.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/entrys.html">entry.S</a></h2>
-                <div class="summary"><p>lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。</p>
-<p>这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB，
-进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。
-而且分页机制也没有使能，所以线性地址就是物理地址）。</p>
-<p>在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时，
-所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射：
-将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。</p>
-<p>内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）：</p>
-<div class="highlight"><pre><span class="x"> </span><span class="err">#</span><span class="x"> Load the physical address of entry_pgdir into cr3.  entry_pgdir</span>
-<span class="x"> </span><span class="err">#</span><span class="x"> is defined in entrypgdir.c ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/entrys.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/lab1-exercise1.html">lab1 exercise1</a></h2>
-                <div class="summary"><p>lab1主要熟悉qemu x86使用环境，各种实验工具，包括qemu与gdb联合调试等，熟悉pc的bootstrap过程，包括BIOS和bootloader。
-该练习主要是实现一个backtrace函数，解析当前函数调用栈帧，并需要解析出当前函数的文件名、函数名、行号信息，如下面所示：</p>
-<div class="highlight"><pre>K&gt; backtrace
-Stack backtrace:
-  ebp f010ff78  eip f01008ae  args 00000001 f010ff8c 00000000 f0110580 00000000
-         kern/monitor.c:143: monitor+106
-  ebp f010ffd8  eip f0100193  args 00000000 00001aac 00000660 00000000 00000000
-         kern/init.c:49: i386_init+59
-  ebp f010fff8 ...</pre></div>
-                    <a class="btn btn-default btn-xs" href="/lab1-exercise1.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/elfwen-jian.html">ELF文件</a></h2>
-                <div class="summary"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
-<ul>
-<li>
-<p>用于执行的可执行文件(executab   file)，用于提供程序的进程映像，加载的内存执行。  这也是本实验的OS文件类型。</p>
-</li>
-<li>
-<p>用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。</p>
-</li>
-<li>
-<p>共享目标文件(shared object  file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件，
-动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。</p>
-</li>
-</ul>
-<p>ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如：</p>
-<p>*.text</p>
-<p>*.rodata</p>
-<p>*.data</p>
-<h4>1. Elf header结构</h4>
-<p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
-控制结构，其定义在elf.h中：</p>
-<div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
-  <span class="n">uint</span>  <span class="n">magic ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/elfwen-jian.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h2>
-                <div class="summary"><p>这里介绍如何用qemu和gdb联合调试：</p>
-<p>1）在JOS目录下执行make qemu-gdb（或者make qemu-nox-gdb），此时qemu会执行并且等待gdb的连接；
-2）然后在打开一个新的terminal，在同一个目录下输入：gdb即可（原理就是在这个目录下有个.gdbinit文件，gdb会读取这个文件）；
-没有出现错误的话，会出现下面的内容：</p>
-<p>The target architecture is assumed to be i8086
-[f000:fff0]    0xffff0: ljmp   $0xf000,$0xe05b
-0x0000fff0 in ?? ()
-+ symbol-file obj/kern/kernel
-如果出现错误：warning: File "/home/yj/yangjin/xv6/jos/.gdbinit" auto-loading has been declined by ...</p>
-                    <a class="btn btn-default btn-xs" href="/qemuhe-gdbdiao-shi.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/stabshi-yi.html">stab释疑</a></h2>
-                <div class="summary"><p>Reference: https://sourceware.org/gdb/onlinedocs/stabs.html</p>
-<h4>1. stabs简介</h4>
-<p>stabs代表一种信息格式，用来将程序的信息展示给调试器debugger。</p>
-<h4>1.2. Debugging information flow</h4>
-<p>一般编译流程：gcc把.c编译成.s，汇编器把.s转化成.o，链接器把.o和库文件组合生成可执行文件；
-当-g选项打开时，gcc会往.s文件中加入额外的调试信息，然后这些调试信息被加入到.o和可执行文件中。
-这个调试信息包括c源文件的一些信息，如文件名，行号，变量的类型和范围（type, scope），函数名字，
-参数和范围(function names, parameters,scopes)。在最后生成的可执行文件中，会生成一个symbol table
-和string table，debugger就是利用这两个表来获取程序的信息的。</p>
-<p>注意 ...</p>
-                    <a class="btn btn-default btn-xs" href="/stabshi-yi.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
             <article>
                 <h2><a href="/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h2>
                 <div class="summary"><h4>1、三种特殊的中断事件</h4>
@@ -278,6 +159,15 @@ Stack backtrace:
             </article>
             <hr/>
 
+        <ul class="pagination">
+                <li class="prev"><a href="/author/jin.html">&laquo;</a>
+                </li>
+                    <li class=""><a
+                            href="/author/jin.html">1</a></li>
+                    <li class="active"><a
+                            href="/author/jin2.html">2</a></li>
+                <li class="next disabled"><a href="#">&raquo;</a></li>
+        </ul>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
@@ -318,7 +208,7 @@ Stack backtrace:
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2013 Jin
+         <div class="col-xs-10">&copy; 2015 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
