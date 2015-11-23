@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>lab2-exercise2：页表 - Living@Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/lab2-exercise2ye-biao.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="os,page table,page directory,address translation" />
+        <meta name="description" content="lab2的exercise1主要完成物理页的管理，建立一个简单的内存管理机制，后面的练习需要用到内存分配都是这里完成的，小结一下exercise1的要点： 完成物理内存的管理机制：主要是建立pages[]与物理页的一一映射（包括设置可用和不可用的物理页，pages数组的index就是物理内存地址pa的高22位）； exercise2主要内容是完成y页目录和页表的建立，从而建立起虚拟地址空间与物理地址空间的映射，主要是实现以下几个函数： pgdir_walk() boot_map_region() page_lookup() page_remove() page_insert() 1. pgdir_walk 给定一个页目录，该函数返回一个虚拟地址对应的在页目录中的页表项page table entry（PTE）的地址。 当该虚拟地址对应的页表不存在时，会创建一个页表。后面几个函数的实现都会依赖该函数. pte_t * pgdir_walk(pde_t *pgdir, const void *va, int create) { // Fill this function in pde_t pde; pte_t *pte; struct PageInfo *page; pde = pgdir ..." />
+
+        <meta property="og:site_name" content="Living@Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="lab2-exercise2：页表"/>
+        <meta property="og:url" content="/lab2-exercise2ye-biao.html"/>
+        <meta property="og:description" content="lab2的exercise1主要完成物理页的管理，建立一个简单的内存管理机制，后面的练习需要用到内存分配都是这里完成的，小结一下exercise1的要点： 完成物理内存的管理机制：主要是建立pages[]与物理页的一一映射（包括设置可用和不可用的物理页，pages数组的index就是物理内存地址pa的高22位）； exercise2主要内容是完成y页目录和页表的建立，从而建立起虚拟地址空间与物理地址空间的映射，主要是实现以下几个函数： pgdir_walk() boot_map_region() page_lookup() page_remove() page_insert() 1. pgdir_walk 给定一个页目录，该函数返回一个虚拟地址对应的在页目录中的页表项page table entry（PTE）的地址。 当该虚拟地址对应的页表不存在时，会创建一个页表。后面几个函数的实现都会依赖该函数. pte_t * pgdir_walk(pde_t *pgdir, const void *va, int create) { // Fill this function in pde_t pde; pte_t *pte; struct PageInfo *page; pde = pgdir ..."/>
+        <meta property="article:published_time" content="2013-02-01" />
+            <meta property="article:section" content="os" />
+            <meta property="article:tag" content="os" />
+            <meta property="article:tag" content="page table" />
+            <meta property="article:tag" content="page directory" />
+            <meta property="article:tag" content="address translation" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Living@Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="/category/linux.html">Linux</a>
+                        </li>
+                        <li class="active">
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="/category/python.html">Python</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/lab2-exercise2ye-biao.html"
+                       rel="bookmark"
+                       title="Permalink to lab2-exercise2：页表">
+                        lab2-exercise2：页表
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2013-02-01T00:00:00+08:00"> Fri 01 February 2013</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/os.html">os</a>
+        /
+	<a href="/tag/page-table.html">page table</a>
+        /
+	<a href="/tag/page-directory.html">page directory</a>
+        /
+	<a href="/tag/address-translation.html">address translation</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>lab2的exercise1主要完成物理页的管理，建立一个简单的内存管理机制，后面的练习需要用到内存分配都是这里完成的，小结一下exercise1的要点：
+完成物理内存的管理机制：主要是建立pages[]与物理页的一一映射（包括设置可用和不可用的物理页，pages数组的index就是物理内存地址pa的高22位）；
+exercise2主要内容是完成y页目录和页表的建立，从而建立起虚拟地址空间与物理地址空间的映射，主要是实现以下几个函数：</p>
+<ul>
+<li>pgdir_walk()</li>
+<li>boot_map_region()</li>
+<li>page_lookup()</li>
+<li>page_remove()</li>
+<li>page_insert()</li>
+</ul>
+<h4>1. pgdir_walk</h4>
+<p>给定一个页目录，该函数返回一个虚拟地址对应的在页目录中的页表项page table entry（PTE）的地址。
+当该虚拟地址对应的页表不存在时，会创建一个页表。后面几个函数的实现都会依赖该函数.</p>
+<div class="highlight"><pre><span class="kt">pte_t</span> <span class="o">*</span>
+<span class="nf">pgdir_walk</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">va</span><span class="p">,</span> <span class="kt">int</span> <span class="n">create</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="kt">pde_t</span> <span class="n">pde</span><span class="p">;</span>
+    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span><span class="p">;</span>
+
+    <span class="n">pde</span>  <span class="o">=</span> <span class="n">pgdir</span><span class="p">[</span><span class="n">PDX</span><span class="p">(</span><span class="n">va</span><span class="p">)];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pde</span> <span class="o">&amp;</span> <span class="n">PTE_P</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">pte</span> <span class="o">=</span> <span class="n">KADDR</span><span class="p">(</span><span class="n">PTE_ADDR</span><span class="p">(</span><span class="n">pde</span><span class="p">));</span>
+        <span class="k">return</span> <span class="o">&amp;</span><span class="n">pte</span><span class="p">[</span><span class="n">PTX</span><span class="p">(</span><span class="n">va</span><span class="p">)];</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">create</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="cm">/* crete a new page table with a new page  */</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="n">page_alloc</span><span class="p">(</span><span class="n">ALLOC_ZERO</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">page</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">pde</span> <span class="o">=</span> <span class="n">page2pa</span><span class="p">(</span><span class="n">page</span><span class="p">);</span>
+    <span class="n">pgdir</span><span class="p">[</span><span class="n">PDX</span><span class="p">(</span><span class="n">va</span><span class="p">)]</span> <span class="o">=</span> <span class="n">pde</span><span class="o">|</span> <span class="n">PTE_P</span> <span class="o">|</span> <span class="n">PTE_W</span> <span class="o">|</span> <span class="n">PTE_U</span><span class="p">;</span><span class="c1">//将新分配的页表加入到页目录中</span>
+    <span class="n">page</span><span class="o">-&gt;</span><span class="n">pp_ref</span><span class="o">++</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="p">((</span><span class="kt">pte_t</span><span class="o">*</span><span class="p">)</span> <span class="n">page2kva</span><span class="p">(</span><span class="n">page</span><span class="p">))[</span><span class="n">PTX</span><span class="p">(</span><span class="n">va</span><span class="p">)];</span><span class="c1">//返回该页表中的va对应的页表项的地址</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4>2. page_lookup</h4>
+<p>查找映射在虚拟地址va对应的物理page，方法就是先利用pgdir_walk找到该va对应的页表项，如果页表
+存在则表示有相应的物理页，并返回该物理页对应的pages[]，否则，表示还该虚拟地址还没有被映射。</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span>
+<span class="nf">page_lookup</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">va</span><span class="p">,</span> <span class="kt">pte_t</span> <span class="o">**</span><span class="n">pte_store</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span> <span class="o">=</span> <span class="n">pgdir_walk</span><span class="p">(</span><span class="n">pgdir</span><span class="p">,</span> <span class="n">va</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span><span class="c1">//0表示当va不存在时，不会创建新页表，只用于查询</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">pte</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">pte</span> <span class="o">&amp;</span> <span class="n">PTE_P</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">pte_store</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">pte_store</span> <span class="o">=</span> <span class="n">pte</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">pa2page</span><span class="p">(</span><span class="n">PTE_ADDR</span><span class="p">(</span><span class="o">*</span><span class="n">pte</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4>3. page_remove</h4>
+<p>移除虚拟地址va对应的物理页的映射，使用上面的page_lookup先找到对应的物理页pages[]，
+然后减少该物理页pages[]的引用计数，如果为0，则会加入空闲物理页表，</p>
+<div class="highlight"><pre><span class="kt">void</span>
+<span class="nf">page_remove</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">va</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">pg</span> <span class="o">=</span> <span class="n">page_lookup</span><span class="p">(</span><span class="n">pgdir</span><span class="p">,</span> <span class="n">va</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pte</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">pg</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="n">page_decref</span><span class="p">(</span><span class="n">pg</span><span class="p">);</span>
+    <span class="o">*</span><span class="n">pte</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">tlb_invalidate</span><span class="p">(</span><span class="n">pgdir</span><span class="p">,</span> <span class="n">va</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4>4. page_insert</h4>
+<p>将物理页pages[]映射到虚拟地址va。先使用pgdir_walk（查看返回的PTE）查找该va是否
+已经有物理页映射，则先使用page_remove移除该映射，然后再建立新的映射；如果没有
+映射（PTE=NULL），则再次调用pgdir_walk建立映射。</p>
+<div class="highlight"><pre><span class="kt">int</span>
+<span class="nf">page_insert</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">pp</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">va</span><span class="p">,</span> <span class="kt">int</span> <span class="n">perm</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span> <span class="o">=</span> <span class="n">pgdir_walk</span><span class="p">(</span><span class="n">pgdir</span><span class="p">,</span> <span class="n">va</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="kt">physaddr_t</span> <span class="n">ppa</span> <span class="o">=</span> <span class="n">page2pa</span><span class="p">(</span><span class="n">pp</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">pte</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">pte</span> <span class="o">&amp;</span> <span class="n">PTE_P</span><span class="p">)</span> 
+           <span class="n">page_remove</span><span class="p">(</span><span class="n">pgdir</span><span class="p">,</span> <span class="n">va</span><span class="p">);</span>
+       <span class="k">if</span> <span class="p">(</span><span class="n">pp</span> <span class="o">==</span> <span class="n">page_free_list</span><span class="p">)</span> 
+           <span class="n">page_free_list</span> <span class="o">=</span> <span class="n">page_free_list</span><span class="o">-&gt;</span><span class="n">pp_link</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="n">pte</span> <span class="o">=</span> <span class="n">pgdir_walk</span><span class="p">(</span><span class="n">pgdir</span><span class="p">,</span> <span class="n">va</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pte</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> 
+            <span class="k">return</span> <span class="o">-</span><span class="n">E_NO_MEM</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="o">*</span><span class="n">pte</span> <span class="o">=</span> <span class="n">ppa</span> <span class="o">|</span> <span class="n">PTE_P</span> <span class="o">|</span> <span class="n">perm</span><span class="p">;</span>
+    <span class="n">pp</span><span class="o">-&gt;</span><span class="n">pp_ref</span><span class="o">++</span><span class="p">;</span>
+    <span class="n">tlb_invalidate</span><span class="p">(</span><span class="n">pgdir</span><span class="p">,</span> <span class="n">va</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4>5. boot_map_region</h4>
+<p>将虚拟地址空间[va,  va+size)映射到物理地址空间[pa,  pa+size)，va，pa，size都是页对齐的（4KB整数倍），
+方法就是对每一页进行映射，这里遇到一个很蛋疼的bug就是无符号整形的溢出问题。</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span>
+<span class="nf">boot_map_region</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="kt">uintptr_t</span> <span class="n">va</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="kt">physaddr_t</span> <span class="n">pa</span><span class="p">,</span> <span class="kt">int</span> <span class="n">perm</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">va</span><span class="o">%</span><span class="n">PGSIZE</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">pa</span><span class="o">%</span><span class="n">PGSIZE</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">size</span><span class="o">%</span><span class="n">PGSIZE</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(;</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">size</span> <span class="o">-=</span> <span class="n">PGSIZE</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">pte</span> <span class="o">=</span> <span class="n">pgdir_walk</span><span class="p">(</span><span class="n">pgdir</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">va</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pte</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">panic</span><span class="p">(</span><span class="s">&quot;failed to create</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">pte</span> <span class="o">&amp;</span> <span class="n">PTE_P</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cprintf</span><span class="p">(</span><span class="s">&quot;va=%x, size=%d, pa=%x</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">va</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">pa</span><span class="p">);</span>
+            <span class="n">panic</span><span class="p">(</span><span class="s">&quot;remapping</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="o">*</span><span class="n">pte</span> <span class="o">=</span> <span class="n">pa</span> <span class="o">|</span> <span class="n">PTE_P</span> <span class="o">|</span> <span class="n">perm</span><span class="p">;</span>
+        <span class="n">va</span> <span class="o">+=</span> <span class="n">PGSIZE</span><span class="p">;</span>
+        <span class="n">pa</span> <span class="o">+=</span> <span class="n">PGSIZE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+
+
+<p>练习最后一部分的工作是利用boot_map_region完成虚拟地址空间（UTOP以上的虚拟地址空间）
+和物理地址空间的映射，并且此后kernel的运行将使用新的页目录kern_pgdir，在mem_init中：
+1) 将pages[]数组以只读方式映射到用户空间（用户虚拟地址空间），
+注意此时pages这块物理内存有两份映射，一份是内核虚拟地址空间
+pages[]的首地址，还有一份就是这个地址UPAGES：</p>
+<div class="highlight"><pre> boot_map_region(kern_pgdir, UPAGES, ROUNDUP(npages*sizeof(struct PageInfo), PGSIZE), 
+            PADDR(pages), PTE_U);
+</pre></div>
+
+
+<p>UPAGES：是用户的虚拟地址空间，PADDR(pages)是pages对应的物理地址；</p>
+<p>2) 将bootstack对应的物理内存作为内核的栈，也就是要将bootstack的物理内存映射到
+内核的stack虚拟地址空间[KSTACKTOP-KSTKSIZE, KSTACKTOP]：</p>
+<div class="highlight"><pre>boot_map_region(kern_pgdir, KSTACKTOP-KSTKSIZE, KSTKSIZE, 
+        PADDR(bootstack), PTE_W);
+</pre></div>
+
+
+<p>3) 将所有的物理内存[0,  2^32 - KERNBASE]映射到虚拟地址空间[KERNBASE,  2^32]
+（这个是将所有物理内存映射到内核虚拟地址空间，与最开始的映射是一致的）：</p>
+<div class="highlight"><pre>boot_map_region(kern_pgdir, KERNBASE, ~KERNBASE+1, 0x0, PTE_W);
+</pre></div>
+
+
+<p>现在新建立的虚拟地址与物理地址的映射如下：
+注意的几点：</p>
+<p>1）ULIM以上是内核的虚拟地址空间，一下是用户虚拟地址空间，这里用boot_map_region
+映射时都设置了权限，确保以后的用户进程不会读写内核虚拟地址空间；</p>
+<p>2）[UTOP,  ULIM]之间的地址空间是是内核和用户都能读的，但不能写，
+这段空间是用于将内核的一些数据结构expose 给用户进程使用，如pages数组。如何实现这一点呢？
+就是将内核的那些需要暴露给用户的数据的物理内存地址映射到该区域即可，同时设置用户读权限；</p>
+<p>3） ULIM以下是用户虚拟地址空间，要注意的是pages数组所在的物理内存既映射到了内核的
+地址空间，同时又映射到了用户地址空间，只不过用户只有只读权限；</p>
+<div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Virtual memory map:                                Permissions</span>
+<span class="cm"> *                                                    kernel/user</span>
+<span class="cm"> *</span>
+<span class="cm"> *    4 Gig --------&gt;  +------------------------------+</span>
+<span class="cm"> *                     |                              | RW/--</span>
+<span class="cm"> *                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="cm"> *                     :              .               :</span>
+<span class="cm"> *                     :              .               :</span>
+<span class="cm"> *                     :              .               :</span>
+<span class="cm"> *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~| RW/--</span>
+<span class="cm"> *                     |                              | RW/--</span>
+<span class="cm"> *                     |   Remapped Physical Memory   | RW/--</span>
+<span class="cm"> *                     |                              | RW/--</span>
+<span class="cm"> *    KERNBASE, ----&gt;  +------------------------------+ 0xf0000000      --+</span>
+<span class="cm"> *    KSTACKTOP        |     CPU0&#39;s Kernel Stack      | RW/--  KSTKSIZE   |</span>
+<span class="cm"> *                     | - - - - - - - - - - - - - - -|                   |</span>
+<span class="cm"> *                     |      Invalid Memory (*)      | --/--  KSTKGAP    |</span>
+<span class="cm"> *                     +------------------------------+                   |</span>
+<span class="cm"> *                     |     CPU1&#39;s Kernel Stack      | RW/--  KSTKSIZE   |</span>
+<span class="cm"> *                     | - - - - - - - - - - - - - - -|                 PTSIZE</span>
+<span class="cm"> *                     |      Invalid Memory (*)      | --/--  KSTKGAP    |</span>
+<span class="cm"> *                     +------------------------------+                   |</span>
+<span class="cm"> *                     :              .               :                   |</span>
+<span class="cm"> *                     :              .               :                   |</span>
+<span class="cm"> *    MMIOLIM ------&gt;  +------------------------------+ 0xefc00000      --+</span>
+<span class="cm"> *                     |       Memory-mapped I/O      | RW/--  PTSIZE</span>
+<span class="cm"> * ULIM, MMIOBASE --&gt;  +------------------------------+ 0xef800000</span>
+<span class="cm"> *                     |  Cur. Page Table (User R-)   | R-/R-  PTSIZE</span>
+<span class="cm"> *    UVPT      ----&gt;  +------------------------------+ 0xef400000</span>
+<span class="cm"> *                     |          RO PAGES            | R-/R-  PTSIZE</span>
+<span class="cm"> *    UPAGES    ----&gt;  +------------------------------+ 0xef000000</span>
+<span class="cm"> *                     |           RO ENVS            | R-/R-  PTSIZE</span>
+<span class="cm"> * UTOP,UENVS ------&gt;  +------------------------------+ 0xeec00000</span>
+<span class="cm"> * UXSTACKTOP -/       |     User Exception Stack     | RW/RW  PGSIZE</span>
+<span class="cm"> *                     +------------------------------+ 0xeebff000</span>
+<span class="cm"> *                     |       Empty Memory (*)       | --/--  PGSIZE</span>
+<span class="cm"> *    USTACKTOP  ---&gt;  +------------------------------+ 0xeebfe000</span>
+<span class="cm"> *                     |      Normal User Stack       | RW/RW  PGSIZE</span>
+<span class="cm"> *                     +------------------------------+ 0xeebfd000</span>
+<span class="cm"> *                     |                              |</span>
+<span class="cm"> *                     |                              |</span>
+<span class="cm"> *                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="cm"> *                     .                              .</span>
+<span class="cm"> *                     .                              .</span>
+<span class="cm"> *                     .                              .</span>
+<span class="cm"> *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|</span>
+<span class="cm"> *                     |     Program Data &amp; Heap      |</span>
+<span class="cm"> *    UTEXT --------&gt;  +------------------------------+ 0x00800000</span>
+<span class="cm"> *    PFTEMP -------&gt;  |       Empty Memory (*)       |        PTSIZE</span>
+<span class="cm"> *                     |                              |</span>
+<span class="cm"> *    UTEMP --------&gt;  +------------------------------+ 0x00400000      --+</span>
+<span class="cm"> *                     |       Empty Memory (*)       |                   |</span>
+<span class="cm"> *                     | - - - - - - - - - - - - - - -|                   |</span>
+<span class="cm"> *                     |  User STAB Data (optional)   |                 PTSIZE</span>
+<span class="cm"> *    USTABDATA ----&gt;  +------------------------------+ 0x00200000        |</span>
+<span class="cm"> *                     |       Empty Memory (*)       |                   |</span>
+<span class="cm"> *    0 ------------&gt;  +------------------------------+                 --+</span>
+<span class="cm"> */</span><span class="w"></span>
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

@@ -74,6 +74,37 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h2>
+                <div class="summary"><p>这里介绍如何用qemu和gdb联合调试：</p>
+<p>1）在JOS目录下执行make qemu-gdb（或者make qemu-nox-gdb），此时qemu会执行并且等待gdb的连接；
+2）然后在打开一个新的terminal，在同一个目录下输入：gdb即可（原理就是在这个目录下有个.gdbinit文件，gdb会读取这个文件）；
+没有出现错误的话，会出现下面的内容：</p>
+<p>The target architecture is assumed to be i8086
+[f000:fff0]    0xffff0: ljmp   $0xf000,$0xe05b
+0x0000fff0 in ?? ()
++ symbol-file obj/kern/kernel
+如果出现错误：warning: File "/home/yj/yangjin/xv6/jos/.gdbinit" auto-loading has been declined by ...</p>
+                    <a class="btn btn-default btn-xs" href="/qemuhe-gdbdiao-shi.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/stabshi-yi.html">stab释疑</a></h2>
+                <div class="summary"><p>Reference: https://sourceware.org/gdb/onlinedocs/stabs.html</p>
+<h4>1. stabs简介</h4>
+<p>stabs代表一种信息格式，用来将程序的信息展示给调试器debugger。</p>
+<h4>1.2. Debugging information flow</h4>
+<p>一般编译流程：gcc把.c编译成.s，汇编器把.s转化成.o，链接器把.o和库文件组合生成可执行文件；
+当-g选项打开时，gcc会往.s文件中加入额外的调试信息，然后这些调试信息被加入到.o和可执行文件中。
+这个调试信息包括c源文件的一些信息，如文件名，行号，变量的类型和范围（type, scope），函数名字，
+参数和范围(function names, parameters,scopes)。在最后生成的可执行文件中，会生成一个symbol table
+和string table，debugger就是利用这两个表来获取程序的信息的。</p>
+<p>注意 ...</p>
+                    <a class="btn btn-default btn-xs" href="/stabshi-yi.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h2>
                 <div class="summary"><h4>1、三种特殊的中断事件</h4>
 <p>异步中断(asynchronous   interrupt)也称外部中断,简称中断 (interrupt)：由CPU外部设备引起的外部事件如I/O中断、

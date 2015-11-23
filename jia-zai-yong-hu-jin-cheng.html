@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>加载用户进程 - Living@Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/jia-zai-yong-hu-jin-cheng.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="os,bootloader,gdb,stab" />
+        <meta name="description" content="该练习主要完成内核加载用户进程，包括用户进程环境的初始化，创建用户进程，加载用户进程等。 主要完成以下几个函数的实现： * env_init()：初始化用户进程，配置每个段的优先级特权级； env_setup_vm()：给每个进程分配一个页目录，并初始化用户地址空间的内核部分； region_alloc()：给用户进程分配物理内存并将物理地址映射到进程的虚拟地址空间； load_icode()：解析用户进程elf文件，并加载到用户地址空间； env_create()：调用env_alloc和load_icode； env_run()：在用户模式下执行进程； 由于此时还没有文件系统，此时是将用户的进程elf文件嵌入到内核的image中，最后生成的 kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序的elf文件，最后由内核加载 并执行。 每个用户进程都有一个相应的结构体： struct Env { struct Trapframe env_tf; // Saved registers struct Env *env_link; // Next free Env envid_t env_id; // Unique environment identifier envid_t env_parent_id; // env_id ..." />
+
+        <meta property="og:site_name" content="Living@Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="加载用户进程"/>
+        <meta property="og:url" content="/jia-zai-yong-hu-jin-cheng.html"/>
+        <meta property="og:description" content="该练习主要完成内核加载用户进程，包括用户进程环境的初始化，创建用户进程，加载用户进程等。 主要完成以下几个函数的实现： * env_init()：初始化用户进程，配置每个段的优先级特权级； env_setup_vm()：给每个进程分配一个页目录，并初始化用户地址空间的内核部分； region_alloc()：给用户进程分配物理内存并将物理地址映射到进程的虚拟地址空间； load_icode()：解析用户进程elf文件，并加载到用户地址空间； env_create()：调用env_alloc和load_icode； env_run()：在用户模式下执行进程； 由于此时还没有文件系统，此时是将用户的进程elf文件嵌入到内核的image中，最后生成的 kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序的elf文件，最后由内核加载 并执行。 每个用户进程都有一个相应的结构体： struct Env { struct Trapframe env_tf; // Saved registers struct Env *env_link; // Next free Env envid_t env_id; // Unique environment identifier envid_t env_parent_id; // env_id ..."/>
+        <meta property="article:published_time" content="2013-02-01" />
+            <meta property="article:section" content="os" />
+            <meta property="article:tag" content="os" />
+            <meta property="article:tag" content="bootloader" />
+            <meta property="article:tag" content="gdb" />
+            <meta property="article:tag" content="stab" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Living@Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="/category/linux.html">Linux</a>
+                        </li>
+                        <li class="active">
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="/category/python.html">Python</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/jia-zai-yong-hu-jin-cheng.html"
+                       rel="bookmark"
+                       title="Permalink to 加载用户进程">
+                        加载用户进程
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2013-02-01T00:00:00+08:00"> Fri 01 February 2013</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/os.html">os</a>
+        /
+	<a href="/tag/bootloader.html">bootloader</a>
+        /
+	<a href="/tag/gdb.html">gdb</a>
+        /
+	<a href="/tag/stab.html">stab</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>该练习主要完成内核加载用户进程，包括用户进程环境的初始化，创建用户进程，加载用户进程等。
+主要完成以下几个函数的实现：
+* env_init()：初始化用户进程，配置每个段的优先级特权级；</p>
+<ul>
+<li>
+<p>env_setup_vm()：给每个进程分配一个页目录，并初始化用户地址空间的内核部分；</p>
+</li>
+<li>
+<p>region_alloc()：给用户进程分配物理内存并将物理地址映射到进程的虚拟地址空间；</p>
+</li>
+<li>
+<p>load_icode()：解析用户进程elf文件，并加载到用户地址空间；</p>
+</li>
+<li>
+<p>env_create()：调用env_alloc和load_icode；</p>
+</li>
+<li>
+<p>env_run()：在用户模式下执行进程；</p>
+</li>
+</ul>
+<p>由于此时还没有文件系统，此时是将用户的进程elf文件嵌入到内核的image中，最后生成的
+kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序的elf文件，最后由内核加载
+并执行。</p>
+<p>每个用户进程都有一个相应的结构体：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Env</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">Trapframe</span> <span class="n">env_tf</span><span class="p">;</span>    <span class="c1">// Saved registers</span>
+    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env_link</span><span class="p">;</span>       <span class="c1">// Next free Env</span>
+    <span class="kt">envid_t</span> <span class="n">env_id</span><span class="p">;</span>         <span class="c1">// Unique environment identifier</span>
+    <span class="kt">envid_t</span> <span class="n">env_parent_id</span><span class="p">;</span>      <span class="c1">// env_id of this env&#39;s parent</span>
+    <span class="k">enum</span> <span class="n">EnvType</span> <span class="n">env_type</span><span class="p">;</span>      <span class="c1">// Indicates special system environments</span>
+    <span class="kt">unsigned</span> <span class="n">env_status</span><span class="p">;</span>        <span class="c1">// Status of the environment</span>
+    <span class="kt">uint32_t</span> <span class="n">env_runs</span><span class="p">;</span>      <span class="c1">// Number of times environment has run</span>
+
+    <span class="c1">// Address space</span>
+    <span class="kt">pde_t</span> <span class="o">*</span><span class="n">env_pgdir</span><span class="p">;</span>       <span class="c1">// Kernel virtual address of page dir</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>该练习的难点在于load_icode的实现（其它的实现就不解释了），该函数先解析用户的elf文件，解析时需要熟悉
+elf文件的结构（前面文章已分析）。将每个段（.text, .data）解析后，同时需要拷贝用户进程的地址
+空间。由于这个拷贝过程用到的虚拟地址是属于用户进程空间，所以这里要切换到用户进程的页目录，
+待解析完后，再切换回内核的页目录。</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span>
+<span class="nf">load_icode</span><span class="p">(</span><span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">binary</span><span class="p">)</span>
+<span class="p">{</span>
+
+    <span class="c1">// LAB 3: Your code here.</span>
+    <span class="k">struct</span> <span class="n">Elf</span> <span class="o">*</span><span class="n">elfh</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">Elf</span> <span class="o">*</span><span class="p">)</span> <span class="n">binary</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">elfh</span><span class="o">-&gt;</span><span class="n">e_magic</span> <span class="o">!=</span> <span class="n">ELF_MAGIC</span><span class="p">)</span>
+        <span class="k">goto</span> <span class="n">bad</span><span class="p">;</span>
+
+    <span class="k">struct</span> <span class="n">Proghdr</span> <span class="o">*</span><span class="n">ph</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">Proghdr</span> <span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="n">binary</span> <span class="o">+</span> <span class="n">elfh</span><span class="o">-&gt;</span><span class="n">e_phoff</span><span class="p">);</span>
+    <span class="k">struct</span> <span class="n">Proghdr</span> <span class="o">*</span><span class="n">eph</span> <span class="o">=</span> <span class="n">ph</span> <span class="o">+</span> <span class="n">elfh</span><span class="o">-&gt;</span><span class="n">e_phnum</span><span class="p">;</span>
+
+    <span class="n">lcr3</span><span class="p">(</span><span class="n">PADDR</span><span class="p">(</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">env_pgdir</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(;</span> <span class="n">ph</span> <span class="o">&lt;</span> <span class="n">eph</span><span class="p">;</span> <span class="n">ph</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ph</span><span class="o">-&gt;</span><span class="n">p_type</span> <span class="o">!=</span> <span class="n">ELF_PROG_LOAD</span><span class="p">)</span> 
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="n">region_alloc</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">ph</span><span class="o">-&gt;</span><span class="n">p_va</span><span class="p">,</span> <span class="n">ph</span><span class="o">-&gt;</span><span class="n">p_memsz</span><span class="p">);</span>
+        <span class="n">memset</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">ph</span><span class="o">-&gt;</span><span class="n">p_va</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ph</span><span class="o">-&gt;</span><span class="n">p_memsz</span><span class="p">);</span>
+        <span class="n">memcpy</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">ph</span><span class="o">-&gt;</span><span class="n">p_va</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)(</span><span class="n">binary</span> <span class="o">+</span> <span class="n">ph</span><span class="o">-&gt;</span><span class="n">p_offset</span><span class="p">),</span> <span class="n">ph</span><span class="o">-&gt;</span><span class="n">p_filesz</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">lcr3</span><span class="p">(</span><span class="n">PADDR</span><span class="p">(</span><span class="n">kern_pgdir</span><span class="p">));</span>
+    <span class="n">e</span><span class="o">-&gt;</span><span class="n">env_tf</span><span class="p">.</span><span class="n">tf_eip</span> <span class="o">=</span> <span class="n">elfh</span><span class="o">-&gt;</span><span class="n">e_entry</span><span class="p">;</span> <span class="c1">//set eip to elf-&gt;entry</span>
+
+    <span class="c1">// Now map one page for the program&#39;s initial stack</span>
+    <span class="c1">// at virtual address USTACKTOP - PGSIZE.</span>
+
+    <span class="c1">// LAB 3: Your code here.</span>
+    <span class="n">region_alloc</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)(</span><span class="n">USTACKTOP</span> <span class="o">-</span> <span class="n">PGSIZE</span><span class="p">),</span> <span class="n">PGSIZE</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+<span class="nl">bad</span><span class="p">:</span>
+    <span class="n">panic</span><span class="p">(</span><span class="s">&quot;load_icode: bad elf image</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

@@ -75,6 +75,41 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a></h2>
+                <div class="summary"><p>该练习主要完成内核加载用户进程，包括用户进程环境的初始化，创建用户进程，加载用户进程等。
+主要完成以下几个函数的实现：
+* env_init()：初始化用户进程，配置每个段的优先级特权级；</p>
+<ul>
+<li>
+<p>env_setup_vm()：给每个进程分配一个页目录，并初始化用户地址空间的内核部分；</p>
+</li>
+<li>
+<p>region_alloc()：给用户进程分配物理内存并将物理地址映射到进程的虚拟地址空间；</p>
+</li>
+<li>
+<p>load_icode()：解析用户进程elf文件，并加载到用户地址空间；</p>
+</li>
+<li>
+<p>env_create()：调用env_alloc和load_icode；</p>
+</li>
+<li>
+<p>env_run()：在用户模式下执行进程；</p>
+</li>
+</ul>
+<p>由于此时还没有文件系统，此时是将用户的进程elf文件嵌入到内核的image中，最后生成的
+kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序的elf文件，最后由内核加载
+并执行。</p>
+<p>每个用户进程都有一个相应的结构体：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Env</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">Trapframe</span> <span class="n">env_tf</span><span class="p">;</span>    <span class="c1">// Saved registers</span>
+    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env_link</span><span class="p">;</span>       <span class="c1">// Next free Env</span>
+    <span class="kt">envid_t</span> <span class="n">env_id</span><span class="p">;</span>         <span class="c1">// Unique environment identifier</span>
+    <span class="kt">envid_t</span> <span class="n">env_parent_id</span><span class="p">;</span>      <span class="c1">// env_id ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/lab3jia-zai-yong-hu-jin-cheng.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="/stabshi-yi.html">stab释疑</a></h2>
                 <div class="summary"><p>Reference: https://sourceware.org/gdb/onlinedocs/stabs.html</p>
 <h4>1. stabs简介</h4>

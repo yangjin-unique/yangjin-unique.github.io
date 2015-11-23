@@ -276,7 +276,7 @@ member contains 0 if the section does not hold a table of fixed-size entries.</p
 <h4>3. Program Header结构</h4>
 <p>program header描述与程序执行直接相关的目标文件结构信息，用来在文件中定位各个段的映像，同时包含其他一些用来为
 程序创建进程映像所必需的信息。可执行文件的程序头部是一个program header结构的数组，    每个结构描述了一个段或者系统准备程序执行i
-所必需的其它信息。目标文件的  “段” 包含一个或者多个    “节区”（section）   ，也就是“段内容（Segment Contents）”。
+所必需的其它信息。目标文件的“段”包含一个或者多个section，也就是“段内容（Segment Contents）”。
 程序头部仅对于可执行文件和共享目标文件有意义。可执行目标文件在ELF头部的e_phentsize和e_phnum成员中给出其自身程序头部的大小。
 程序头部的数据结构如下表所示：</p>
 <div class="highlight"><pre><span class="k">struct</span>  <span class="n">proghdr</span> <span class="p">{</span>
@@ -292,7 +292,21 @@ member contains 0 if the section does not hold a table of fixed-size entries.</p
 </pre></div>
 
 
-<p>根据elfhdr和proghdr的结构描述，bootloader就可以完成对ELF格式的ucore操作系统的加载过程（参见boot/bootmain.c中的bootmain函数）。</p>
+<p>va是进程需要加载到的虚拟地址，对于可执行文件，这个va就是系统加载的虚拟地址；二对于共享目标文件，由于这些段包含的是与位置无关的
+代码，这个va是相对地址。
+下面的图是官方文档给出的可执行文件和共享目标文件加载的两个例子：
+1）可执行文件
+下图是一个elf文件的典型结构：
+<img alt="img4" src="../images/4.png" />
+下面是给出了text和data段的program header的成员值：
+<img alt="img5" src="../images/5.png" />
+下面这个图就是进程加载后的映像：
+<img alt="img6" src="../images/6.png" /></p>
+<p>2）共享目标文件
+下图给出了4个进程同时加载这个共享目标文件到各自的地址空间，可以看出，加载的地址并不意义，但是相对地址保持不变：
+<img alt="img7" src="../images/7.png" /></p>
+<h4>4. OS如何加载elf文件</h4>
+<p>OS创建进程映像（也就是加载elf可执行文件）需要将文件的各个段（program header）拷贝到相应的进程虚拟地址空间，此时并不需</p>
 <h3>[补充材料]</h3>
 <p>Link    addr&amp;Load   addr</p>
 <ul>

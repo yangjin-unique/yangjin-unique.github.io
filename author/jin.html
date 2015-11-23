@@ -152,6 +152,69 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
             </article>
             <hr/>
             <article>
+                <h2><a href="/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a></h2>
+                <div class="summary"><p>lab2的exercise1主要完成物理页的管理，建立一个简单的内存管理机制，后面的练习需要用到内存分配都是这里完成的，小结一下exercise1的要点：
+完成物理内存的管理机制：主要是建立pages[]与物理页的一一映射（包括设置可用和不可用的物理页，pages数组的index就是物理内存地址pa的高22位）；
+exercise2主要内容是完成y页目录和页表的建立，从而建立起虚拟地址空间与物理地址空间的映射，主要是实现以下几个函数：</p>
+<ul>
+<li>pgdir_walk()</li>
+<li>boot_map_region()</li>
+<li>page_lookup()</li>
+<li>page_remove()</li>
+<li>page_insert()</li>
+</ul>
+<h4>1. pgdir_walk</h4>
+<p>给定一个页目录，该函数返回一个虚拟地址对应的在页目录中的页表项page table entry（PTE）的地址。
+当该虚拟地址对应的页表不存在时，会创建一个页表。后面几个函数的实现都会依赖该函数.</p>
+<div class="highlight"><pre><span class="kt">pte_t</span> <span class="o">*</span>
+<span class="nf">pgdir_walk</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">va</span><span class="p">,</span> <span class="kt">int</span> <span class="n">create</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="kt">pde_t</span> <span class="n">pde</span><span class="p">;</span>
+    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span><span class="p">;</span>
+
+    <span class="n">pde</span>  <span class="o">=</span> <span class="n">pgdir ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/lab2-exercise2ye-biao.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a></h2>
+                <div class="summary"><p>该练习主要完成内核加载用户进程，包括用户进程环境的初始化，创建用户进程，加载用户进程等。
+主要完成以下几个函数的实现：
+* env_init()：初始化用户进程，配置每个段的优先级特权级；</p>
+<ul>
+<li>
+<p>env_setup_vm()：给每个进程分配一个页目录，并初始化用户地址空间的内核部分；</p>
+</li>
+<li>
+<p>region_alloc()：给用户进程分配物理内存并将物理地址映射到进程的虚拟地址空间；</p>
+</li>
+<li>
+<p>load_icode()：解析用户进程elf文件，并加载到用户地址空间；</p>
+</li>
+<li>
+<p>env_create()：调用env_alloc和load_icode；</p>
+</li>
+<li>
+<p>env_run()：在用户模式下执行进程；</p>
+</li>
+</ul>
+<p>由于此时还没有文件系统，此时是将用户的进程elf文件嵌入到内核的image中，最后生成的
+kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序的elf文件，最后由内核加载
+并执行。</p>
+<p>每个用户进程都有一个相应的结构体：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Env</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">Trapframe</span> <span class="n">env_tf</span><span class="p">;</span>    <span class="c1">// Saved registers</span>
+    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env_link</span><span class="p">;</span>       <span class="c1">// Next free Env</span>
+    <span class="kt">envid_t</span> <span class="n">env_id</span><span class="p">;</span>         <span class="c1">// Unique environment identifier</span>
+    <span class="kt">envid_t</span> <span class="n">env_parent_id</span><span class="p">;</span>      <span class="c1">// env_id ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/lab3jia-zai-yong-hu-jin-cheng.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="/x86-address-translation.html">x86 Address Translation</a></h2>
                 <div class="summary"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p>
                     <a class="btn btn-default btn-xs" href="/x86-address-translation.html">more ...</a>
@@ -214,37 +277,6 @@ Stack backtrace:
 <div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
   <span class="n">uint</span>  <span class="n">magic ...</span></pre></div>
                     <a class="btn btn-default btn-xs" href="/elfwen-jian.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h2>
-                <div class="summary"><p>这里介绍如何用qemu和gdb联合调试：</p>
-<p>1）在JOS目录下执行make qemu-gdb（或者make qemu-nox-gdb），此时qemu会执行并且等待gdb的连接；
-2）然后在打开一个新的terminal，在同一个目录下输入：gdb即可（原理就是在这个目录下有个.gdbinit文件，gdb会读取这个文件）；
-没有出现错误的话，会出现下面的内容：</p>
-<p>The target architecture is assumed to be i8086
-[f000:fff0]    0xffff0: ljmp   $0xf000,$0xe05b
-0x0000fff0 in ?? ()
-+ symbol-file obj/kern/kernel
-如果出现错误：warning: File "/home/yj/yangjin/xv6/jos/.gdbinit" auto-loading has been declined by ...</p>
-                    <a class="btn btn-default btn-xs" href="/qemuhe-gdbdiao-shi.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/stabshi-yi.html">stab释疑</a></h2>
-                <div class="summary"><p>Reference: https://sourceware.org/gdb/onlinedocs/stabs.html</p>
-<h4>1. stabs简介</h4>
-<p>stabs代表一种信息格式，用来将程序的信息展示给调试器debugger。</p>
-<h4>1.2. Debugging information flow</h4>
-<p>一般编译流程：gcc把.c编译成.s，汇编器把.s转化成.o，链接器把.o和库文件组合生成可执行文件；
-当-g选项打开时，gcc会往.s文件中加入额外的调试信息，然后这些调试信息被加入到.o和可执行文件中。
-这个调试信息包括c源文件的一些信息，如文件名，行号，变量的类型和范围（type, scope），函数名字，
-参数和范围(function names, parameters,scopes)。在最后生成的可执行文件中，会生成一个symbol table
-和string table，debugger就是利用这两个表来获取程序的信息的。</p>
-<p>注意 ...</p>
-                    <a class="btn btn-default btn-xs" href="/stabshi-yi.html">more ...</a>
                 </div>
             </article>
             <hr/>
