@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Archives - Living@Greatwall</title>
+    <title>const - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,7 +10,8 @@
 
 
 
-        <meta name="author" content="Jin" />
+    <meta name="author" content="Jin" />
+    <meta name="keywords" content="const" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -73,75 +74,24 @@ Living@Greatwall            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-    <section id="content">
-        <h1>Archives for Living@Greatwall</h1>
-        <div id="archives">
-                <p>
-                    <span class="categories-timestamp"><time datetime="2015-11-20T00:00:00+08:00">Fri 20 November 2015</time></span>
-                    <a href="/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">const修饰变了能否被修改</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2015-11-18T00:00:00+08:00">Wed 18 November 2015</time></span>
-                    <a href="/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2015-11-15T00:00:00+08:00">Sun 15 November 2015</time></span>
-                    <a href="/gcc-wshdowxuan-xiang.html">gcc -Wshdow选项</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2015-11-13T00:00:00+08:00">Fri 13 November 2015</time></span>
-                    <a href="/how-to-use-pelican-to-bulid-blog-on-githubio.html">How to use Pelican to bulid blog on github.io</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-02-16T00:00:00+08:00">Sat 16 February 2013</time></span>
-                    <a href="/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-02-01T00:00:00+08:00">Fri 01 February 2013</time></span>
-                    <a href="/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-02-01T00:00:00+08:00">Fri 01 February 2013</time></span>
-                    <a href="/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-17T00:00:00+08:00">Thu 17 January 2013</time></span>
-                    <a href="/x86-address-translation.html">x86 Address Translation</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-16T00:00:00+08:00">Wed 16 January 2013</time></span>
-                    <a href="/entrys.html">entry.S</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-16T00:00:00+08:00">Wed 16 January 2013</time></span>
-                    <a href="/lab1-exercise1.html">lab1 exercise1</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-15T00:00:00+08:00">Tue 15 January 2013</time></span>
-                    <a href="/elfwen-jian.html">ELF文件</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-15T00:00:00+08:00">Tue 15 January 2013</time></span>
-                    <a href="/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-15T00:00:00+08:00">Tue 15 January 2013</time></span>
-                    <a href="/stabshi-yi.html">stab释疑</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-15T00:00:00+08:00">Tue 15 January 2013</time></span>
-                    <a href="/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-13T00:00:00+08:00">Sun 13 January 2013</time></span>
-                    <a href="/lab1-bootloader.html">lab1: bootloader</a>
-                </p>
-                <p>
-                    <span class="categories-timestamp"><time datetime="2013-01-13T00:00:00+08:00">Sun 13 January 2013</time></span>
-                    <a href="/x86ji-cun-qi-ji-chu.html">x86寄存器基础</a>
-                </p>
-        </div>
-    </section>
+            <article>
+                <h2><a href="/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">const修饰变了能否被修改</a></h2>
+                <div class="summary"><p>今天无意中想到一个问题，const修饰的变量能否被修改，虽然修改const变量是个不好的习惯，
+但是仍想去验证一下这个问题。
+const一般用于修饰变量或者函数参数，用于函参修饰指针时表示函数不会改变该指针指向
+的变量的值，一个经典的问题就是：const int *p 与 int * const p的区别。在c++中，
+const还用于修饰成员函数，表示该成员函数不能修改成员变量，只能修改mutable类型的
+成员变量。
+看下面一段测试代码，g为全局常量，a为局部常量，下面分别通过指针去修改这两个变量的
+值，下面程序执行到最后修改g变量时出现segmentation fault，也就是说能修改局部常量，
+但不能修改全局定义的常量，因为g是保存在只读数据段.rodata里。
+（使用gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2，运行在 Intel(R) Core(TM) i7-3770 CPU)</p>
+<div class="highlight"><pre><span class="k">const</span> <span class="kt">int</span> <span class="n">g ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

@@ -74,6 +74,23 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">const修饰变了能否被修改</a></h2>
+                <div class="summary"><p>今天无意中想到一个问题，const修饰的变量能否被修改，虽然修改const变量是个不好的习惯，
+但是仍想去验证一下这个问题。
+const一般用于修饰变量或者函数参数，用于函参修饰指针时表示函数不会改变该指针指向
+的变量的值，一个经典的问题就是：const int *p 与 int * const p的区别。在c++中，
+const还用于修饰成员函数，表示该成员函数不能修改成员变量，只能修改mutable类型的
+成员变量。
+看下面一段测试代码，g为全局常量，a为局部常量，下面分别通过指针去修改这两个变量的
+值，下面程序执行到最后修改g变量时出现segmentation fault，也就是说能修改局部常量，
+但不能修改全局定义的常量，因为g是保存在只读数据段.rodata里。
+（使用gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2，运行在 Intel(R) Core(TM) i7-3770 CPU)</p>
+<div class="highlight"><pre><span class="k">const</span> <span class="kt">int</span> <span class="n">g ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a></h2>
                 <div class="summary"><h4>1. 简介</h4>
 <p>内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元，
@@ -249,34 +266,6 @@ Stack backtrace:
          kern/init.c:49: i386_init+59
   ebp f010fff8 ...</pre></div>
                     <a class="btn btn-default btn-xs" href="/lab1-exercise1.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/elfwen-jian.html">ELF文件</a></h2>
-                <div class="summary"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
-<ul>
-<li>
-<p>用于执行的可执行文件(executab   file)，用于提供程序的进程映像，加载的内存执行。  这也是本实验的OS文件类型。</p>
-</li>
-<li>
-<p>用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。</p>
-</li>
-<li>
-<p>共享目标文件(shared object  file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件，
-动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。</p>
-</li>
-</ul>
-<p>ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如：</p>
-<p>*.text</p>
-<p>*.rodata</p>
-<p>*.data</p>
-<h4>1. Elf header结构</h4>
-<p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
-控制结构，其定义在elf.h中：</p>
-<div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
-  <span class="n">uint</span>  <span class="n">magic ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/elfwen-jian.html">more ...</a>
                 </div>
             </article>
             <hr/>
