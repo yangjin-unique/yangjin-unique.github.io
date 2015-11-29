@@ -60,6 +60,9 @@ Living@Greatwall            </a>
                         <li >
                             <a href="/category/python.html">Python</a>
                         </li>
+                        <li >
+                            <a href="/category/tools.html">Tools</a>
+                        </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
@@ -73,6 +76,22 @@ Living@Greatwall            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
+            <article>
+                <h2><a href="/entrys.html">entry.S</a></h2>
+                <div class="summary"><p>lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。</p>
+<p>这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB，
+进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。
+而且分页机制也没有使能，所以线性地址就是物理地址）。</p>
+<p>在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时，
+所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射：
+将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。</p>
+<p>内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）：</p>
+<div class="highlight"><pre><span class="x"> </span><span class="err">#</span><span class="x"> Load the physical address of entry_pgdir into cr3.  entry_pgdir</span>
+<span class="x"> </span><span class="err">#</span><span class="x"> is defined in entrypgdir.c ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/entrys.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
             <article>
                 <h2><a href="/lab1-exercise1.html">lab1 exercise1</a></h2>
                 <div class="summary"><p>lab1主要熟悉qemu x86使用环境，各种实验工具，包括qemu与gdb联合调试等，熟悉pc的bootstrap过程，包括BIOS和bootloader。

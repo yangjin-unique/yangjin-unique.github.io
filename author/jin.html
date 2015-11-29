@@ -60,6 +60,9 @@ Living@Greatwall            </a>
                         <li >
                             <a href="/category/python.html">Python</a>
                         </li>
+                        <li >
+                            <a href="/category/tools.html">Tools</a>
+                        </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
@@ -80,6 +83,20 @@ Living@Greatwall            </a>
 <p>如果翻不了墙的话可以去我github看看google提供的练习题：<a href="https://github.com/yangjin-unique">My Github</a>，等
 哪天有时间了会在我的blog上提供这些课程的中文版。</p>
                     <a class="btn btn-default btn-xs" href="/googles-python-class.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/yi-kuan-hen-hao-yong-de-bao-wen-liu-liang-sheng-cheng-he-fen-xi-gong-ju-ostinato.html">一款很好用的报文流量生成和分析工具：Ostinato</a></h2>
+                <div class="summary"><p>最近测试一个功能需要用到报文生成工具来打流量，公司虽然有高大上的打流量利器Ixia，但是杀鸡焉用牛刀！于是找出了很早就用的
+ostinato，但是由于要生成一系列的报文（ICMP的各种type和code），用这个工具得手工一个一个来制造这些icmp报文，想着都麻烦，
+立马想到这个工具是否支持脚本自动化，于是goole了一下这个工具，发现其最新版本支持自动化部署，提供了python接口，顿时心情大好。</p>
+<p>Ostinato是一个采用QT写的跨平台的工具，支持window/linux，作者要把该工具打造为：Wireshark in Reverse，足见作者的野心！不过
+该工具确实很好用，可以方便的构造各类报文。</p>
+<p>Ostinato采用agent-controller架构：ostinato是GUI agent，drone是controller，另外支持用户使用python-ostinato模块来打造自己的
+agent，用户写的agent与controller之间的通讯是采用google的protocol buffers结构化数据，下面是该工具的官方网站:</p>
+<h4><a href="http://ostinato.org/">Ostinato</a></h4>
+                    <a class="btn btn-default btn-xs" href="/yi-kuan-hen-hao-yong-de-bao-wen-liu-liang-sheng-cheng-he-fen-xi-gong-ju-ostinato.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -245,22 +262,6 @@ kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序�
                 <h2><a href="/x86-address-translation.html">x86 Address Translation</a></h2>
                 <div class="summary"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p>
                     <a class="btn btn-default btn-xs" href="/x86-address-translation.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/entrys.html">entry.S</a></h2>
-                <div class="summary"><p>lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。</p>
-<p>这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB，
-进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。
-而且分页机制也没有使能，所以线性地址就是物理地址）。</p>
-<p>在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时，
-所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射：
-将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。</p>
-<p>内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）：</p>
-<div class="highlight"><pre><span class="x"> </span><span class="err">#</span><span class="x"> Load the physical address of entry_pgdir into cr3.  entry_pgdir</span>
-<span class="x"> </span><span class="err">#</span><span class="x"> is defined in entrypgdir.c ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/entrys.html">more ...</a>
                 </div>
             </article>
             <hr/>

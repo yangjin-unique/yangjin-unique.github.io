@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>os - Living@Greatwall</title>
+    <title>traffic generator analyzer - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="os" />
+    <meta name="keywords" content="traffic generator analyzer" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -55,7 +55,7 @@ Living@Greatwall            </a>
                         <li >
                             <a href="/category/linux.html">Linux</a>
                         </li>
-                        <li class="active">
+                        <li >
                             <a href="/category/os.html">Os</a>
                         </li>
                         <li >
@@ -78,83 +78,20 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/lab1-bootloader.html">lab1: bootloader</a></h2>
-                <div class="summary"><p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
-从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。</p>
-<h3>一、BIOS工作</h3>
-<h4>1. bios启动后会读取bootloader</h4>
-<p>bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成：
-<em> 主引导记录：也就是bootloader，大小占446字节；
-</em> 分区表：占64字节；
-* 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。</p>
-<h4>2.上电后的第一条指令地址为0xFFFFFFF0</h4>
-<p>这是启动后的第一条执行指令，EPROM，而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动设备
-（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00；</p>
-<p>实时模式与保护模式的区别 ...</p>
-                    <a class="btn btn-default btn-xs" href="/lab1-bootloader.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/x86ji-cun-qi-ji-chu.html">x86寄存器基础</a></h2>
-                <div class="summary"><p>http://oss.org.cn/kernel-book/ch02/2.3.1.htm</p>
-<h3>1. i386寄存器</h3>
-<p>80386作为80X86系列中的一员，必须保证向后兼容，也就是说，既要支持16位的处理器，也要支持32位的处理器。在8086中，所有的寄存器都是16位的，
-下面我们来看一下80386中寄存器有何变化：</p>
-<ul>
-<li>
-<p>把16位的通用寄存器、标志寄存器以及指令指针寄存器扩充为32位的寄存器段寄存器仍然为16位</p>
-</li>
-<li>
-<p>增加4个32位的控制寄存器</p>
-</li>
-<li>
-<p>增加4个系统地址寄存器</p>
-</li>
-<li>
-<p>增加8个调式寄存器</p>
-</li>
-<li>
-<p>增加2个测试寄存器</p>
-</li>
-</ul>
-<h3>2. 通用寄存器</h3>
-<p>8个通用寄存器是8086寄存器的超集，它们的名称和用途分别为：</p>
-<ul>
-<li>
-<p>EAX  一般用作累加器</p>
-</li>
-<li>
-<p>EBX  一般用作基址寄存器（Base）</p>
-</li>
-<li>
-<p>ECX  一般用来计数（Count）</p>
-</li>
-<li>
-<p>EDX  一般用来存放数据（Data）</p>
-</li>
-<li>
-<p>ESP  一般用作堆栈指针（Stack Pointer）</p>
-</li>
-<li>
-<p>EBP  一般用作基址指针（Base Pointer）</p>
-</li>
-<li>
-<p>ESI ...</p></li></ul>
-                    <a class="btn btn-default btn-xs" href="/x86ji-cun-qi-ji-chu.html">more ...</a>
+                <h2><a href="/yi-kuan-hen-hao-yong-de-bao-wen-liu-liang-sheng-cheng-he-fen-xi-gong-ju-ostinato.html">一款很好用的报文流量生成和分析工具：Ostinato</a></h2>
+                <div class="summary"><p>最近测试一个功能需要用到报文生成工具来打流量，公司虽然有高大上的打流量利器Ixia，但是杀鸡焉用牛刀！于是找出了很早就用的
+ostinato，但是由于要生成一系列的报文（ICMP的各种type和code），用这个工具得手工一个一个来制造这些icmp报文，想着都麻烦，
+立马想到这个工具是否支持脚本自动化，于是goole了一下这个工具，发现其最新版本支持自动化部署，提供了python接口，顿时心情大好。</p>
+<p>Ostinato是一个采用QT写的跨平台的工具，支持window/linux，作者要把该工具打造为：Wireshark in Reverse，足见作者的野心！不过
+该工具确实很好用，可以方便的构造各类报文。</p>
+<p>Ostinato采用agent-controller架构：ostinato是GUI agent，drone是controller，另外支持用户使用python-ostinato模块来打造自己的
+agent，用户写的agent与controller之间的通讯是采用google的protocol buffers结构化数据，下面是该工具的官方网站:</p>
+<h4><a href="http://ostinato.org/">Ostinato</a></h4>
+                    <a class="btn btn-default btn-xs" href="/yi-kuan-hen-hao-yong-de-bao-wen-liu-liang-sheng-cheng-he-fen-xi-gong-ju-ostinato.html">more ...</a>
                 </div>
             </article>
             <hr/>
 
-        <ul class="pagination">
-                <li class="prev"><a href="/category/os.html">&laquo;</a>
-                </li>
-                    <li class=""><a
-                            href="/category/os.html">1</a></li>
-                    <li class="active"><a
-                            href="/category/os2.html">2</a></li>
-                <li class="next disabled"><a href="#">&raquo;</a></li>
-        </ul>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
@@ -195,7 +132,7 @@ Living@Greatwall            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2013 Jin
+         <div class="col-xs-10">&copy; 2015 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
