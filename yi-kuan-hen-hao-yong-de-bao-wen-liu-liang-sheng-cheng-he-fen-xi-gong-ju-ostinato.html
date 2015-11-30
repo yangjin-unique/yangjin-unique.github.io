@@ -13,13 +13,13 @@
 
         <meta name="author" content="jin" />
         <meta name="keywords" content="ostinato,traffic generator analyzer,qt" />
-        <meta name="description" content="最近测试一个功能需要用到报文生成工具来打流量，公司虽然有高大上的打流量利器Ixia，但是杀鸡焉用牛刀！于是找出了很早就用的 ostinato，但是由于要生成一系列的报文（ICMP的各种type和code），用这个工具得手工一个一个来制造这些icmp报文，想着都麻烦， 立马想到这个工具是否支持脚本自动化，于是goole了一下这个工具，发现其最新版本支持自动化部署，提供了python接口，顿时心情大好。 Ostinato是一个采用QT写的跨平台的工具，支持window/linux，作者要把该工具打造为：Wireshark in Reverse，足见作者的野心！不过 该工具确实很好用，可以方便的构造各类报文。 Ostinato采用agent-controller架构：ostinato是GUI agent，drone是controller，另外支持用户使用python-ostinato模块来打造自己的 agent，用户写的agent与controller之间的通讯是采用google的protocol buffers结构化数据，下面是该工具的官方网站: Ostinato" />
+        <meta name="description" content="最近测试一个功能需要用到报文生成工具来打流量，公司虽然有高大上的打流量利器Ixia，但是杀鸡焉用牛刀！于是找出了很早就用的 ostinato，但是由于要生成一系列的报文（ICMP的各种type和code），用这个工具得手工一个一个来制造这些icmp报文，想着都麻烦， 立马想到这个工具是否支持脚本自动化，于是goole了一下这个工具，发现其最新版本支持自动化部署，提供了python接口，顿时心情大好。 Ostinato是一个采用QT写的跨平台的工具，支持window/linux，作者要把该工具打造为：Wireshark in Reverse，足见作者的野心！不过 该工具确实很好用，可以方便的构造各类报文。 Ostinato采用agent-controller架构：ostinato是GUI agent，drone是controller，另外支持用户使用python-ostinato模块来打造自己的 agent，用户写的agent与controller之间的通讯是采用google的protocol buffers结构化数据，下面是该工具的官方网站: Ostinato 贴上用python写的与drone交互的script： #! /usr/bin/env python # This is a tool script used with Ostinato to generate ..." />
 
         <meta property="og:site_name" content="Living@Greatwall" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="一款很好用的报文流量生成和分析工具：Ostinato"/>
         <meta property="og:url" content="/yi-kuan-hen-hao-yong-de-bao-wen-liu-liang-sheng-cheng-he-fen-xi-gong-ju-ostinato.html"/>
-        <meta property="og:description" content="最近测试一个功能需要用到报文生成工具来打流量，公司虽然有高大上的打流量利器Ixia，但是杀鸡焉用牛刀！于是找出了很早就用的 ostinato，但是由于要生成一系列的报文（ICMP的各种type和code），用这个工具得手工一个一个来制造这些icmp报文，想着都麻烦， 立马想到这个工具是否支持脚本自动化，于是goole了一下这个工具，发现其最新版本支持自动化部署，提供了python接口，顿时心情大好。 Ostinato是一个采用QT写的跨平台的工具，支持window/linux，作者要把该工具打造为：Wireshark in Reverse，足见作者的野心！不过 该工具确实很好用，可以方便的构造各类报文。 Ostinato采用agent-controller架构：ostinato是GUI agent，drone是controller，另外支持用户使用python-ostinato模块来打造自己的 agent，用户写的agent与controller之间的通讯是采用google的protocol buffers结构化数据，下面是该工具的官方网站: Ostinato"/>
+        <meta property="og:description" content="最近测试一个功能需要用到报文生成工具来打流量，公司虽然有高大上的打流量利器Ixia，但是杀鸡焉用牛刀！于是找出了很早就用的 ostinato，但是由于要生成一系列的报文（ICMP的各种type和code），用这个工具得手工一个一个来制造这些icmp报文，想着都麻烦， 立马想到这个工具是否支持脚本自动化，于是goole了一下这个工具，发现其最新版本支持自动化部署，提供了python接口，顿时心情大好。 Ostinato是一个采用QT写的跨平台的工具，支持window/linux，作者要把该工具打造为：Wireshark in Reverse，足见作者的野心！不过 该工具确实很好用，可以方便的构造各类报文。 Ostinato采用agent-controller架构：ostinato是GUI agent，drone是controller，另外支持用户使用python-ostinato模块来打造自己的 agent，用户写的agent与controller之间的通讯是采用google的protocol buffers结构化数据，下面是该工具的官方网站: Ostinato 贴上用python写的与drone交互的script： #! /usr/bin/env python # This is a tool script used with Ostinato to generate ..."/>
         <meta property="article:published_time" content="2015-11-28" />
             <meta property="article:section" content="tools" />
             <meta property="article:tag" content="ostinato" />
@@ -125,6 +125,225 @@ ostinato，但是由于要生成一系列的报文（ICMP的各种type和code）
 <p>Ostinato采用agent-controller架构：ostinato是GUI agent，drone是controller，另外支持用户使用python-ostinato模块来打造自己的
 agent，用户写的agent与controller之间的通讯是采用google的protocol buffers结构化数据，下面是该工具的官方网站:</p>
 <h4><a href="http://ostinato.org/">Ostinato</a></h4>
+<p>贴上用python写的与drone交互的script：</p>
+<div class="highlight"><pre><span class="c">#! /usr/bin/env python</span>
+<span class="c"># This is a tool script used with Ostinato to generate ICMP packets with special </span>
+<span class="c"># ICMP Type &amp; Code pairs on any designated interface, like eth0, eth1, lo.</span>
+<span class="c"># See ostinato.org for information about Ostinato.</span>
+<span class="c"># Author: Jin</span>
+
+<span class="c"># standard modules</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">socket</span><span class="o">,</span> <span class="nn">struct</span>
+
+<span class="c"># ostinato modules </span>
+<span class="kn">from</span> <span class="nn">ostinato.core</span> <span class="kn">import</span> <span class="n">ost_pb</span><span class="p">,</span> <span class="n">DroneProxy</span>
+<span class="kn">from</span> <span class="nn">ostinato.protocols.mac_pb2</span> <span class="kn">import</span> <span class="n">mac</span>
+<span class="kn">from</span> <span class="nn">ostinato.protocols.ip4_pb2</span> <span class="kn">import</span> <span class="n">ip4</span><span class="p">,</span> <span class="n">Ip4</span>
+<span class="kn">from</span> <span class="nn">ostinato.protocols.icmp_pb2</span> <span class="kn">import</span> <span class="n">icmp</span><span class="p">,</span> <span class="n">Icmp</span>
+
+
+<span class="k">def</span> <span class="nf">ipstr2long</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
+    <span class="n">packedIp</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_aton</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s">&quot;!L&quot;</span><span class="p">,</span> <span class="n">packedIp</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="c"># ICMP streams with type-code pairs</span>
+<span class="c"># add new ICMP type-code pairs here</span>
+<span class="n">ICMP_TYPE_CODE</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="c"># Destination unreachable group, type = 3, code = 0~15</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>  <span class="c"># Ridirect group, type = 5, code = 0~3</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="c"># Time exceeded group, type = 11, code = 0~1</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c"># Parameter problem group, type = 12, code = 0~2</span>
+        <span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c"># initialize defaults</span>
+    <span class="n">use_defaults</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">host_name</span> <span class="o">=</span> <span class="s">&#39;127.0.0.1&#39;</span> <span class="c"># default drone host name</span>
+    <span class="n">tx_port_number</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">src_mac</span> <span class="o">=</span> <span class="mh">0x000c292eba20</span> <span class="c"># pkt src mac, modify it </span>
+    <span class="n">dst_mac</span> <span class="o">=</span> <span class="mh">0x18b169091010</span> <span class="c"># pkt dst mac, modify it</span>
+    <span class="n">src_ip</span> <span class="o">=</span> <span class="n">ipstr2long</span><span class="p">(</span><span class="s">&#39;192.168.168.2&#39;</span><span class="p">)</span> <span class="c"># pkt scr ip, modify it</span>
+    <span class="n">dst_ip</span> <span class="o">=</span> <span class="n">ipstr2long</span><span class="p">(</span><span class="s">&#39;192.168.166.2&#39;</span><span class="p">)</span> <span class="c"># pkt dst ip, modify it</span>
+
+    <span class="c"># compute total num of streams</span>
+    <span class="n">total_streams</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ICMP_TYPE_CODE</span><span class="p">])</span>
+    <span class="k">print</span> <span class="s">&#39;Total number of streams: </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span><span class="n">total_streams</span>
+
+    <span class="c"># setup logging</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+    <span class="c"># command-line option/arg processing</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;-d&#39;</span><span class="p">,</span> <span class="s">&#39;--use-defaults&#39;</span><span class="p">):</span>
+            <span class="n">use_defaults</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;-h&#39;</span><span class="p">,</span> <span class="s">&#39;--help&#39;</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> [OPTION]...&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Options:&#39;</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39; -d --use-defaults   run using default values&#39;</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39; -h --help           show this help&#39;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">use_defaults</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Drone</span><span class="se">\&#39;</span><span class="s">s Hostname/IP [</span><span class="si">%s</span><span class="s">]: &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host_name</span><span class="p">))</span>
+        <span class="n">host_name</span> <span class="o">=</span> <span class="n">s</span> <span class="ow">or</span> <span class="n">host_name</span>
+
+    <span class="n">drone</span> <span class="o">=</span> <span class="n">DroneProxy</span><span class="p">(</span><span class="n">host_name</span><span class="p">)</span>
+    <span class="n">drone</span><span class="o">.</span><span class="n">TransmitMode</span> <span class="o">=</span> <span class="s">&#39;sequential&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c"># connect to drone</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;connecting to drone(</span><span class="si">%s</span><span class="s">:</span><span class="si">%d</span><span class="s">)&#39;</span> 
+                <span class="o">%</span> <span class="p">(</span><span class="n">drone</span><span class="o">.</span><span class="n">hostName</span><span class="p">(),</span> <span class="n">drone</span><span class="o">.</span><span class="n">portNumber</span><span class="p">()))</span>
+        <span class="n">drone</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+        <span class="c"># retreive port id list</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;retreiving port list&#39;</span><span class="p">)</span>
+        <span class="n">port_id_list</span> <span class="o">=</span> <span class="n">drone</span><span class="o">.</span><span class="n">getPortIdList</span><span class="p">()</span>
+
+        <span class="c"># retreive port config list</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;retreiving port config for all ports&#39;</span><span class="p">)</span>
+        <span class="n">port_config_list</span> <span class="o">=</span> <span class="n">drone</span><span class="o">.</span><span class="n">getPortConfig</span><span class="p">(</span><span class="n">port_id_list</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_config_list</span><span class="o">.</span><span class="n">port</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;drone has no ports!&#39;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Port List&#39;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;---------&#39;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="p">(</span><span class="n">port_config_list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">port_config_list</span><span class="o">.</span><span class="n">port</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">.</span><span class="si">%s</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">port_id</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">port</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">port</span><span class="o">.</span><span class="n">description</span><span class="p">))</span>
+            <span class="c"># use a loopback port as default tx/rx port </span>
+            <span class="k">if</span> <span class="p">(</span><span class="s">&#39;lo&#39;</span> <span class="ow">in</span> <span class="n">port</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s">&#39;loopback&#39;</span> <span class="ow">in</span> <span class="n">port</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+                <span class="n">tx_port_number</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">port_id</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_defaults</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Tx Port Id [</span><span class="si">%d</span><span class="s">]: &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tx_port_number</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">tx_port_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="n">tx_port</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">PortIdList</span><span class="p">()</span>
+        <span class="n">tx_port</span><span class="o">.</span><span class="n">port_id</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">tx_port_number</span><span class="p">;</span>
+
+        <span class="n">sid</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">icmp_stream</span> <span class="ow">in</span> <span class="n">ICMP_TYPE_CODE</span><span class="p">:</span>
+            <span class="n">stype</span> <span class="o">=</span> <span class="n">icmp_stream</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">scode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icmp_stream</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="c"># add a stream</span>
+                <span class="k">print</span> <span class="s">&#39;icmp (type, code) = (</span><span class="si">%d</span><span class="s">, </span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">stype</span><span class="p">,</span> <span class="n">scode</span><span class="p">)</span>
+                <span class="n">stream_id</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">StreamIdList</span><span class="p">()</span>
+                <span class="n">stream_id</span><span class="o">.</span><span class="n">port_id</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">tx_port</span><span class="o">.</span><span class="n">port_id</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">stream_id</span><span class="o">.</span><span class="n">stream_id</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">sid</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;adding tx_stream </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">stream_id</span><span class="o">.</span><span class="n">stream_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">drone</span><span class="o">.</span><span class="n">addStream</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span>
+
+                <span class="c"># configure the stream</span>
+                <span class="n">stream_cfg</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">StreamConfigList</span><span class="p">()</span>
+                <span class="n">stream_cfg</span><span class="o">.</span><span class="n">port_id</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">tx_port</span><span class="o">.</span><span class="n">port_id</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">stream_cfg</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">stream_id</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">stream_id</span><span class="o">.</span><span class="n">stream_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">is_enabled</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">num_packets</span> <span class="o">=</span> <span class="mi">1</span>
+
+                <span class="c"># setup stream protocols as mac:eth2:ip4:icmp</span>
+                <span class="c"># setup mac header</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">protocol_id</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">Protocol</span><span class="o">.</span><span class="n">kMacFieldNumber</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">Extensions</span><span class="p">[</span><span class="n">mac</span><span class="p">]</span><span class="o">.</span><span class="n">dst_mac</span> <span class="o">=</span> <span class="n">dst_mac</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">Extensions</span><span class="p">[</span><span class="n">mac</span><span class="p">]</span><span class="o">.</span><span class="n">src_mac</span> <span class="o">=</span> <span class="n">src_mac</span>
+
+                <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">protocol_id</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">Protocol</span><span class="o">.</span><span class="n">kEth2FieldNumber</span>
+
+                <span class="c">#setup ip header</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">protocol_id</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">Protocol</span><span class="o">.</span><span class="n">kIp4FieldNumber</span>
+                <span class="n">ip</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Extensions</span><span class="p">[</span><span class="n">ip4</span><span class="p">]</span>
+                <span class="n">ip</span><span class="o">.</span><span class="n">src_ip</span> <span class="o">=</span> <span class="n">src_ip</span> 
+                <span class="n">ip</span><span class="o">.</span><span class="n">dst_ip</span> <span class="o">=</span> <span class="n">dst_ip</span> 
+                <span class="n">ip</span><span class="o">.</span><span class="n">dst_ip_mode</span> <span class="o">=</span> <span class="n">Ip4</span><span class="o">.</span><span class="n">e_im_fixed</span>
+
+                <span class="c"># setup icmp header</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">protocol_id</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">Protocol</span><span class="o">.</span><span class="n">kIcmpFieldNumber</span>
+                <span class="n">icmp_va</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Extensions</span><span class="p">[</span><span class="n">icmp</span><span class="p">]</span> 
+                <span class="n">icmp_va</span><span class="o">.</span><span class="n">icmp_version</span> <span class="o">=</span> <span class="n">Icmp</span><span class="o">.</span><span class="n">kIcmp4</span>  <span class="c"># icmp version</span>
+                <span class="n">icmp_va</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">stype</span>                <span class="c"># icmp type</span>
+                <span class="n">icmp_va</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">scode</span>                <span class="c"># icmp code</span>
+
+                <span class="n">s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">protocol_id</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">Protocol</span><span class="o">.</span><span class="n">kPayloadFieldNumber</span>
+
+                <span class="n">s</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">StreamControl</span><span class="o">.</span><span class="n">e_su_packets</span> <span class="c"># Send: Packets</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">StreamControl</span><span class="o">.</span><span class="n">e_sm_fixed</span> <span class="c"># Mode: Fixed</span>
+
+                <span class="k">if</span> <span class="n">sid</span> <span class="o">&lt;</span> <span class="n">total_streams</span><span class="p">:</span>
+                    <span class="n">s</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">StreamControl</span><span class="o">.</span><span class="n">e_nw_goto_next</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">s</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">ost_pb</span><span class="o">.</span><span class="n">StreamControl</span><span class="o">.</span><span class="n">e_nw_goto_id</span> <span class="c"># e_nw_stop</span>
+
+                <span class="n">s</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">ordinal</span> <span class="o">=</span> <span class="n">sid</span> <span class="o">-</span> <span class="mi">1</span> <span class="c"># keep stream transmitted in order</span>
+                <span class="n">sid</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">packets_per_sec</span> <span class="o">=</span> <span class="mi">20</span> <span class="c"># transmit rate: pkts per second</span>
+
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;configuring tx_stream </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">stream_id</span><span class="o">.</span><span class="n">stream_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">drone</span><span class="o">.</span><span class="n">modifyStream</span><span class="p">(</span><span class="n">stream_cfg</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;clearing tx stats&#39;</span><span class="p">)</span>
+        <span class="n">drone</span><span class="o">.</span><span class="n">clearStats</span><span class="p">(</span><span class="n">tx_port</span><span class="p">)</span>
+
+        <span class="c"># start transmit</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;starting transmit&#39;</span><span class="p">)</span>
+        <span class="n">drone</span><span class="o">.</span><span class="n">startTransmit</span><span class="p">(</span><span class="n">tx_port</span><span class="p">)</span>
+
+        <span class="c"># wait for transmit to finish</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;waiting for transmit to finish ...&#39;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">tx_stats</span> <span class="o">=</span> <span class="n">drone</span><span class="o">.</span><span class="n">getStats</span><span class="p">(</span><span class="n">tx_port</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">tx_stats</span><span class="o">.</span><span class="n">port_stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">is_transmit_on</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Transmit terminated by user!!!&#39;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="c"># stop transmit and capture</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;stopping transmit&#39;</span><span class="p">)</span>
+        <span class="n">drone</span><span class="o">.</span><span class="n">stopTransmit</span><span class="p">(</span><span class="n">tx_port</span><span class="p">)</span>
+
+        <span class="c"># get tx/rx stats</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;retreiving stats&#39;</span><span class="p">)</span>
+        <span class="n">tx_stats</span> <span class="o">=</span> <span class="n">drone</span><span class="o">.</span><span class="n">getStats</span><span class="p">(</span><span class="n">tx_port</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;tx pkts = </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tx_stats</span><span class="o">.</span><span class="n">port_stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tx_pkts</span><span class="p">))</span>
+
+        <span class="c"># retrieve and dump received packets</span>
+        <span class="c">#log.info(&#39;getting Rx capture buffer&#39;)</span>
+        <span class="c">#drone.saveCaptureBuffer(buff, &#39;capture.pcap&#39;)</span>
+        <span class="c">#log.info(&#39;dumping Rx capture buffer&#39;)</span>
+        <span class="c">#os.system(&#39;tshark -r capture.pcap&#39;)</span>
+        <span class="c">#os.remove(&#39;capture.pcap&#39;)</span>
+
+        <span class="c"># delete streams</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;deleting tx_stream </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">stream_id</span><span class="o">.</span><span class="n">stream_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">drone</span><span class="o">.</span><span class="n">deleteStream</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span>
+        <span class="c"># desconnect drone</span>
+        <span class="n">drone</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
             </div>
             <!-- /.entry-content -->
         </article>
