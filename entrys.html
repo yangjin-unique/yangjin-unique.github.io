@@ -9,7 +9,7 @@
 
 
 
-<link rel="canonical" href="/entrys.html">
+<link rel="canonical" href="http://yangjin-unique.github.io/entrys.html">
 
         <meta name="author" content="jin" />
         <meta name="keywords" content="os,bootloader,entry.S" />
@@ -18,7 +18,7 @@
         <meta property="og:site_name" content="Living@Greatwall" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="entry.S"/>
-        <meta property="og:url" content="/entrys.html"/>
+        <meta property="og:url" content="http://yangjin-unique.github.io/entrys.html"/>
         <meta property="og:description" content="lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。 这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB， 进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。 而且分页机制也没有使能，所以线性地址就是物理地址）。 在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时， 所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射： 将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。 内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）： # Load the physical address of entry_pgdir into cr3. entry_pgdir # is defined in entrypgdir.c ..."/>
         <meta property="article:published_time" content="2013-01-16" />
             <meta property="article:section" content="os" />
@@ -29,11 +29,11 @@
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
 
 
 
@@ -51,29 +51,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
 Living@Greatwall            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
-                            <a href="/category/cc.html">C&c++</a>
+                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
                         </li>
                         <li >
-                            <a href="/category/linux.html">Linux</a>
+                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
                         </li>
                         <li class="active">
-                            <a href="/category/os.html">Os</a>
+                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
                         </li>
                         <li >
-                            <a href="/category/python.html">Python</a>
+                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
                         </li>
                         <li >
-                            <a href="/category/tools.html">Tools</a>
+                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -88,7 +88,7 @@ Living@Greatwall            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/entrys.html"
+                    <a href="http://yangjin-unique.github.io/entrys.html"
                        rel="bookmark"
                        title="Permalink to entry.S">
                         entry.S
@@ -109,11 +109,11 @@ Living@Greatwall            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/os.html">os</a>
+	<a href="http://yangjin-unique.github.io/tag/os.html">os</a>
         /
-	<a href="/tag/bootloader.html">bootloader</a>
+	<a href="http://yangjin-unique.github.io/tag/bootloader.html">bootloader</a>
         /
-	<a href="/tag/entrys.html">entry.S</a>
+	<a href="http://yangjin-unique.github.io/tag/entrys.html">entry.S</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -165,7 +165,7 @@ Living@Greatwall            </a>
             var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'entrys';
-                var disqus_url = '/entrys.html';
+                var disqus_url = 'http://yangjin-unique.github.io/entrys.html';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -236,13 +236,13 @@ Living@Greatwall            </a>
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
     <!-- Disqus -->
     <script type="text/javascript">

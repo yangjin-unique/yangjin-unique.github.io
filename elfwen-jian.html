@@ -9,7 +9,7 @@
 
 
 
-<link rel="canonical" href="/elfwen-jian.html">
+<link rel="canonical" href="http://yangjin-unique.github.io/elfwen-jian.html">
 
         <meta name="author" content="jin" />
         <meta name="keywords" content="os,bootloader,elf,header,linker" />
@@ -18,7 +18,7 @@
         <meta property="og:site_name" content="Living@Greatwall" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="ELF文件"/>
-        <meta property="og:url" content="/elfwen-jian.html"/>
+        <meta property="og:url" content="http://yangjin-unique.github.io/elfwen-jian.html"/>
         <meta property="og:description" content="ELF(Executable and linking format)文件格式是Linux系统下的一种常用目标文件(object file)格式，有三种主要类型: 用于执行的可执行文件(executab file)，用于提供程序的进程映像，加载的内存执行。 这也是本实验的OS文件类型。 用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。 共享目标文件(shared object file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件， 动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。 ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如： *.text *.rodata *.data 1. Elf header结构 这里只分析与本实验相关的ELF可执行文件类型。ELF header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的 控制结构，其定义在elf.h中： struct elfhdr { uint magic ..."/>
         <meta property="article:published_time" content="2013-01-15" />
             <meta property="article:section" content="os" />
@@ -31,11 +31,11 @@
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
 
 
 
@@ -53,29 +53,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
 Living@Greatwall            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
-                            <a href="/category/cc.html">C&c++</a>
+                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
                         </li>
                         <li >
-                            <a href="/category/linux.html">Linux</a>
+                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
                         </li>
                         <li class="active">
-                            <a href="/category/os.html">Os</a>
+                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
                         </li>
                         <li >
-                            <a href="/category/python.html">Python</a>
+                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
                         </li>
                         <li >
-                            <a href="/category/tools.html">Tools</a>
+                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -90,7 +90,7 @@ Living@Greatwall            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/elfwen-jian.html"
+                    <a href="http://yangjin-unique.github.io/elfwen-jian.html"
                        rel="bookmark"
                        title="Permalink to ELF文件">
                         ELF文件
@@ -111,15 +111,15 @@ Living@Greatwall            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/os.html">os</a>
+	<a href="http://yangjin-unique.github.io/tag/os.html">os</a>
         /
-	<a href="/tag/bootloader.html">bootloader</a>
+	<a href="http://yangjin-unique.github.io/tag/bootloader.html">bootloader</a>
         /
-	<a href="/tag/elf.html">elf</a>
+	<a href="http://yangjin-unique.github.io/tag/elf.html">elf</a>
         /
-	<a href="/tag/header.html">header</a>
+	<a href="http://yangjin-unique.github.io/tag/header.html">header</a>
         /
-	<a href="/tag/linker.html">linker</a>
+	<a href="http://yangjin-unique.github.io/tag/linker.html">linker</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -334,7 +334,7 @@ Link Addr和LoadAddr不同会导致：直接跳转位置错误直接内存访问
             var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'elfwen-jian';
-                var disqus_url = '/elfwen-jian.html';
+                var disqus_url = 'http://yangjin-unique.github.io/elfwen-jian.html';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -405,13 +405,13 @@ Link Addr和LoadAddr不同会导致：直接跳转位置错误直接内存访问
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
     <!-- Disqus -->
     <script type="text/javascript">

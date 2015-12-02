@@ -17,16 +17,16 @@
         <meta property="og:site_name" content="Living@Greatwall" />
         <meta property="og:type" content="website"/>
         <meta property="og:title" content="Living@Greatwall"/>
-        <meta property="og:url" content=""/>
+        <meta property="og:url" content="http://yangjin-unique.github.io"/>
         <meta property="og:description" content="Living@Greatwall"/>
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
 
 
 
@@ -44,29 +44,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
 Living@Greatwall            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
-                            <a href="/category/cc.html">C&c++</a>
+                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
                         </li>
                         <li >
-                            <a href="/category/linux.html">Linux</a>
+                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
-                            <a href="/category/os.html">Os</a>
+                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
                         </li>
                         <li >
-                            <a href="/category/python.html">Python</a>
+                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
                         </li>
                         <li >
-                            <a href="/category/tools.html">Tools</a>
+                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -78,7 +78,7 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
                 <div class="summary"><p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
 前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
 也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处，
@@ -94,12 +94,12 @@ Living@Greatwall            </a>
 <span class="nf">boot_alloc</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/lab2-exercise1physical-memory-management.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a></h2>
                 <div class="summary"><p>lab2的exercise1主要完成物理页的管理，建立一个简单的内存管理机制，后面的练习需要用到内存分配都是这里完成的，小结一下exercise1的要点：
 完成物理内存的管理机制：主要是建立pages[]与物理页的一一映射（包括设置可用和不可用的物理页，pages数组的index就是物理内存地址pa的高22位）；
 exercise2主要内容是完成y页目录和页表的建立，从而建立起虚拟地址空间与物理地址空间的映射，主要是实现以下几个函数：</p>
@@ -122,12 +122,12 @@ exercise2主要内容是完成y页目录和页表的建立，从而建立起虚�
     <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span><span class="p">;</span>
 
     <span class="n">pde</span>  <span class="o">=</span> <span class="n">pgdir ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/lab2-exercise2ye-biao.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab2-exercise2ye-biao.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a></h2>
                 <div class="summary"><p>该练习主要完成内核加载用户进程，包括用户进程环境的初始化，创建用户进程，加载用户进程等。
 主要完成以下几个函数的实现：
 * env_init()：初始化用户进程，配置每个段的优先级特权级；</p>
@@ -157,19 +157,19 @@ kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序�
     <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env_link</span><span class="p">;</span>       <span class="c1">// Next free Env</span>
     <span class="kt">envid_t</span> <span class="n">env_id</span><span class="p">;</span>         <span class="c1">// Unique environment identifier</span>
     <span class="kt">envid_t</span> <span class="n">env_parent_id</span><span class="p">;</span>      <span class="c1">// env_id ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/lab3jia-zai-yong-hu-jin-cheng.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3jia-zai-yong-hu-jin-cheng.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/x86-address-translation.html">x86 Address Translation</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/x86-address-translation.html">x86 Address Translation</a></h2>
                 <div class="summary"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p>
-                    <a class="btn btn-default btn-xs" href="/x86-address-translation.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/x86-address-translation.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/entrys.html">entry.S</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/entrys.html">entry.S</a></h2>
                 <div class="summary"><p>lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。</p>
 <p>这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB，
 进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。
@@ -180,12 +180,12 @@ kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序�
 <p>内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）：</p>
 <div class="highlight"><pre><span class="x"> </span><span class="err">#</span><span class="x"> Load the physical address of entry_pgdir into cr3.  entry_pgdir</span>
 <span class="x"> </span><span class="err">#</span><span class="x"> is defined in entrypgdir.c ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/entrys.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/entrys.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/lab1-exercise1.html">lab1 exercise1</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/lab1-exercise1.html">lab1 exercise1</a></h2>
                 <div class="summary"><p>lab1主要熟悉qemu x86使用环境，各种实验工具，包括qemu与gdb联合调试等，熟悉pc的bootstrap过程，包括BIOS和bootloader。
 该练习主要是实现一个backtrace函数，解析当前函数调用栈帧，并需要解析出当前函数的文件名、函数名、行号信息，如下面所示：</p>
 <div class="highlight"><pre>K&gt; backtrace
@@ -195,12 +195,12 @@ Stack backtrace:
   ebp f010ffd8  eip f0100193  args 00000000 00001aac 00000660 00000000 00000000
          kern/init.c:49: i386_init+59
   ebp f010fff8 ...</pre></div>
-                    <a class="btn btn-default btn-xs" href="/lab1-exercise1.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab1-exercise1.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/elfwen-jian.html">ELF文件</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/elfwen-jian.html">ELF文件</a></h2>
                 <div class="summary"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
 <ul>
 <li>
@@ -223,12 +223,12 @@ Stack backtrace:
 控制结构，其定义在elf.h中：</p>
 <div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
   <span class="n">uint</span>  <span class="n">magic ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/elfwen-jian.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/elfwen-jian.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h2>
                 <div class="summary"><p>这里介绍如何用qemu和gdb联合调试：</p>
 <p>1）在JOS目录下执行make qemu-gdb（或者make qemu-nox-gdb），此时qemu会执行并且等待gdb的连接；
 2）然后在打开一个新的terminal，在同一个目录下输入：gdb即可（原理就是在这个目录下有个.gdbinit文件，gdb会读取这个文件）；
@@ -238,12 +238,12 @@ Stack backtrace:
 0x0000fff0 in ?? ()
 + symbol-file obj/kern/kernel
 如果出现错误：warning: File "/home/yj/yangjin/xv6/jos/.gdbinit" auto-loading has been declined by ...</p>
-                    <a class="btn btn-default btn-xs" href="/qemuhe-gdbdiao-shi.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/qemuhe-gdbdiao-shi.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/stabshi-yi.html">stab释疑</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/stabshi-yi.html">stab释疑</a></h2>
                 <div class="summary"><p>Reference: https://sourceware.org/gdb/onlinedocs/stabs.html</p>
 <h4>1. stabs简介</h4>
 <p>stabs代表一种信息格式，用来将程序的信息展示给调试器debugger。</p>
@@ -254,12 +254,12 @@ Stack backtrace:
 参数和范围(function names, parameters,scopes)。在最后生成的可执行文件中，会生成一个symbol table
 和string table，debugger就是利用这两个表来获取程序的信息的。</p>
 <p>注意 ...</p>
-                    <a class="btn btn-default btn-xs" href="/stabshi-yi.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/stabshi-yi.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h2>
+                <h2><a href="http://yangjin-unique.github.io/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h2>
                 <div class="summary"><h4>1、三种特殊的中断事件</h4>
 <p>异步中断(asynchronous   interrupt)也称外部中断,简称中断 (interrupt)：由CPU外部设备引起的外部事件如I/O中断、
 时钟中断、控制台中断等是异步产生的 （即产生的时刻不确定），与CPU的执行无关;</p>
@@ -271,7 +271,7 @@ Stack backtrace:
 <p>当CPU收到中断（通过8259A完成，有关8259A的信息请看附录A）或者异常的事件时，它会暂停执行当前的程序或任务，
 通过一定的机制跳转到负责处理这个信号的相关处理例程中，在完成对这个事件的处 理后再跳回到刚才被打断的程序或任务中。</p>
 <p>中断向量和中断服务例程的对应关系主要是由IDT（中断描述符表）负责。操作 系统在IDT中设置好各种中断向量对应的中断描述符 ...</p>
-                    <a class="btn btn-default btn-xs" href="/x86zhong-duan-yu-yi-chang.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/x86zhong-duan-yu-yi-chang.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -279,11 +279,11 @@ Stack backtrace:
         <ul class="pagination">
                 <li class="prev disabled"><a href="#">&laquo;</a></li>
                     <li class="active"><a
-                            href="/tag/os.html">1</a></li>
+                            href="http://yangjin-unique.github.io/tag/os.html">1</a></li>
                     <li class=""><a
-                            href="/tag/os2.html">2</a></li>
+                            href="http://yangjin-unique.github.io/tag/os2.html">2</a></li>
                 <li class="next"><a
-                        href="/tag/os2.html">&raquo;</a></li>
+                        href="http://yangjin-unique.github.io/tag/os2.html">&raquo;</a></li>
         </ul>
         </div>
         <div class="col-sm-3" id="sidebar">
@@ -333,13 +333,13 @@ Stack backtrace:
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
     <!-- Disqus -->
     <script type="text/javascript">

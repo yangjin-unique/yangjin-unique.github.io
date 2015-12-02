@@ -9,7 +9,7 @@
 
 
 
-<link rel="canonical" href="/ptmallocnei-cun-guan-li-jie-xi.html">
+<link rel="canonical" href="http://yangjin-unique.github.io/ptmallocnei-cun-guan-li-jie-xi.html">
 
         <meta name="author" content="jin" />
         <meta name="keywords" content="linux glibc malloc ptmalloc" />
@@ -18,7 +18,7 @@
         <meta property="og:site_name" content="Living@Greatwall" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="ptmalloc内存管理解析"/>
-        <meta property="og:url" content="/ptmallocnei-cun-guan-li-jie-xi.html"/>
+        <meta property="og:url" content="http://yangjin-unique.github.io/ptmallocnei-cun-guan-li-jie-xi.html"/>
         <meta property="og:description" content="1. 简介 内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元， 如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的 sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始 是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的 支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。 2. 内存管理设计目标 衡量内存管理算法优劣的主要指标有如下几点： 分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性； 内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等； 回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等； 跨平台可移植性 ..."/>
         <meta property="article:published_time" content="2015-11-18" />
             <meta property="article:section" content="linux" />
@@ -27,11 +27,11 @@
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
 
 
 
@@ -49,29 +49,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
+            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
 Living@Greatwall            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
-                            <a href="/category/cc.html">C&c++</a>
+                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
                         </li>
                         <li class="active">
-                            <a href="/category/linux.html">Linux</a>
+                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
-                            <a href="/category/os.html">Os</a>
+                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
                         </li>
                         <li >
-                            <a href="/category/python.html">Python</a>
+                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
                         </li>
                         <li >
-                            <a href="/category/tools.html">Tools</a>
+                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -86,7 +86,7 @@ Living@Greatwall            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/ptmallocnei-cun-guan-li-jie-xi.html"
+                    <a href="http://yangjin-unique.github.io/ptmallocnei-cun-guan-li-jie-xi.html"
                        rel="bookmark"
                        title="Permalink to ptmalloc内存管理解析">
                         ptmalloc内存管理解析
@@ -107,7 +107,7 @@ Living@Greatwall            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>
+	<a href="http://yangjin-unique.github.io/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -361,7 +361,7 @@ _int_malloc()是整个内存分配的核心，根据内存大小，依次按顺�
             var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
 
                     var disqus_identifier = 'ptmallocnei-cun-guan-li-jie-xi';
-                var disqus_url = '/ptmallocnei-cun-guan-li-jie-xi.html';
+                var disqus_url = 'http://yangjin-unique.github.io/ptmallocnei-cun-guan-li-jie-xi.html';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -432,13 +432,13 @@ _int_malloc()是整个内存分配的核心，根据内存大小，依次按顺�
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
     <!-- Disqus -->
     <script type="text/javascript">
