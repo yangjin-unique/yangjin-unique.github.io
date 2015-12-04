@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>os - Living@Greatwall</title>
+    <title>syscall - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="os" />
+    <meta name="keywords" content="syscall" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -55,7 +55,7 @@ Living@Greatwall            </a>
                         <li >
                             <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
                         </li>
-                        <li class="active">
+                        <li >
                             <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
                         </li>
                         <li >
@@ -78,100 +78,26 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="http://yangjin-unique.github.io/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h2>
-                <div class="summary"><h4>1、三种特殊的中断事件</h4>
-<p>异步中断(asynchronous   interrupt)也称外部中断,简称中断 (interrupt)：由CPU外部设备引起的外部事件如I/O中断、
-时钟中断、控制台中断等是异步产生的 （即产生的时刻不确定），与CPU的执行无关;</p>
-<p>异常(exception)：而把在CPU执行指令期间检测到不正常的或非法的条件(如除零错、地访问越界)所引起的内部事件称作
-同步中断(synchronous    interrupt);</p>
-<p>异常：把在程序中使用请求系统服务的系统调用而引发的事件， 称作陷入中断(trap    interrupt)，也称软中断(soft   interrupt)，
-系统调用(system call)简称trap。</p>
-<h4>2、保护模式下的中断处理过程</h4>
-<p>当CPU收到中断（通过8259A完成，有关8259A的信息请看附录A）或者异常的事件时，它会暂停执行当前的程序或任务，
-通过一定的机制跳转到负责处理这个信号的相关处理例程中，在完成对这个事件的处 理后再跳回到刚才被打断的程序或任务中。</p>
-<p>中断向量和中断服务例程的对应关系主要是由IDT（中断描述符表）负责。操作 系统在IDT中设置好各种中断向量对应的中断描述符 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/x86zhong-duan-yu-yi-chang.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab1-bootloader.html">lab1: bootloader</a></h2>
-                <div class="summary"><p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
-从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。</p>
-<h3>一、BIOS工作</h3>
-<h4>1. bios启动后会读取bootloader</h4>
-<p>bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成：
-<em> 主引导记录：也就是bootloader，大小占446字节；
-</em> 分区表：占64字节；
-* 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。</p>
-<h4>2.上电后的第一条指令地址为0xFFFFFFF0</h4>
-<p>这是启动后的第一条执行指令，EPROM，而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动设备
-（如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00；</p>
-<p>实时模式与保护模式的区别 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab1-bootloader.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/x86ji-cun-qi-ji-chu.html">x86寄存器基础</a></h2>
-                <div class="summary"><p>http://oss.org.cn/kernel-book/ch02/2.3.1.htm</p>
-<h3>1. i386寄存器</h3>
-<p>80386作为80X86系列中的一员，必须保证向后兼容，也就是说，既要支持16位的处理器，也要支持32位的处理器。在8086中，所有的寄存器都是16位的，
-下面我们来看一下80386中寄存器有何变化：</p>
-<ul>
-<li>
-<p>把16位的通用寄存器、标志寄存器以及指令指针寄存器扩充为32位的寄存器段寄存器仍然为16位</p>
-</li>
-<li>
-<p>增加4个32位的控制寄存器</p>
-</li>
-<li>
-<p>增加4个系统地址寄存器</p>
-</li>
-<li>
-<p>增加8个调式寄存器</p>
-</li>
-<li>
-<p>增加2个测试寄存器</p>
-</li>
-</ul>
-<h3>2. 通用寄存器</h3>
-<p>8个通用寄存器是8086寄存器的超集，它们的名称和用途分别为：</p>
-<ul>
-<li>
-<p>EAX  一般用作累加器</p>
-</li>
-<li>
-<p>EBX  一般用作基址寄存器（Base）</p>
-</li>
-<li>
-<p>ECX  一般用来计数（Count）</p>
-</li>
-<li>
-<p>EDX  一般用来存放数据（Data）</p>
-</li>
-<li>
-<p>ESP  一般用作堆栈指针（Stack Pointer）</p>
-</li>
-<li>
-<p>EBP  一般用作基址指针（Base Pointer）</p>
-</li>
-<li>
-<p>ESI ...</p></li></ul>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/x86ji-cun-qi-ji-chu.html">more ...</a>
+                <h2><a href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h2>
+                <div class="summary"><p>x86有两种类型的中断：</p>
+<p>中断interrupt：主要指外设的中断；
+异常exception：包括faults，traps，aborts，还有软中断（注意软中断也被当做异常处理）；
+x86使用下面两种机制来实现中断处理机制。</p>
+<h4>1. 中断描述符表IDT</h4>
+<p>x86允许256个中断，每个中断有一个中断向量interrupt vector，这个vector值在[0, 255]之间。当中断发生时，cpu使用这个vector来索引IDT，IDT与GDT类似，IDT中每一项都是一个描述符，叫IDT descriptors，有三种类型：
+task gates：用于hardware支持的任务切换；
+interrupt gates；
+trap gates；
+每个描述符长为8字节，结构如下（由于task gate没用到，就不说了）：</p>
+<p>那么中断的过程如下图：</p>
+<p>当中断产生时，cpu使用vector来索引IDT，找到相应的描述符，从描述符中获取下面的东西：
+将描述符里面值赋给eip，也就是将eip指向了中断处理服务例程的指令（就是讲上上面的图中selector和offset组成得到eip）；
+将描述符里面的值赋给cs寄存器，包括特权级DPL，一般中断处理这个都为0，内核态处理 ...</p>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">more ...</a>
                 </div>
             </article>
             <hr/>
 
-        <ul class="pagination">
-                <li class="prev"><a href="http://yangjin-unique.github.io/category/os.html">&laquo;</a>
-                </li>
-                    <li class=""><a
-                            href="http://yangjin-unique.github.io/category/os.html">1</a></li>
-                    <li class="active"><a
-                            href="http://yangjin-unique.github.io/category/os2.html">2</a></li>
-                <li class="next disabled"><a href="#">&raquo;</a></li>
-        </ul>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
