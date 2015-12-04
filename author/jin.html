@@ -178,6 +178,33 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
             </article>
             <hr/>
             <article>
+                <h2><a href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">lab3:user mode切换到kernel mode所涉及的数据结构</a></h2>
+                <div class="summary"><p>其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
+tss-&gt;ts_esp0 = 每个cpu的栈top;
+tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
+<p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。
+发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中，
+那么cpu是怎么做的呢？
+先看TrapFrame结构：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">PushRegs</span> <span class="p">{</span>
+    <span class="cm">/* registers as pushed by pusha */</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_edi</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_esi</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ebp</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_oesp</span><span class="p">;</span>        <span class="cm">/* Useless */</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ebx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_edx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ecx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_eax</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">packed</span><span class="p">));</span>
+
+<span class="k">struct</span> <span class="n">Trapframe</span> <span class="p">{</span>
+    <span class="k">struct ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h2>
                 <div class="summary"><p>x86有两种类型的中断：</p>
 <p>中断interrupt：主要指外设的中断；
@@ -229,33 +256,6 @@ kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序�
     <span class="kt">envid_t</span> <span class="n">env_id</span><span class="p">;</span>         <span class="c1">// Unique environment identifier</span>
     <span class="kt">envid_t</span> <span class="n">env_parent_id</span><span class="p">;</span>      <span class="c1">// env_id ...</span></pre></div>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3jia-zai-yong-hu-jin-cheng.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">lab3:user mode切换到kernel mode所涉及的数据结构</a></h2>
-                <div class="summary"><p>其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
-tss-&gt;ts_esp0 = 每个cpu的栈top;
-tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
-<p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。
-发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中，
-那么cpu是怎么做的呢？
-先看TrapFrame结构：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">PushRegs</span> <span class="p">{</span>
-    <span class="cm">/* registers as pushed by pusha */</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_edi</span><span class="p">;</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_esi</span><span class="p">;</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_ebp</span><span class="p">;</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_oesp</span><span class="p">;</span>        <span class="cm">/* Useless */</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_ebx</span><span class="p">;</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_edx</span><span class="p">;</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_ecx</span><span class="p">;</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_eax</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">packed</span><span class="p">));</span>
-
-<span class="k">struct</span> <span class="n">Trapframe</span> <span class="p">{</span>
-    <span class="k">struct ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">more ...</a>
                 </div>
             </article>
             <hr/>

@@ -142,47 +142,47 @@ trap gates；
 将描述符里面的值赋给cs寄存器，包括特权级DPL，一般中断处理这个都为0，内核态处理；</p>
 <h4>2. 任务状态段TSS：task state segment</h4>
 <p>中断发生时，需要从当前任务中切换到中断模式，所以内核需要将当前任务环境存在某个地方以方便中断返回后继续执行当前任务。cpu会将当前任务环境（包括cs和eip等）保存到内核栈，内核利用这个TSS来实现这个，TSS是JOS内核自己定义的全局变量，然后在GDR中初始化TSS段描述符（属于task segment：GD_TSS0）：</p>
-<div class="highlight"><pre>static  struct  Taskstate  ts;
-// Task state segment format (as described by the Pentium architecture book)
-struct Taskstate {
-    uint32_t ts_link;    // Old ts selector
-    uintptr_t ts_esp0;    // Stack pointers and segment selectors
-    uint16_t ts_ss0;    //   after an increase in privilege level
-    uint16_t ts_padding1;
-    uintptr_t ts_esp1;
-    uint16_t ts_ss1;
-    uint16_t ts_padding2;
-    uintptr_t ts_esp2;
-    uint16_t ts_ss2;
-    uint16_t ts_padding3;
-    physaddr_t ts_cr3;    // Page directory base
-    uintptr_t ts_eip;    // Saved state from last task switch
-    uint32_t ts_eflags;
-    uint32_t ts_eax;    // More saved state (registers)
-    uint32_t ts_ecx;
-    uint32_t ts_edx;
-    uint32_t ts_ebx;
-    uintptr_t ts_esp;
-    uintptr_t ts_ebp;
-    uint32_t ts_esi;
-    uint32_t ts_edi;
-    uint16_t ts_es;        // Even more saved state (segment selectors)
-    uint16_t ts_padding4;
-    uint16_t ts_cs;
-    uint16_t ts_padding5;
-    uint16_t ts_ss;
-    uint16_t ts_padding6;
-    uint16_t ts_ds;
-    uint16_t ts_padding7;
-    uint16_t ts_fs;
-    uint16_t ts_padding8;
-    uint16_t ts_gs;
-    uint16_t ts_padding9;
-    uint16_t ts_ldt;
-    uint16_t ts_padding10;
-    uint16_t ts_t;        // Trap on task switch
-    uint16_t ts_iomb;    // I/O map base address
-};
+<div class="highlight"><pre><span class="k">static</span>  <span class="k">struct</span>  <span class="n">Taskstate</span>  <span class="n">ts</span><span class="p">;</span>
+<span class="c1">// Task state segment format (as described by the Pentium architecture book)</span>
+<span class="k">struct</span> <span class="n">Taskstate</span> <span class="p">{</span>
+    <span class="kt">uint32_t</span> <span class="n">ts_link</span><span class="p">;</span>    <span class="c1">// Old ts selector</span>
+    <span class="kt">uintptr_t</span> <span class="n">ts_esp0</span><span class="p">;</span>    <span class="c1">// Stack pointers and segment selectors</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_ss0</span><span class="p">;</span>    <span class="c1">//   after an increase in privilege level</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding1</span><span class="p">;</span>
+    <span class="kt">uintptr_t</span> <span class="n">ts_esp1</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_ss1</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding2</span><span class="p">;</span>
+    <span class="kt">uintptr_t</span> <span class="n">ts_esp2</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_ss2</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding3</span><span class="p">;</span>
+    <span class="kt">physaddr_t</span> <span class="n">ts_cr3</span><span class="p">;</span>    <span class="c1">// Page directory base</span>
+    <span class="kt">uintptr_t</span> <span class="n">ts_eip</span><span class="p">;</span>    <span class="c1">// Saved state from last task switch</span>
+    <span class="kt">uint32_t</span> <span class="n">ts_eflags</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">ts_eax</span><span class="p">;</span>    <span class="c1">// More saved state (registers)</span>
+    <span class="kt">uint32_t</span> <span class="n">ts_ecx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">ts_edx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">ts_ebx</span><span class="p">;</span>
+    <span class="kt">uintptr_t</span> <span class="n">ts_esp</span><span class="p">;</span>
+    <span class="kt">uintptr_t</span> <span class="n">ts_ebp</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">ts_esi</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">ts_edi</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_es</span><span class="p">;</span>        <span class="c1">// Even more saved state (segment selectors)</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding4</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_cs</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding5</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_ss</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding6</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_ds</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding7</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_fs</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding8</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_gs</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding9</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_ldt</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_padding10</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="kt">ts_t</span><span class="p">;</span>        <span class="c1">// Trap on task switch</span>
+    <span class="kt">uint16_t</span> <span class="n">ts_iomb</span><span class="p">;</span>    <span class="c1">// I/O map base address</span>
+<span class="p">};</span>
 </pre></div>
 
 
