@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Authors - Living@Greatwall</title>
+    <title>user mode - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,7 +10,8 @@
 
 
 
-        <meta name="author" content="Jin" />
+    <meta name="author" content="Jin" />
+    <meta name="keywords" content="user mode" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -76,8 +77,34 @@ Living@Greatwall            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-    <h1>Authors on Living@Greatwall</h1>
-        <li><a href="http://yangjin-unique.github.io/author/jin.html">jin</a> (20)</li>
+            <article>
+                <h2><a href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">lab3:user mode切换到kernel mode所涉及的数据结构</a></h2>
+                <div class="summary"><p>其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
+tss-&gt;ts_esp0 = 每个cpu的栈top;
+tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
+<p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。
+发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中，
+那么cpu是怎么做的呢？
+先看TrapFrame结构：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">PushRegs</span> <span class="p">{</span>
+    <span class="cm">/* registers as pushed by pusha */</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_edi</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_esi</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ebp</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_oesp</span><span class="p">;</span>        <span class="cm">/* Useless */</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ebx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_edx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ecx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_eax</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">packed</span><span class="p">));</span>
+
+<span class="k">struct</span> <span class="n">Trapframe</span> <span class="p">{</span>
+    <span class="k">struct ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
@@ -118,7 +145,7 @@ Living@Greatwall            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
+         <div class="col-xs-10">&copy; 2013 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

@@ -233,6 +233,33 @@ kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序�
             </article>
             <hr/>
             <article>
+                <h2><a href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">lab3:user mode切换到kernel mode所涉及的数据结构</a></h2>
+                <div class="summary"><p>其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
+tss-&gt;ts_esp0 = 每个cpu的栈top;
+tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
+<p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。
+发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中，
+那么cpu是怎么做的呢？
+先看TrapFrame结构：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">PushRegs</span> <span class="p">{</span>
+    <span class="cm">/* registers as pushed by pusha */</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_edi</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_esi</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ebp</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_oesp</span><span class="p">;</span>        <span class="cm">/* Useless */</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ebx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_edx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_ecx</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_eax</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">packed</span><span class="p">));</span>
+
+<span class="k">struct</span> <span class="n">Trapframe</span> <span class="p">{</span>
+    <span class="k">struct ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
                 <div class="summary"><p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
 前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
@@ -250,34 +277,6 @@ kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序�
 <span class="p">{</span>
     <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree ...</span></pre></div>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a></h2>
-                <div class="summary"><p>lab2的exercise1主要完成物理页的管理，建立一个简单的内存管理机制，后面的练习需要用到内存分配都是这里完成的，小结一下exercise1的要点：
-完成物理内存的管理机制：主要是建立pages[]与物理页的一一映射（包括设置可用和不可用的物理页，pages数组的index就是物理内存地址pa的高22位）；
-exercise2主要内容是完成y页目录和页表的建立，从而建立起虚拟地址空间与物理地址空间的映射，主要是实现以下几个函数：</p>
-<ul>
-<li>pgdir_walk()</li>
-<li>boot_map_region()</li>
-<li>page_lookup()</li>
-<li>page_remove()</li>
-<li>page_insert()</li>
-</ul>
-<h4>1. pgdir_walk</h4>
-<p>给定一个页目录，该函数返回一个虚拟地址对应的在页目录中的页表项page table entry（PTE）的地址。
-当该虚拟地址对应的页表不存在时，会创建一个页表。后面几个函数的实现都会依赖该函数.</p>
-<div class="highlight"><pre><span class="kt">pte_t</span> <span class="o">*</span>
-<span class="nf">pgdir_walk</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">va</span><span class="p">,</span> <span class="kt">int</span> <span class="n">create</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// Fill this function in</span>
-    <span class="kt">pde_t</span> <span class="n">pde</span><span class="p">;</span>
-    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span><span class="p">;</span>
-
-    <span class="n">pde</span>  <span class="o">=</span> <span class="n">pgdir ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab2-exercise2ye-biao.html">more ...</a>
                 </div>
             </article>
             <hr/>

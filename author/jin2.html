@@ -77,6 +77,34 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a></h2>
+                <div class="summary"><p>lab2的exercise1主要完成物理页的管理，建立一个简单的内存管理机制，后面的练习需要用到内存分配都是这里完成的，小结一下exercise1的要点：
+完成物理内存的管理机制：主要是建立pages[]与物理页的一一映射（包括设置可用和不可用的物理页，pages数组的index就是物理内存地址pa的高22位）；
+exercise2主要内容是完成y页目录和页表的建立，从而建立起虚拟地址空间与物理地址空间的映射，主要是实现以下几个函数：</p>
+<ul>
+<li>pgdir_walk()</li>
+<li>boot_map_region()</li>
+<li>page_lookup()</li>
+<li>page_remove()</li>
+<li>page_insert()</li>
+</ul>
+<h4>1. pgdir_walk</h4>
+<p>给定一个页目录，该函数返回一个虚拟地址对应的在页目录中的页表项page table entry（PTE）的地址。
+当该虚拟地址对应的页表不存在时，会创建一个页表。后面几个函数的实现都会依赖该函数.</p>
+<div class="highlight"><pre><span class="kt">pte_t</span> <span class="o">*</span>
+<span class="nf">pgdir_walk</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">va</span><span class="p">,</span> <span class="kt">int</span> <span class="n">create</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Fill this function in</span>
+    <span class="kt">pde_t</span> <span class="n">pde</span><span class="p">;</span>
+    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span><span class="p">;</span>
+
+    <span class="n">pde</span>  <span class="o">=</span> <span class="n">pgdir ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab2-exercise2ye-biao.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/x86-address-translation.html">x86 Address Translation</a></h2>
                 <div class="summary"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/x86-address-translation.html">more ...</a>
