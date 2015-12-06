@@ -192,8 +192,8 @@ multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同�
             </article>
             <hr/>
             <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">lab3:user mode切换到kernel mode所涉及的数据结构</a></h2>
-                <div class="summary"><p>其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
+                <h2><a href="http://yangjin-unique.github.io/lab3user-modeyu-kernel-modede-qie-huan.html">lab3:user mode与kernel mode的切换</a></h2>
+                <div class="summary"><p>两个模式切换涉及两个很重要的数据结构：Taskstate和TrapFrame，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
 tss-&gt;ts_esp0 = 每个cpu的栈top;
 tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
 <p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。</p>
@@ -208,8 +208,8 @@ tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
     <span class="cm">/* registers as pushed by pusha */</span>
     <span class="kt">uint32_t</span> <span class="n">reg_edi</span><span class="p">;</span>
     <span class="kt">uint32_t</span> <span class="n">reg_esi</span><span class="p">;</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_ebp ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">more ...</a>
+    <span class="kt">uint32_t ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeyu-kernel-modede-qie-huan.html">more ...</a>
                 </div>
             </article>
             <hr/>
