@@ -13,13 +13,13 @@
 
         <meta name="author" content="jin" />
         <meta name="keywords" content="os,user mode,kernel mode,tast state,TrapFrame" />
-        <meta name="description" content="其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器： tss-&gt;ts_esp0 = 每个cpu的栈top; tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子 每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。 发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中， 那么cpu是怎么做的呢？ 先看TrapFrame结构： struct PushRegs { /* registers as pushed by pusha */ uint32_t reg_edi; uint32_t reg_esi; uint32_t reg_ebp; uint32_t reg_oesp; /* Useless */ uint32_t reg_ebx; uint32_t reg_edx; uint32_t reg_ecx; uint32_t reg_eax; } __attribute__((packed)); struct Trapframe { struct ..." />
+        <meta name="description" content="其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器： tss-&gt;ts_esp0 = 每个cpu的栈top; tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子 每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。 TrapFrame用在内核态与用户态相互切换时，当从user mode切换到kernel mode时，cpu会将当前进程的状态信息以TrapFrame的形式 保存在cpu的内核栈上（内核栈地址由上面的tss给出），而当cpu从kernel mode返回时，会从内核栈上pop出进程的状态信息，然后继续进程的运行。 下面从两种模式切换时trapframe的作用。 1) 从user mode到kernel mode 发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中， 那么cpu是怎么做的呢？ 先看TrapFrame结构： struct PushRegs { /* registers as pushed by pusha */ uint32_t reg_edi; uint32_t reg_esi; uint32_t reg_ebp ..." />
 
         <meta property="og:site_name" content="Living@Greatwall" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="lab3:user mode切换到kernel mode所涉及的数据结构"/>
         <meta property="og:url" content="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html"/>
-        <meta property="og:description" content="其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器： tss-&gt;ts_esp0 = 每个cpu的栈top; tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子 每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。 发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中， 那么cpu是怎么做的呢？ 先看TrapFrame结构： struct PushRegs { /* registers as pushed by pusha */ uint32_t reg_edi; uint32_t reg_esi; uint32_t reg_ebp; uint32_t reg_oesp; /* Useless */ uint32_t reg_ebx; uint32_t reg_edx; uint32_t reg_ecx; uint32_t reg_eax; } __attribute__((packed)); struct Trapframe { struct ..."/>
+        <meta property="og:description" content="其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器： tss-&gt;ts_esp0 = 每个cpu的栈top; tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子 每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。 TrapFrame用在内核态与用户态相互切换时，当从user mode切换到kernel mode时，cpu会将当前进程的状态信息以TrapFrame的形式 保存在cpu的内核栈上（内核栈地址由上面的tss给出），而当cpu从kernel mode返回时，会从内核栈上pop出进程的状态信息，然后继续进程的运行。 下面从两种模式切换时trapframe的作用。 1) 从user mode到kernel mode 发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中， 那么cpu是怎么做的呢？ 先看TrapFrame结构： struct PushRegs { /* registers as pushed by pusha */ uint32_t reg_edi; uint32_t reg_esi; uint32_t reg_ebp ..."/>
         <meta property="article:published_time" content="2013-04-05" />
             <meta property="article:section" content="os" />
             <meta property="article:tag" content="os" />
@@ -126,8 +126,12 @@ Living@Greatwall            </a>
                 <p>其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
 tss-&gt;ts_esp0 = 每个cpu的栈top;
 tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
-<p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。
-发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中，
+<p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。</p>
+<p>TrapFrame用在内核态与用户态相互切换时，当从user mode切换到kernel mode时，cpu会将当前进程的状态信息以TrapFrame的形式
+保存在cpu的内核栈上（内核栈地址由上面的tss给出），而当cpu从kernel mode返回时，会从内核栈上pop出进程的状态信息，然后继续进程的运行。
+下面从两种模式切换时trapframe的作用。</p>
+<h4>1) 从user mode到kernel mode</h4>
+<p>发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中，
 那么cpu是怎么做的呢？
 先看TrapFrame结构：</p>
 <div class="highlight"><pre><span class="k">struct</span> <span class="n">PushRegs</span> <span class="p">{</span>
@@ -205,7 +209,38 @@ tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
 
 <p>_alltraps中会调用trap()函数，我们知道trap函数的参数TrapFrame，所以这个TrapFrame参数是在前面两段汇编代码里面传进去的，现在好办了，只要看看这些汇编代码是怎么处理栈（参数是通过栈传递）？
 由于栈是从高地址往低地址生长，所以入栈的顺序应该与寄存器在TrapFrame的位置顺序相反：
-也就是从call trap指令往上看，先pushal，这个对应将PushRegs入栈，然后es，ds，再到num，0为止。tf_trapno后面的值都不是这里操作的。</p>
+也就是从call trap指令往上看，先pushal，这个对应将PushRegs入栈，然后es，ds，再到num，0为止。tf_trapno后面的值都不是这里操作的。
+TrapFrame的结构如下图所示：</p>
+<p><img alt="img1" src="../images/trapframe.png" /></p>
+<h4>2) 从kernel mode到user mode</h4>
+<p>从中断（如缺页，外设中断）返回时，或者从系统调用返回时（excptions发生时，用户进程会被终止）。下面先说一种情况，就是cpu调度一个新的进程运行，
+此时一般是先从user mode到kernel mode，然后从kernel mode再到user mode，只是换了一个新的进程在执行。什么情况会出现这种情况呢？常见的就是用户进程执行某个系统调用阻塞了
+（如以阻塞方式读取网络设备的数据，数据还没ready，或者等待某个信号量，或者sleep），此时cpu会调度另外一个进程运行。JOS中sched_yield实现了进程调度，而完成从kernel mode到user mode切换的就是其中的env_run(new_process)：</p>
+<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">curenv</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">curenv</span><span class="o">-&gt;</span><span class="n">env_status</span> <span class="o">==</span> <span class="n">ENV_RUNNING</span><span class="p">)</span>
+        <span class="n">curenv</span><span class="o">-&gt;</span><span class="n">env_status</span> <span class="o">=</span> <span class="n">ENV_RUNNABLE</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">curenv</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+<span class="n">curenv</span><span class="o">-&gt;</span><span class="n">env_status</span> <span class="o">=</span> <span class="n">ENV_RUNNING</span><span class="p">;</span>
+<span class="n">curenv</span><span class="o">-&gt;</span><span class="n">env_runs</span><span class="o">++</span><span class="p">;</span>
+<span class="n">lcr3</span><span class="p">(</span><span class="n">PADDR</span><span class="p">(</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">env_pgdir</span><span class="p">));</span>
+<span class="n">unlock_kernel</span><span class="p">();</span>
+<span class="n">env_pop_tf</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cunv_tf</span><span class="p">);</span>
+</pre></div>
+
+
+<p>上面env_run先判断是否发生了进程切换，如果是则将当前进程设为RUNNABLE，然后将curenv设为新的进程，再加载新进程的地址空间，解锁big kernel lock，再调用env_pop_tf来恢复新进程的状态（继续上一次的运行指令）：</p>
+<div class="highlight"><pre>__asm __volatile(&quot;movl %0,%%esp\n&quot;
+    &quot;\tpopal\n&quot;
+    &quot;\tpopl %%es\n&quot;
+    &quot;\tpopl %%ds\n&quot;
+    &quot;\taddl $0x8,%%esp\n&quot; /* skip tf_trapno and tf_errcode */
+    &quot;\tiret&quot;
+    : : &quot;g&quot; (tf) : &quot;memory&quot;);
+</pre></div>
+
+
+<p>上面就是env_pop_tf的代码，实际上就是将之前保存在内核站的TrapFrame再pop出来完成了切换到用户进程。</p>
             </div>
             <!-- /.entry-content -->
     <hr/>
