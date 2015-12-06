@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>syscall - Living@Greatwall</title>
+    <title>Syscall - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="syscall" />
+    <meta name="keywords" content="Syscall" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -78,6 +78,20 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h2>
+                <div class="summary"><h3>一、多核启动</h3>
+<p>lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。
+关于multiprocessor与multicore的区别请看：https://software.intel.com/en-us/blogs/2008/04/17/the-difference-between-multi-core-and-multi-processing。
+multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同一个主板上，cpu之前通过总线通信；而multicore是所有cpus都在同一个chip上，这样cpu之间的通信时延更低，更省电；
+在SMP系统中，正常运行时所有cpu功能一样，但在启动时，cpu分为两类：
+1）Bootstrap processor（BSP）：负责初始化并启动系统；
+2）Application processors（AP）：os启动后被BSP激活。</p>
+<p>在SMP系统中，每个cpu有一个APIC（LAPIC：高级可编程中断管理器）单元，专门负责传送中断信号，见kern/lapic.c，LAPIC给每个cpu分配一个唯一的ID ...</p>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h2>
                 <div class="summary"><p>x86有两种类型的中断：</p>
 <p>中断interrupt：主要指外设的中断；
@@ -138,7 +152,7 @@ trap gates；
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2013 Jin
+         <div class="col-xs-10">&copy; 2014 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

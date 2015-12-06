@@ -178,6 +178,20 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
             </article>
             <hr/>
             <article>
+                <h2><a href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h2>
+                <div class="summary"><h3>一、多核启动</h3>
+<p>lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。
+关于multiprocessor与multicore的区别请看：https://software.intel.com/en-us/blogs/2008/04/17/the-difference-between-multi-core-and-multi-processing。
+multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同一个主板上，cpu之前通过总线通信；而multicore是所有cpus都在同一个chip上，这样cpu之间的通信时延更低，更省电；
+在SMP系统中，正常运行时所有cpu功能一样，但在启动时，cpu分为两类：
+1）Bootstrap processor（BSP）：负责初始化并启动系统；
+2）Application processors（AP）：os启动后被BSP激活。</p>
+<p>在SMP系统中，每个cpu有一个APIC（LAPIC：高级可编程中断管理器）单元，专门负责传送中断信号，见kern/lapic.c，LAPIC给每个cpu分配一个唯一的ID ...</p>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html">lab3:user mode切换到kernel mode所涉及的数据结构</a></h2>
                 <div class="summary"><p>其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
 tss-&gt;ts_esp0 = 每个cpu的栈top;
@@ -254,27 +268,6 @@ kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序�
                 </div>
             </article>
             <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
-                <div class="summary"><p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
-前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
-也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处，
-所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数：</p>
-<p>boot_alloc()</p>
-<p>mem_init() (only up to the call to check_page_free_list(1))</p>
-<p>page_init()</p>
-<p>page_alloc()</p>
-<p>page_free()</p>
-<h4>1. boot_alloc</h4>
-<p>是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。</p>
-<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span>
-<span class="nf">boot_alloc</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
 
         <ul class="pagination">
                 <li class="prev disabled"><a href="#">&laquo;</a></li>
@@ -282,6 +275,8 @@ kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序�
                             href="http://yangjin-unique.github.io/author/jin.html">1</a></li>
                     <li class=""><a
                             href="http://yangjin-unique.github.io/author/jin2.html">2</a></li>
+                    <li class=""><a
+                            href="http://yangjin-unique.github.io/author/jin3.html">3</a></li>
                 <li class="next"><a
                         href="http://yangjin-unique.github.io/author/jin2.html">&raquo;</a></li>
         </ul>

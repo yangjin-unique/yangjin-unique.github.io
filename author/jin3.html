@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>interrupts - Living@Greatwall</title>
+    <title>Articles by jin - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,8 +10,7 @@
 
 
 
-    <meta name="author" content="Jin" />
-    <meta name="keywords" content="interrupts" />
+        <meta name="author" content="Jin" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -78,26 +77,67 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h2>
-                <div class="summary"><p>x86有两种类型的中断：</p>
-<p>中断interrupt：主要指外设的中断；
-异常exception：包括faults，traps，aborts，还有软中断（注意软中断也被当做异常处理）；
-x86使用下面两种机制来实现中断处理机制。</p>
-<h4>1. 中断描述符表IDT</h4>
-<p>x86允许256个中断，每个中断有一个中断向量interrupt vector，这个vector值在[0, 255]之间。当中断发生时，cpu使用这个vector来索引IDT，IDT与GDT类似，IDT中每一项都是一个描述符，叫IDT descriptors，有三种类型：
-task gates：用于hardware支持的任务切换；
-interrupt gates；
-trap gates；
-每个描述符长为8字节，结构如下（由于task gate没用到，就不说了）：</p>
-<p>那么中断的过程如下图：</p>
-<p>当中断产生时，cpu使用vector来索引IDT，找到相应的描述符，从描述符中获取下面的东西：
-将描述符里面值赋给eip，也就是将eip指向了中断处理服务例程的指令（就是讲上上面的图中selector和offset组成得到eip）；
-将描述符里面的值赋给cs寄存器，包括特权级DPL，一般中断处理这个都为0，内核态处理 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">more ...</a>
+                <h2><a href="http://yangjin-unique.github.io/x86ji-cun-qi-ji-chu.html">x86寄存器基础</a></h2>
+                <div class="summary"><p>http://oss.org.cn/kernel-book/ch02/2.3.1.htm</p>
+<h3>1. i386寄存器</h3>
+<p>80386作为80X86系列中的一员，必须保证向后兼容，也就是说，既要支持16位的处理器，也要支持32位的处理器。在8086中，所有的寄存器都是16位的，
+下面我们来看一下80386中寄存器有何变化：</p>
+<ul>
+<li>
+<p>把16位的通用寄存器、标志寄存器以及指令指针寄存器扩充为32位的寄存器段寄存器仍然为16位</p>
+</li>
+<li>
+<p>增加4个32位的控制寄存器</p>
+</li>
+<li>
+<p>增加4个系统地址寄存器</p>
+</li>
+<li>
+<p>增加8个调式寄存器</p>
+</li>
+<li>
+<p>增加2个测试寄存器</p>
+</li>
+</ul>
+<h3>2. 通用寄存器</h3>
+<p>8个通用寄存器是8086寄存器的超集，它们的名称和用途分别为：</p>
+<ul>
+<li>
+<p>EAX  一般用作累加器</p>
+</li>
+<li>
+<p>EBX  一般用作基址寄存器（Base）</p>
+</li>
+<li>
+<p>ECX  一般用来计数（Count）</p>
+</li>
+<li>
+<p>EDX  一般用来存放数据（Data）</p>
+</li>
+<li>
+<p>ESP  一般用作堆栈指针（Stack Pointer）</p>
+</li>
+<li>
+<p>EBP  一般用作基址指针（Base Pointer）</p>
+</li>
+<li>
+<p>ESI ...</p></li></ul>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/x86ji-cun-qi-ji-chu.html">more ...</a>
                 </div>
             </article>
             <hr/>
 
+        <ul class="pagination">
+                <li class="prev"><a href="http://yangjin-unique.github.io/author/jin2.html">&laquo;</a>
+                </li>
+                    <li class=""><a
+                            href="http://yangjin-unique.github.io/author/jin.html">1</a></li>
+                    <li class=""><a
+                            href="http://yangjin-unique.github.io/author/jin2.html">2</a></li>
+                    <li class="active"><a
+                            href="http://yangjin-unique.github.io/author/jin3.html">3</a></li>
+                <li class="next disabled"><a href="#">&raquo;</a></li>
+        </ul>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
@@ -138,7 +178,7 @@ trap gates；
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2014 Jin
+         <div class="col-xs-10">&copy; 2015 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

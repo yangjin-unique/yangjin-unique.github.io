@@ -78,6 +78,21 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h2>
+                <div class="summary"><p>这里介绍如何用qemu和gdb联合调试：</p>
+<p>1）在JOS目录下执行make qemu-gdb（或者make qemu-nox-gdb），此时qemu会执行并且等待gdb的连接；
+2）然后在打开一个新的terminal，在同一个目录下输入：gdb即可（原理就是在这个目录下有个.gdbinit文件，gdb会读取这个文件）；
+没有出现错误的话，会出现下面的内容：</p>
+<p>The target architecture is assumed to be i8086
+[f000:fff0]    0xffff0: ljmp   $0xf000,$0xe05b
+0x0000fff0 in ?? ()
++ symbol-file obj/kern/kernel
+如果出现错误：warning: File "/home/yj/yangjin/xv6/jos/.gdbinit" auto-loading has been declined by ...</p>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/qemuhe-gdbdiao-shi.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/stabshi-yi.html">stab释疑</a></h2>
                 <div class="summary"><p>Reference: https://sourceware.org/gdb/onlinedocs/stabs.html</p>
 <h4>1. stabs简介</h4>
@@ -228,7 +243,7 @@ Living@Greatwall            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2013 Jin
+         <div class="col-xs-10">&copy; 2014 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

@@ -20,7 +20,7 @@
         <meta property="og:title" content="lab3:user mode切换到kernel mode所涉及的数据结构"/>
         <meta property="og:url" content="http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html"/>
         <meta property="og:description" content="其实这两个没有太大关系，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器： tss-&gt;ts_esp0 = 每个cpu的栈top; tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子 每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。 TrapFrame用在内核态与用户态相互切换时，当从user mode切换到kernel mode时，cpu会将当前进程的状态信息以TrapFrame的形式 保存在cpu的内核栈上（内核栈地址由上面的tss给出），而当cpu从kernel mode返回时，会从内核栈上pop出进程的状态信息，然后继续进程的运行。 下面从两种模式切换时trapframe的作用。 1) 从user mode到kernel mode 发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中， 那么cpu是怎么做的呢？ 先看TrapFrame结构： struct PushRegs { /* registers as pushed by pusha */ uint32_t reg_edi; uint32_t reg_esi; uint32_t reg_ebp ..."/>
-        <meta property="article:published_time" content="2013-04-05" />
+        <meta property="article:published_time" content="2014-04-05" />
             <meta property="article:section" content="os" />
             <meta property="article:tag" content="os" />
             <meta property="article:tag" content="user mode" />
@@ -103,7 +103,7 @@ Living@Greatwall            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2013-04-05T00:00:00+08:00"> Fri 05 April 2013</time>
+        <i class="fa fa-calendar"></i><time datetime="2014-04-05T00:00:00+08:00"> Sat 05 April 2014</time>
     </span>
 
 

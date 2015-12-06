@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>interrupts - Living@Greatwall</title>
+    <title>Multi-processor - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="interrupts" />
+    <meta name="keywords" content="Multi-processor" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -78,22 +78,16 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h2>
-                <div class="summary"><p>x86有两种类型的中断：</p>
-<p>中断interrupt：主要指外设的中断；
-异常exception：包括faults，traps，aborts，还有软中断（注意软中断也被当做异常处理）；
-x86使用下面两种机制来实现中断处理机制。</p>
-<h4>1. 中断描述符表IDT</h4>
-<p>x86允许256个中断，每个中断有一个中断向量interrupt vector，这个vector值在[0, 255]之间。当中断发生时，cpu使用这个vector来索引IDT，IDT与GDT类似，IDT中每一项都是一个描述符，叫IDT descriptors，有三种类型：
-task gates：用于hardware支持的任务切换；
-interrupt gates；
-trap gates；
-每个描述符长为8字节，结构如下（由于task gate没用到，就不说了）：</p>
-<p>那么中断的过程如下图：</p>
-<p>当中断产生时，cpu使用vector来索引IDT，找到相应的描述符，从描述符中获取下面的东西：
-将描述符里面值赋给eip，也就是将eip指向了中断处理服务例程的指令（就是讲上上面的图中selector和offset组成得到eip）；
-将描述符里面的值赋给cs寄存器，包括特权级DPL，一般中断处理这个都为0，内核态处理 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">more ...</a>
+                <h2><a href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h2>
+                <div class="summary"><h3>一、多核启动</h3>
+<p>lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。
+关于multiprocessor与multicore的区别请看：https://software.intel.com/en-us/blogs/2008/04/17/the-difference-between-multi-core-and-multi-processing。
+multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同一个主板上，cpu之前通过总线通信；而multicore是所有cpus都在同一个chip上，这样cpu之间的通信时延更低，更省电；
+在SMP系统中，正常运行时所有cpu功能一样，但在启动时，cpu分为两类：
+1）Bootstrap processor（BSP）：负责初始化并启动系统；
+2）Application processors（AP）：os启动后被BSP激活。</p>
+<p>在SMP系统中，每个cpu有一个APIC（LAPIC：高级可编程中断管理器）单元，专门负责传送中断信号，见kern/lapic.c，LAPIC给每个cpu分配一个唯一的ID ...</p>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">more ...</a>
                 </div>
             </article>
             <hr/>

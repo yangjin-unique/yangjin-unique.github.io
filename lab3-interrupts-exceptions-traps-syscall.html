@@ -20,7 +20,7 @@
         <meta property="og:title" content="lab3: Interrupts, Exceptions, Traps, Syscall"/>
         <meta property="og:url" content="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html"/>
         <meta property="og:description" content="x86有两种类型的中断： 中断interrupt：主要指外设的中断； 异常exception：包括faults，traps，aborts，还有软中断（注意软中断也被当做异常处理）； x86使用下面两种机制来实现中断处理机制。 1. 中断描述符表IDT x86允许256个中断，每个中断有一个中断向量interrupt vector，这个vector值在[0, 255]之间。当中断发生时，cpu使用这个vector来索引IDT，IDT与GDT类似，IDT中每一项都是一个描述符，叫IDT descriptors，有三种类型： task gates：用于hardware支持的任务切换； interrupt gates； trap gates； 每个描述符长为8字节，结构如下（由于task gate没用到，就不说了）： 那么中断的过程如下图： 当中断产生时，cpu使用vector来索引IDT，找到相应的描述符，从描述符中获取下面的东西： 将描述符里面值赋给eip，也就是将eip指向了中断处理服务例程的指令（就是讲上上面的图中selector和offset组成得到eip）； 将描述符里面的值赋给cs寄存器，包括特权级DPL，一般中断处理这个都为0，内核态处理 ..."/>
-        <meta property="article:published_time" content="2013-04-01" />
+        <meta property="article:published_time" content="2014-04-01" />
             <meta property="article:section" content="os" />
             <meta property="article:tag" content="os" />
             <meta property="article:tag" content="interrupts" />
@@ -104,7 +104,7 @@ Living@Greatwall            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2013-04-01T00:00:00+08:00"> Mon 01 April 2013</time>
+        <i class="fa fa-calendar"></i><time datetime="2014-04-01T00:00:00+08:00"> Tue 01 April 2014</time>
     </span>
 
 

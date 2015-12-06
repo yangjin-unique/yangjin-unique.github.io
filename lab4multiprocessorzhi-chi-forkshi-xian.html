@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>lab4:MultiProcessor支持、fork实现 - Living@Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="Multi-processor,fork,Copy-on-Write,Syscall" />
+        <meta name="description" content="一、多核启动 lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。 关于multiprocessor与multicore的区别请看：https://software.intel.com/en-us/blogs/2008/04/17/the-difference-between-multi-core-and-multi-processing。 multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同一个主板上，cpu之前通过总线通信；而multicore是所有cpus都在同一个chip上，这样cpu之间的通信时延更低，更省电； 在SMP系统中，正常运行时所有cpu功能一样，但在启动时，cpu分为两类： 1）Bootstrap processor（BSP）：负责初始化并启动系统； 2）Application processors（AP）：os启动后被BSP激活。 在SMP系统中，每个cpu有一个APIC（LAPIC：高级可编程中断管理器）单元，专门负责传送中断信号，见kern/lapic.c，LAPIC给每个cpu分配一个唯一的ID ..." />
+
+        <meta property="og:site_name" content="Living@Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="lab4:MultiProcessor支持、fork实现"/>
+        <meta property="og:url" content="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html"/>
+        <meta property="og:description" content="一、多核启动 lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。 关于multiprocessor与multicore的区别请看：https://software.intel.com/en-us/blogs/2008/04/17/the-difference-between-multi-core-and-multi-processing。 multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同一个主板上，cpu之前通过总线通信；而multicore是所有cpus都在同一个chip上，这样cpu之间的通信时延更低，更省电； 在SMP系统中，正常运行时所有cpu功能一样，但在启动时，cpu分为两类： 1）Bootstrap processor（BSP）：负责初始化并启动系统； 2）Application processors（AP）：os启动后被BSP激活。 在SMP系统中，每个cpu有一个APIC（LAPIC：高级可编程中断管理器）单元，专门负责传送中断信号，见kern/lapic.c，LAPIC给每个cpu分配一个唯一的ID ..."/>
+        <meta property="article:published_time" content="2014-05-01" />
+            <meta property="article:section" content="os" />
+            <meta property="article:tag" content="Multi-processor" />
+            <meta property="article:tag" content="fork" />
+            <meta property="article:tag" content="Copy-on-Write" />
+            <meta property="article:tag" content="Syscall" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
+Living@Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
+                        </li>
+                        <li class="active">
+                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html"
+                       rel="bookmark"
+                       title="Permalink to lab4:MultiProcessor支持、fork实现">
+                        lab4:MultiProcessor支持、fork实现
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-05-01T00:00:00+08:00"> Thu 01 May 2014</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://yangjin-unique.github.io/tag/multi-processor.html">Multi-processor</a>
+        /
+	<a href="http://yangjin-unique.github.io/tag/fork.html">fork</a>
+        /
+	<a href="http://yangjin-unique.github.io/tag/copy-on-write.html">Copy-on-Write</a>
+        /
+	<a href="http://yangjin-unique.github.io/tag/syscall.html">Syscall</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h3>一、多核启动</h3>
+<p>lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。
+关于multiprocessor与multicore的区别请看：https://software.intel.com/en-us/blogs/2008/04/17/the-difference-between-multi-core-and-multi-processing。
+multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同一个主板上，cpu之前通过总线通信；而multicore是所有cpus都在同一个chip上，这样cpu之间的通信时延更低，更省电；
+在SMP系统中，正常运行时所有cpu功能一样，但在启动时，cpu分为两类：
+1）Bootstrap processor（BSP）：负责初始化并启动系统；
+2）Application processors（AP）：os启动后被BSP激活。</p>
+<p>在SMP系统中，每个cpu有一个APIC（LAPIC：高级可编程中断管理器）单元，专门负责传送中断信号，见kern/lapic.c，LAPIC给每个cpu分配一个唯一的ID，需要用到的LAPIC的功能：
+1）读取LAPIC的ID，指出当前代码运行在哪个cpu上（cpunum）；
+2）从BSP发出STARTUP中断信号（IPI）给其他APs，以bringup这些AP；
+3）控制LAPIC内部的定时器，以产生时钟中断来支持多任务抢占式调度。</p>
+<p>cpu采用MMIO（memory mapped IO）访问其LAPIC。每个AP启动时都是先进入实时模式，BSP执行boot_aps时会将mpentry.S代码拷贝到MPENTRY_PADDR处（mpentry.S与boot.S比较相似，但不使能A20地址总线），并调用lapic_startap来启动其他每个AP，AP的启动路线为：
+mpentry.S --&gt; mp_main()
+per-CPU相关数据：
+1）per-CPU kernel stack：需要完成相应的映射；
+2）per-CPU TSS和TSS描述符：每个cpu需要一个task state segment，来保存每个cpu内核栈的地址，TSS值为cpus[i].cpu_ts；
+3）per-CPU 当前进程指针：执行当前cpu运行的进程，thiscpu-&gt;cpu_env，或者cpus[cpunum()]；
+4）per-CPU系统寄存器：每个cpu有自己的寄存器；</p>
+<p>Ex1-3：
+1）完成BSP为其他AP创建各个cpu内核栈的映射；
+2）建立perCPU的TSS；
+上面任务较为简单，只是在给每个cpu建立TSS时要注意使用该cpu的tss。</p>
+<h3>二、内核锁</h3>
+<p>为了保证多个cpu保存同步（执行内核代码时），jos采用一个big kernel lock：kernel_lock。
+ex5完成以下任务，比较简单：
+In i386_init(), acquire the lock before the BSP wakes up the other CPUs.
+In mp_main(), acquire the lock after initializing the AP, and then call sched_yield() to start running environments on this AP.
+In trap(), acquire the lock when trapped from user mode. To determine whether a trap happened in user mode or in kernel mode, check the low bits of the tf_cs.
+In env_run(), release the lock right before switching to user mode. Do not do that too early or too late, otherwise you will experience races or deadlocks.</p>
+<h3>三、Round-robin调度</h3>
+<p>创建3或更多的用户进程，然后让所有cpu去执行这些进程，需要在sched_yield中实现用户进程RR调度算法，算法本身并不复杂，但是实现的时候有几个点要考虑：
+1）当curenv为null时，我开始没考虑到这个问题，运行时老是出现kernel page fault错误，最后调试看到curenv为null，也就是每个cpu最开始执行（boot完后）第一个进程时，此时应该从0开始选一个runable的进程；</p>
+<h3>四、fork实现</h3>
+<p>前面创建的进程都是由内核自己创建的，现在要实现由用户进程来创建子进程，也就是unix下的fork系统调用。需要实现几个API：
+sys_exofork:
+This system call creates a new environment with an almost blank slate: nothing is mapped in the user portion of its address space, and it is not runnable. The new environment will have the same register state as the parent environment at the time of the sys_exofork call. In the parent, sys_exofork will return the envid_t of the newly created environment (or a negative error code if the environment allocation failed). In the child, however, it will return 0. (Since the child starts out marked as not runnable, sys_exofork will not actually return in the child until the parent has explicitly allowed this by marking the child runnable using....)
+sys_env_set_status:
+Sets the status of a specified environment to ENV_RUNNABLE or ENV_NOT_RUNNABLE. This system call is typically used to mark a new environment ready to run, once its address space and register state has been fully initialized.
+sys_page_alloc:
+Allocates a page of physical memory and maps it at a given virtual address in a given environment's address space.
+sys_page_map:
+Copy a page mapping (not the contents of a page!) from one environment's address space to another, leaving a memory sharing arrangement in place so that the new and the old mappings both refer to the same page of physical memory.
+sys_page_unmap:
+Unmap a page mapped at a given virtual address in a given environment.
+这里要注意sys_exofork的实现，为了保证子进程返回0，父进程返回子进程id，在复制父进程
+当前寄存器状态TrapFrame时，需要将子进程的trapframe的eax寄存器设为0，这样就保证了子进程的fork返回0（系统调用参数返回是通过寄存器eax）。其中fork实现如下：</p>
+<div class="highlight"><pre><span class="n">sys_exofork</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">new_env</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+
+    <span class="n">assert</span><span class="p">(</span><span class="n">curenv</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">ret</span> <span class="o">=</span> <span class="n">env_alloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">new_env</span><span class="p">,</span> <span class="n">curenv</span><span class="o">-&gt;</span><span class="n">env_id</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="n">new_env</span><span class="o">-&gt;</span><span class="n">env_status</span> <span class="o">=</span> <span class="n">ENV_NOT_RUNNABLE</span><span class="p">;</span>
+    <span class="n">memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">new_env</span><span class="o">-&gt;</span><span class="n">env_tf</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">curenv</span><span class="o">-&gt;</span><span class="n">env_tf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">Trapframe</span><span class="p">));</span>
+    <span class="n">new_env</span><span class="o">-&gt;</span><span class="n">env_tf</span><span class="p">.</span><span class="n">tf_regs</span><span class="p">.</span><span class="n">reg_eax</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//child process return 0</span>
+    <span class="k">return</span> <span class="n">new_env</span><span class="o">-&gt;</span><span class="n">env_id</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>sys_exofork将父进程的状态（所有的相关寄存器，curenv-&gt;env_tf，这是TrapFrame，保存进程当前的状态信息）全部拷贝到子进程，然后将子进程的env_tf.tf_regs.reg_eax设为0，因为子进程的返回值就是通过这个来设置的。
+除了父进程的状态信息，还需要将父进程的地址空间拷贝给子进程，那这个是在哪里实现的呢？
+JOS是在用户态通过系统调用来实现的，在lib/dumpfork.c中完成地址空间的拷贝，</p>
+<h3>五、Copy-on-Wirte fork实现</h3>
+<p>上面的fork实现中，最耗cpu的地方是要完全复制父进程的地址空间，包括复制每一个page的内容。而一般fork完后都是会去执行exec，所以出现了copy-on-write的方式来提高fork的性能，这也是unix下的实现方式，实际就是复制时我只是复制地址空间映射，也就是此时父子进程地址空间映射到同一块物理内存，然后将这块共享内存设为只读，当父子进程的任何一个想写这块内存时，会产生一个page fault。
+JOS的将copy-on-wirte的fork实现在用户空间。</p>
+<h4>1）User level page fault handler</h4>
+<p>通过系统调用sys_env_set_pgfault_upcall 来实现，当用户态出现page fault时，内核会重启这个进程，并让这个进程执行这个user page fault handler，并且使用的栈不是原进程的栈，而是叫user exception stack。要实现这一点，我们需要实现一个栈切换的机制，这个机制就像x86在用户态切换到内核态所完成的操作一样：设置trap frame（尤其是TrapFrame中有些是x86硬件完成的，这里我们需要自己来完成，使用结构UTrapFrame）。
+user exception stack大小为一页，地址为[UXSTACKTOP-PGSIZE, UXSTACKTOP-1]。</p>
+<h4>2）触发User level page fault handler</h4>
+<p>当user level page fault发生时，page_fault_handler会被调用，在这个里面，我们需要完成设置好user exception stack的内容（设置好struct UTrapFrame，UTrapFrame实际上保存在user exception stack的开始处）：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">UTrapframe</span> <span class="p">{</span>
+    <span class="cm">/* information about the fault */</span>
+    <span class="kt">uint32_t</span> <span class="n">utf_fault_va</span><span class="p">;</span>    <span class="cm">/* va for T_PGFLT, 0 otherwise */</span>
+    <span class="kt">uint32_t</span> <span class="n">utf_err</span><span class="p">;</span>
+    <span class="cm">/* trap-time return state */</span>
+    <span class="k">struct</span> <span class="n">PushRegs</span> <span class="n">utf_regs</span><span class="p">;</span>
+    <span class="kt">uintptr_t</span> <span class="n">utf_eip</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">utf_eflags</span><span class="p">;</span>
+    <span class="cm">/* the trap-time stack to return to */</span>
+    <span class="kt">uintptr_t</span> <span class="n">utf_esp</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">packed</span><span class="p">));</span>
+</pre></div>
+
+
+<p>UTrapframe 后面4个值是为了在exception stack上执行完user page fault handler时，能返回到用户进程发生trap的地方继续执行（注意是直接返回，不会再进入kernel）。刚进入user page fault handler时，exception stack结构如下（也就是UTrapFrame结构）：</p>
+<div class="highlight"><pre>                    &lt;-- UXSTACKTOP
+trap-time esp
+trap-time eflags
+trap-time eip
+trap-time eax       start of struct PushRegs
+trap-time ecx
+trap-time edx
+trap-time ebx
+trap-time esp
+trap-time ebp
+trap-time esi
+trap-time edi       end of struct PushRegs
+tf_err (error code)
+fault_va            &lt;-- %esp when handler is run
+</pre></div>
+
+
+<h4>3）user page fault handler入口</h4>
+<p>user page fault handler的入口在lib/pfentry.S中：</p>
+<div class="highlight"><pre><span class="na">.text</span>
+<span class="na">.globl</span> <span class="no">_pgfault_upcall</span>
+<span class="nl">_pgfault_upcall:</span>
+    <span class="err">//</span> <span class="nf">Call</span> <span class="no">the</span> <span class="no">C</span> <span class="no">page</span> <span class="no">fault</span> <span class="no">handler.</span>
+    <span class="nf">pushl</span> <span class="nv">%esp</span>            <span class="err">//</span> <span class="no">function</span> <span class="no">argument</span><span class="p">:</span> <span class="no">pointer</span> <span class="no">to</span> <span class="no">UTF</span>
+    <span class="nf">movl</span> <span class="no">_pgfault_handler</span><span class="p">,</span> <span class="nv">%eax</span>
+    <span class="nf">call</span> <span class="p">*</span><span class="nv">%eax</span>
+    <span class="nf">addl</span> <span class="no">$4</span><span class="p">,</span> <span class="nv">%esp</span>            <span class="err">//</span> <span class="no">pop</span> <span class="no">function</span> <span class="no">argument</span>
+   <span class="err">//</span><span class="nf">LAB</span> <span class="mi">4</span>
+    <span class="nf">movl</span> <span class="mi">48</span><span class="p">(</span><span class="nv">%esp</span><span class="p">),</span> <span class="nv">%eax</span>
+    <span class="nf">subl</span> <span class="no">$4</span><span class="p">,</span> <span class="nv">%eax</span>
+    <span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="mi">48</span><span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
+    <span class="nf">movl</span> <span class="mi">40</span><span class="p">(</span><span class="nv">%esp</span><span class="p">),</span> <span class="nv">%ebx</span>
+    <span class="nf">movl</span> <span class="nv">%ebx</span><span class="p">,</span> <span class="p">(</span><span class="nv">%eax</span><span class="p">)</span>
+    <span class="err">//</span> <span class="nf">Restore</span> <span class="no">the</span> <span class="no">trap-time</span> <span class="no">registers.</span>  <span class="no">After</span> <span class="no">you</span> <span class="no">do</span> <span class="no">this</span><span class="p">,</span> <span class="no">you</span>
+    <span class="err">//</span> <span class="nf">can</span> <span class="no">no</span> <span class="no">longer</span> <span class="no">modify</span> <span class="no">any</span> <span class="no">general-purpose</span> <span class="no">registers.</span>
+    <span class="err">//</span> <span class="nf">LAB</span> <span class="mi">4</span><span class="p">:</span> <span class="no">Your</span> <span class="no">code</span> <span class="no">here.</span>
+    <span class="nf">add</span> <span class="no">$8</span><span class="p">,</span> <span class="nv">%esp</span>
+    <span class="nf">popal</span>
+    <span class="err">//</span> <span class="nf">Restore</span> <span class="no">eflags</span> <span class="no">from</span> <span class="no">the</span> <span class="no">stack.</span>  <span class="no">After</span> <span class="no">you</span> <span class="no">do</span> <span class="no">this</span><span class="p">,</span> <span class="no">you</span> <span class="no">can</span>
+    <span class="err">//</span> <span class="nf">no</span> <span class="no">longer</span> <span class="no">use</span> <span class="no">arithmetic</span> <span class="no">operations</span> <span class="no">or</span> <span class="no">anything</span> <span class="no">else</span> <span class="no">that</span>
+    <span class="err">//</span> <span class="nf">modifies</span> <span class="no">eflags.</span>
+    <span class="err">//</span> <span class="nf">LAB</span> <span class="mi">4</span><span class="p">:</span> <span class="no">Your</span> <span class="no">code</span> <span class="no">here.</span>
+    <span class="nf">add</span> <span class="no">$4</span><span class="p">,</span> <span class="nv">%esp</span>
+    <span class="nf">popf</span>
+    <span class="err">//</span> <span class="nf">Switch</span> <span class="no">back</span> <span class="no">to</span> <span class="no">the</span> <span class="no">adjusted</span> <span class="no">trap-time</span> <span class="no">stack.</span>
+    <span class="err">//</span> <span class="nf">LAB</span> <span class="mi">4</span><span class="p">:</span> <span class="no">Your</span> <span class="no">code</span> <span class="no">here.</span>
+    <span class="nf">popl</span> <span class="nv">%esp</span>
+    <span class="err">//</span> <span class="nf">Return</span> <span class="no">to</span> <span class="no">re-execute</span> <span class="no">the</span> <span class="no">instruction</span> <span class="no">that</span> <span class="no">faulted.</span>
+    <span class="err">//</span> <span class="nf">LAB</span> <span class="mi">4</span><span class="p">:</span> <span class="no">Your</span> <span class="no">code</span> <span class="no">here.</span>
+    <span class="nf">ret</span>
+</pre></div>
+
+
+<p>上面执行完user page fault handler后，要处理的问题是返回之前的用户进程，实现这个需要做两件事：一是切换到进程的原来的栈，二是装入进程的eip。</p>
+<h4>4）fork实现</h4>
+<p>前面的几个步骤都是为了这个fork的实现，具体如下：
+父进程将pgfault作为user level page fault handler；
+父进程调用sys_exofork来创建子进程；
+父进程调用duppage将copy-on-wirte的页映射到子进程的地址空间，同时也要重新remap这些页到自己的地址空间，并设为copy-on-write，同时把对应的PTEs设为可读。注意异常栈是不能这样做映射的。
+父进程替子进程设置user page fault entrypoint；
+父进程将子进程设为RUNNABLE，以便调度器调度运行。
+当父子进程任意一个要写copy-on-write页时，会产生一个page fault，流程如下：
+内核将这个page fault传递给_pgfault_upcall，_pgfault_upcall调用fork的pgfault handler；
+pgfault检测这个fault是否是一次写（检测error code的FEC_WR位），还检测相应的PTE是否标志位PT_COW；如果不是，则panic；
+pgfault分配一个新页，并映射到一个临时地址，然后将错误页的内容拷贝这个新页。最后将这个新页映射到相应的地址，读写权限，替代原来的映射；
+贴上fork的代码：</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span>
+<span class="nf">pgfault</span><span class="p">(</span><span class="k">struct</span> <span class="n">UTrapframe</span> <span class="o">*</span><span class="n">utf</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">addr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">utf</span><span class="o">-&gt;</span><span class="n">utf_fault_va</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">err</span> <span class="o">=</span> <span class="n">utf</span><span class="o">-&gt;</span><span class="n">utf_err</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
+
+    <span class="c1">// Check that the faulting access was (1) a write, and (2) to a</span>
+    <span class="c1">// copy-on-write page.  If not, panic.</span>
+    <span class="c1">// Hint:</span>
+    <span class="c1">//   Use the read-only page table mappings at uvpt</span>
+    <span class="c1">//   (see &lt;inc/memlayout.h&gt;).</span>
+
+    <span class="c1">// LAB 4: Your code here.</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">err</span> <span class="o">&amp;</span> <span class="n">FEC_WR</span><span class="p">)</span> <span class="o">!=</span> <span class="n">FEC_WR</span><span class="p">)</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;pgfault: not write&quot;</span><span class="p">);</span>
+
+    <span class="kt">uintptr_t</span> <span class="n">fault_va</span> <span class="o">=</span> <span class="n">ROUNDDOWN</span><span class="p">((</span><span class="kt">uintptr_t</span><span class="p">)</span> <span class="n">addr</span><span class="p">,</span> <span class="n">PGSIZE</span><span class="p">);</span>
+    <span class="kt">pte_t</span> <span class="n">pte</span> <span class="o">=</span> <span class="n">uvpt</span><span class="p">[</span><span class="n">PGNUM</span><span class="p">(</span><span class="n">fault_va</span><span class="p">)];</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">pte</span> <span class="o">&amp;</span> <span class="n">PTE_P</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="p">(</span><span class="n">pte</span> <span class="o">&amp;</span> <span class="n">PTE_COW</span><span class="p">))</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;pgfault</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="c1">// Allocate a new page, map it at a temporary location (PFTEMP),</span>
+    <span class="c1">// copy the data from the old page to the new page, then move the new</span>
+    <span class="c1">// page to the old page&#39;s address.</span>
+    <span class="c1">// Hint:</span>
+    <span class="c1">//   You should make three system calls.</span>
+
+    <span class="c1">// LAB 4: Your code here.</span>
+    <span class="k">struct</span> <span class="n">Page</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+    <span class="kt">envid_t</span> <span class="n">envid</span> <span class="o">=</span> <span class="n">sys_getenvid</span><span class="p">();</span>
+
+    <span class="k">if</span><span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sys_page_alloc</span><span class="p">(</span><span class="n">envid</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">PFTEMP</span><span class="p">,</span> <span class="n">PTE_P</span><span class="o">|</span><span class="n">PTE_U</span><span class="o">|</span><span class="n">PTE_W</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;pgfault handler error: %e</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+
+    <span class="n">memmove</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">PFTEMP</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">fault_va</span><span class="p">,</span> <span class="n">PGSIZE</span><span class="p">);</span>
+
+    <span class="k">if</span><span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sys_page_map</span><span class="p">(</span><span class="n">envid</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">PFTEMP</span><span class="p">,</span> <span class="n">envid</span><span class="p">,</span>  <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">fault_va</span><span class="p">,</span> <span class="n">PTE_P</span><span class="o">|</span><span class="n">PTE_U</span><span class="o">|</span><span class="n">PTE_W</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;pgfault handler error: %e</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+    <span class="n">sys_page_unmap</span><span class="p">(</span><span class="n">envid</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">PFTEMP</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//</span>
+<span class="c1">// Map our virtual page pn (address pn*PGSIZE) into the target envid</span>
+<span class="c1">// at the same virtual address.  If the page is writable or copy-on-write,</span>
+<span class="c1">// the new mapping must be created copy-on-write, and then our mapping must be</span>
+<span class="c1">// marked copy-on-write as well.  (Exercise: Why do we need to mark ours</span>
+<span class="c1">// copy-on-write again if it was already copy-on-write at the beginning of</span>
+<span class="c1">// this function?)</span>
+<span class="c1">//</span>
+<span class="c1">// Returns: 0 on success, &lt; 0 on error.</span>
+<span class="c1">// It is also OK to panic on error.</span>
+<span class="c1">//</span>
+<span class="k">static</span> <span class="kt">int</span>
+<span class="nf">duppage</span><span class="p">(</span><span class="kt">envid_t</span> <span class="n">envid</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">pn</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
+
+    <span class="c1">// LAB 4: Your code here.</span>
+    <span class="kt">envid_t</span> <span class="n">cur_evid</span> <span class="o">=</span> <span class="n">sys_getenvid</span><span class="p">();</span>
+    <span class="kt">pte_t</span> <span class="n">pte</span> <span class="o">=</span> <span class="n">uvpt</span><span class="p">[</span><span class="n">pn</span><span class="p">];</span>
+    <span class="kt">uint32_t</span> <span class="n">perm</span> <span class="o">=</span> <span class="n">pte</span> <span class="o">&amp;</span> <span class="n">PTE_SYSCALL</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">((</span><span class="n">perm</span> <span class="o">&amp;</span> <span class="n">PTE_W</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">perm</span> <span class="o">&amp;</span> <span class="n">PTE_COW</span><span class="p">)){</span>
+        <span class="n">perm</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">PTE_W</span><span class="p">;</span>     
+        <span class="n">perm</span> <span class="o">|=</span> <span class="n">PTE_COW</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sys_page_map</span><span class="p">(</span><span class="n">cur_evid</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="n">pn</span><span class="o">*</span><span class="n">PGSIZE</span><span class="p">),</span> 
+        <span class="n">envid</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="n">pn</span><span class="o">*</span><span class="n">PGSIZE</span><span class="p">),</span> <span class="n">perm</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;ken: duppage map error, %e, pn=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">pn</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">perm</span> <span class="o">&amp;</span> <span class="n">PTE_COW</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sys_page_map</span><span class="p">(</span><span class="n">cur_evid</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="n">pn</span><span class="o">*</span><span class="n">PGSIZE</span><span class="p">),</span> 
+            <span class="n">cur_evid</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="n">pn</span><span class="o">*</span><span class="n">PGSIZE</span><span class="p">),</span> <span class="n">perm</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">panic</span><span class="p">(</span><span class="s">&quot;ken: duppage map error1 %e</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//</span>
+<span class="c1">// User-level fork with copy-on-write.</span>
+<span class="c1">// Set up our page fault handler appropriately.</span>
+<span class="c1">// Create a child.</span>
+<span class="c1">// Copy our address space and page fault handler setup to the child.</span>
+<span class="c1">// Then mark the child as runnable and return.</span>
+<span class="c1">//</span>
+<span class="c1">// Returns: child&#39;s envid to the parent, 0 to the child, &lt; 0 on error.</span>
+<span class="c1">// It is also OK to panic on error.</span>
+<span class="c1">//</span>
+<span class="c1">// Hint:</span>
+<span class="c1">//   Use uvpd, uvpt, and duppage.</span>
+<span class="c1">//   Remember to fix &quot;thisenv&quot; in the child process.</span>
+<span class="c1">//   Neither user exception stack should ever be marked copy-on-write,</span>
+<span class="c1">//   so you must allocate a new page for the child&#39;s user exception stack.</span>
+<span class="c1">//</span>
+<span class="kt">envid_t</span>
+<span class="nf">fork</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// LAB 4: Your code here.</span>
+    <span class="n">set_pgfault_handler</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pgfault</span><span class="p">);</span> 
+    <span class="kt">envid_t</span> <span class="n">child</span> <span class="o">=</span> <span class="n">sys_exofork</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">child</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">child</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">child</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
+        <span class="n">thisenv</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">envs</span><span class="p">[</span><span class="n">ENVX</span><span class="p">(</span><span class="n">sys_getenvid</span><span class="p">())];</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">uintptr_t</span> <span class="n">addr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(;</span> <span class="n">addr</span> <span class="o">&lt;</span> <span class="n">UXSTACKTOP</span> <span class="o">-</span> <span class="n">PGSIZE</span><span class="p">;</span> <span class="n">addr</span> <span class="o">+=</span> <span class="n">PGSIZE</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">((</span><span class="n">uvpd</span><span class="p">[</span><span class="n">PDX</span><span class="p">(</span><span class="n">addr</span><span class="p">)]</span> <span class="o">&amp;</span> <span class="n">PTE_P</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">uvpt</span><span class="p">[</span><span class="n">PGNUM</span><span class="p">(</span><span class="n">addr</span><span class="p">)]</span> <span class="o">&amp;</span> <span class="n">PTE_P</span><span class="p">))</span>
+            <span class="k">if</span><span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">duppage</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">PGNUM</span><span class="p">(</span><span class="n">addr</span><span class="p">)))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">cprintf</span><span class="p">(</span><span class="s">&quot;fork: duppage failed, addr=%x</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">addr</span><span class="p">);</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>       
+            <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* alloc exception stack for child process */</span>
+    <span class="k">if</span><span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sys_page_alloc</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> 
+        <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">UXSTACKTOP</span><span class="o">-</span><span class="n">PGSIZE</span><span class="p">,</span> <span class="n">PTE_P</span><span class="o">|</span><span class="n">PTE_U</span><span class="o">|</span><span class="n">PTE_W</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+
+    <span class="cm">/* set user page fault handler for child process */</span>
+    <span class="k">extern</span> <span class="kt">void</span> <span class="n">_pgfault_upcall</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sys_env_set_pgfault_upcall</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">_pgfault_upcall</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;fork: sys_env_set_upcall failed: %e</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* set child to RUNNABLE */</span>
+    <span class="k">if</span><span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sys_env_set_status</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">ENV_RUNNABLE</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">child</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'lab4multiprocessorzhi-chi-forkshi-xian';
+                var disqus_url = 'http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+
+</body>
+</html>

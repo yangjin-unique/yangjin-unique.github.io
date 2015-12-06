@@ -20,7 +20,7 @@
         <meta property="og:title" content="lab1: bootloader"/>
         <meta property="og:url" content="http://yangjin-unique.github.io/lab1-bootloader.html"/>
         <meta property="og:description" content="非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好， 从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。 一、BIOS工作 1. bios启动后会读取bootloader bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成： 主引导记录：也就是bootloader，大小占446字节； 分区表：占64字节； * 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。 2.上电后的第一条指令地址为0xFFFFFFF0 这是启动后的第一条执行指令，EPROM，而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动设备 （如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00； 实时模式与保护模式的区别 ..."/>
-        <meta property="article:published_time" content="2013-01-13" />
+        <meta property="article:published_time" content="2014-01-13" />
             <meta property="article:section" content="os" />
             <meta property="article:tag" content="os" />
             <meta property="article:tag" content="bootloader" />
@@ -102,7 +102,7 @@ Living@Greatwall            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2013-01-13T00:00:00+08:00"> Sun 13 January 2013</time>
+        <i class="fa fa-calendar"></i><time datetime="2014-01-13T00:00:00+08:00"> Mon 13 January 2014</time>
     </span>
 
 

@@ -5,28 +5,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/</loc>
-<lastmod>2015-12-06T16:00:20-00:00</lastmod>
+<lastmod>2015-12-06T21:36:57-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/archives.html</loc>
-<lastmod>2015-12-06T16:00:20-00:00</lastmod>
+<lastmod>2015-12-06T21:36:57-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tags.html</loc>
-<lastmod>2015-12-06T16:00:20-00:00</lastmod>
+<lastmod>2015-12-06T21:36:57-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/categories.html</loc>
-<lastmod>2015-12-06T16:00:20-00:00</lastmod>
+<lastmod>2015-12-06T21:36:57-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -74,99 +74,106 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html</loc>
+<lastmod>2014-05-01T00:00:00+08:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
 <loc>http://yangjin-unique.github.io/lab3user-modeqie-huan-dao-kernel-modesuo-she-ji-de-shu-ju-jie-gou.html</loc>
-<lastmod>2013-04-05T00:00:00+08:00</lastmod>
+<lastmod>2014-04-05T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html</loc>
-<lastmod>2013-04-01T00:00:00+08:00</lastmod>
+<lastmod>2014-04-01T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/lab3jia-zai-yong-hu-jin-cheng.html</loc>
-<lastmod>2013-03-01T00:00:00+08:00</lastmod>
+<lastmod>2014-03-01T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html</loc>
-<lastmod>2013-02-16T00:00:00+08:00</lastmod>
+<lastmod>2014-02-16T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/lab2-exercise2ye-biao.html</loc>
-<lastmod>2013-02-01T00:00:00+08:00</lastmod>
+<lastmod>2014-02-01T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/x86-address-translation.html</loc>
-<lastmod>2013-01-17T00:00:00+08:00</lastmod>
+<lastmod>2014-01-17T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/entrys.html</loc>
-<lastmod>2013-01-16T00:00:00+08:00</lastmod>
+<lastmod>2014-01-16T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/lab1-exercise1.html</loc>
-<lastmod>2013-01-16T00:00:00+08:00</lastmod>
+<lastmod>2014-01-16T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/elfwen-jian.html</loc>
-<lastmod>2013-01-15T00:00:00+08:00</lastmod>
+<lastmod>2014-01-15T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/qemuhe-gdbdiao-shi.html</loc>
-<lastmod>2013-01-15T00:00:00+08:00</lastmod>
+<lastmod>2014-01-15T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/stabshi-yi.html</loc>
-<lastmod>2013-01-15T00:00:00+08:00</lastmod>
+<lastmod>2014-01-15T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/x86zhong-duan-yu-yi-chang.html</loc>
-<lastmod>2013-01-15T00:00:00+08:00</lastmod>
+<lastmod>2014-01-15T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/lab1-bootloader.html</loc>
-<lastmod>2013-01-13T00:00:00+08:00</lastmod>
+<lastmod>2014-01-13T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/x86ji-cun-qi-ji-chu.html</loc>
-<lastmod>2013-01-13T00:00:00+08:00</lastmod>
+<lastmod>2014-01-13T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
@@ -187,7 +194,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/category/os.html</loc>
-<lastmod>2013-04-05T00:00:00+08:06</lastmod>
+<lastmod>2014-05-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -208,42 +215,42 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/entrys.html</loc>
-<lastmod>2013-01-16T00:00:00+08:06</lastmod>
+<lastmod>2014-01-16T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/user-mode.html</loc>
-<lastmod>2013-04-05T00:00:00+08:06</lastmod>
+<lastmod>2014-04-05T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/page-directory.html</loc>
-<lastmod>2013-02-01T00:00:00+08:06</lastmod>
+<lastmod>2014-02-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/syscall.html</loc>
-<lastmod>2013-04-01T00:00:00+08:06</lastmod>
+<lastmod>2014-05-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/linker.html</loc>
-<lastmod>2013-01-15T00:00:00+08:06</lastmod>
+<lastmod>2014-01-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/header.html</loc>
-<lastmod>2013-01-15T00:00:00+08:06</lastmod>
+<lastmod>2014-01-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -257,14 +264,14 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/page-table.html</loc>
-<lastmod>2013-02-01T00:00:00+08:06</lastmod>
+<lastmod>2014-02-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/qemu.html</loc>
-<lastmod>2013-01-15T00:00:00+08:06</lastmod>
+<lastmod>2014-01-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -278,35 +285,42 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/bios.html</loc>
-<lastmod>2013-01-13T00:00:00+08:06</lastmod>
+<lastmod>2014-01-13T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/debug.html</loc>
-<lastmod>2013-01-15T00:00:00+08:06</lastmod>
+<lastmod>2014-01-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/elf.html</loc>
-<lastmod>2013-01-15T00:00:00+08:06</lastmod>
+<lastmod>2014-01-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/trapframe.html</loc>
-<lastmod>2013-04-05T00:00:00+08:06</lastmod>
+<lastmod>2014-04-05T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://yangjin-unique.github.io/tag/multi-processor.html</loc>
+<lastmod>2014-05-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/task-swtich.html</loc>
-<lastmod>2013-04-01T00:00:00+08:06</lastmod>
+<lastmod>2014-04-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -314,6 +328,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://yangjin-unique.github.io/tag/ostinato.html</loc>
 <lastmod>2015-11-28T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://yangjin-unique.github.io/tag/fork.html</loc>
+<lastmod>2014-05-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -327,7 +348,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/jos.html</loc>
-<lastmod>2013-01-13T00:00:00+08:06</lastmod>
+<lastmod>2014-01-13T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -341,7 +362,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/x86.html</loc>
-<lastmod>2013-01-15T00:00:00+08:06</lastmod>
+<lastmod>2014-01-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -355,14 +376,14 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/interrupts.html</loc>
-<lastmod>2013-04-01T00:00:00+08:06</lastmod>
+<lastmod>2014-04-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/kernel-mode.html</loc>
-<lastmod>2013-04-05T00:00:00+08:06</lastmod>
+<lastmod>2014-04-05T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -376,49 +397,56 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/linelear-address.html</loc>
-<lastmod>2013-01-17T00:00:00+08:06</lastmod>
+<lastmod>2014-01-17T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/stab.html</loc>
-<lastmod>2013-03-01T00:00:00+08:06</lastmod>
+<lastmod>2014-03-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/address-translation.html</loc>
-<lastmod>2013-02-01T00:00:00+08:06</lastmod>
+<lastmod>2014-02-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/interrupt.html</loc>
-<lastmod>2013-01-15T00:00:00+08:06</lastmod>
+<lastmod>2014-01-15T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://yangjin-unique.github.io/tag/copy-on-write.html</loc>
+<lastmod>2014-05-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/translation.html</loc>
-<lastmod>2013-01-17T00:00:00+08:06</lastmod>
+<lastmod>2014-01-17T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/bootloader.html</loc>
-<lastmod>2013-03-01T00:00:00+08:06</lastmod>
+<lastmod>2014-03-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/traps.html</loc>
-<lastmod>2013-04-01T00:00:00+08:06</lastmod>
+<lastmod>2014-04-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -439,49 +467,49 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/tast-state.html</loc>
-<lastmod>2013-04-05T00:00:00+08:06</lastmod>
+<lastmod>2014-04-05T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/logical-address.html</loc>
-<lastmod>2013-01-17T00:00:00+08:06</lastmod>
+<lastmod>2014-01-17T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/trap.html</loc>
-<lastmod>2013-01-15T00:00:00+08:06</lastmod>
+<lastmod>2014-01-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/exceptions.html</loc>
-<lastmod>2013-04-01T00:00:00+08:06</lastmod>
+<lastmod>2014-04-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/physical-memory-management.html</loc>
-<lastmod>2013-02-16T00:00:00+08:06</lastmod>
+<lastmod>2014-02-16T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/os.html</loc>
-<lastmod>2013-04-05T00:00:00+08:06</lastmod>
+<lastmod>2014-04-05T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/page.html</loc>
-<lastmod>2013-02-16T00:00:00+08:06</lastmod>
+<lastmod>2014-02-16T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
