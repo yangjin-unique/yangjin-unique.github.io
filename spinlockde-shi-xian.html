@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>spinlock的实现 - Living@Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="Multi-processor,spinlock" />
+        <meta name="description" content="spinlock在多核多线程的场景中使用非常广泛，采用busy_wait_loop忙等待的方式，与信号量相比的优点在于不会进程上下文的切换（进程的调度），节省了进程切换带来的敖贵的系统开销。一般用spinlock时，要保证临界区的代码短小，等待的时间较短。linux内核中很多地方都使用了spinlock，如中断上下文中使用（多核），用户态多进程pthread提供了spinlock的API。spinlock的实现一般采用cpu提供的原子指令（atomic）来实现，如Test-and-Set，Compare-and-Swap。 JOS内核提供了spinlock，采用CAS（使用x86的xchg指令）方法实现。 spinlock的定义如下： // Mutual exclusion lock. struct spinlock { unsigned locked; // Is the lock held? #ifdef DEBUG_SPINLOCK // For debugging: char *name; // Name of lock. struct CpuInfo *cpu; // The CPU holding the lock ..." />
+
+        <meta property="og:site_name" content="Living@Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="spinlock的实现"/>
+        <meta property="og:url" content="http://yangjin-unique.github.io/spinlockde-shi-xian.html"/>
+        <meta property="og:description" content="spinlock在多核多线程的场景中使用非常广泛，采用busy_wait_loop忙等待的方式，与信号量相比的优点在于不会进程上下文的切换（进程的调度），节省了进程切换带来的敖贵的系统开销。一般用spinlock时，要保证临界区的代码短小，等待的时间较短。linux内核中很多地方都使用了spinlock，如中断上下文中使用（多核），用户态多进程pthread提供了spinlock的API。spinlock的实现一般采用cpu提供的原子指令（atomic）来实现，如Test-and-Set，Compare-and-Swap。 JOS内核提供了spinlock，采用CAS（使用x86的xchg指令）方法实现。 spinlock的定义如下： // Mutual exclusion lock. struct spinlock { unsigned locked; // Is the lock held? #ifdef DEBUG_SPINLOCK // For debugging: char *name; // Name of lock. struct CpuInfo *cpu; // The CPU holding the lock ..."/>
+        <meta property="article:published_time" content="2014-06-01" />
+            <meta property="article:section" content="os" />
+            <meta property="article:tag" content="Multi-processor" />
+            <meta property="article:tag" content="spinlock" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
+Living@Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
+                        </li>
+                        <li class="active">
+                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://yangjin-unique.github.io/spinlockde-shi-xian.html"
+                       rel="bookmark"
+                       title="Permalink to spinlock的实现">
+                        spinlock的实现
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-06-01T00:00:00+08:00"> Sun 01 June 2014</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://yangjin-unique.github.io/tag/multi-processor.html">Multi-processor</a>
+        /
+	<a href="http://yangjin-unique.github.io/tag/spinlock.html">spinlock</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>spinlock在多核多线程的场景中使用非常广泛，采用busy_wait_loop忙等待的方式，与信号量相比的优点在于不会进程上下文的切换（进程的调度），节省了进程切换带来的敖贵的系统开销。一般用spinlock时，要保证临界区的代码短小，等待的时间较短。linux内核中很多地方都使用了spinlock，如中断上下文中使用（多核），用户态多进程pthread提供了spinlock的API。spinlock的实现一般采用cpu提供的原子指令（atomic）来实现，如Test-and-Set，Compare-and-Swap。
+JOS内核提供了spinlock，采用CAS（使用x86的xchg指令）方法实现。
+spinlock的定义如下：</p>
+<div class="highlight"><pre><span class="c1">// Mutual exclusion lock.</span>
+<span class="k">struct</span> <span class="n">spinlock</span> <span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="n">locked</span><span class="p">;</span>       <span class="c1">// Is the lock held?</span>
+
+<span class="cp">#ifdef DEBUG_SPINLOCK</span>
+    <span class="c1">// For debugging:</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>            <span class="c1">// Name of lock.</span>
+    <span class="k">struct</span> <span class="n">CpuInfo</span> <span class="o">*</span><span class="n">cpu</span><span class="p">;</span>   <span class="c1">// The CPU holding the lock.</span>
+    <span class="kt">uintptr_t</span> <span class="n">pcs</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>     <span class="c1">// The call stack (an array of program counters)</span>
+                           <span class="c1">// that locked the lock.</span>
+<span class="cp">#endif</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>lock与unlock如下：</p>
+<div class="highlight"><pre><span class="kt">void</span>
+<span class="nf">__spin_initlock</span><span class="p">(</span><span class="k">struct</span> <span class="n">spinlock</span> <span class="o">*</span><span class="n">lk</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">lk</span><span class="o">-&gt;</span><span class="n">locked</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="cp">#ifdef DEBUG_SPINLOCK</span>
+    <span class="n">lk</span><span class="o">-&gt;</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+    <span class="n">lk</span><span class="o">-&gt;</span><span class="n">cpu</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="cp">#endif</span>
+<span class="p">}</span>
+
+<span class="c1">// Acquire the lock.</span>
+<span class="c1">// Loops (spins) until the lock is acquired.</span>
+<span class="c1">// Holding a lock for a long time may cause</span>
+<span class="c1">// other CPUs to waste time spinning to acquire it.</span>
+<span class="kt">void</span>
+<span class="nf">spin_lock</span><span class="p">(</span><span class="k">struct</span> <span class="n">spinlock</span> <span class="o">*</span><span class="n">lk</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="cp">#ifdef DEBUG_SPINLOCK</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">holding</span><span class="p">(</span><span class="n">lk</span><span class="p">))</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;CPU %d cannot acquire %s: already holding&quot;</span><span class="p">,</span> <span class="n">cpunum</span><span class="p">(),</span> <span class="n">lk</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="cp">#endif</span>
+
+    <span class="c1">// The xchg is atomic.</span>
+    <span class="c1">// It also serializes, so that reads after acquire are not</span>
+    <span class="c1">// reordered before it. </span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">xchg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lk</span><span class="o">-&gt;</span><span class="n">locked</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">asm</span> <span class="k">volatile</span> <span class="p">(</span><span class="s">&quot;pause&quot;</span><span class="p">);</span>
+
+    <span class="c1">// Record info about lock acquisition for debugging.</span>
+<span class="cp">#ifdef DEBUG_SPINLOCK</span>
+    <span class="n">lk</span><span class="o">-&gt;</span><span class="n">cpu</span> <span class="o">=</span> <span class="n">thiscpu</span><span class="p">;</span>
+    <span class="n">get_caller_pcs</span><span class="p">(</span><span class="n">lk</span><span class="o">-&gt;</span><span class="n">pcs</span><span class="p">);</span>
+<span class="cp">#endif</span>
+<span class="p">}</span>
+
+<span class="c1">// Release the lock.</span>
+<span class="kt">void</span>
+<span class="nf">spin_unlock</span><span class="p">(</span><span class="k">struct</span> <span class="n">spinlock</span> <span class="o">*</span><span class="n">lk</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="cp">#ifdef DEBUG_SPINLOCK</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">holding</span><span class="p">(</span><span class="n">lk</span><span class="p">))</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">pcs</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+        <span class="c1">// Nab the acquiring EIP chain before it gets released</span>
+        <span class="n">memmove</span><span class="p">(</span><span class="n">pcs</span><span class="p">,</span> <span class="n">lk</span><span class="o">-&gt;</span><span class="n">pcs</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">pcs</span><span class="p">);</span>
+        <span class="n">cprintf</span><span class="p">(</span><span class="s">&quot;CPU %d cannot release %s: held by CPU %d</span><span class="se">\n</span><span class="s">Acquired at:&quot;</span><span class="p">,</span> 
+            <span class="n">cpunum</span><span class="p">(),</span> <span class="n">lk</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">lk</span><span class="o">-&gt;</span><span class="n">cpu</span><span class="o">-&gt;</span><span class="n">cpu_id</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">&amp;&amp;</span> <span class="n">pcs</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">struct</span> <span class="n">Eipdebuginfo</span> <span class="n">info</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">debuginfo_eip</span><span class="p">(</span><span class="n">pcs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">info</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">cprintf</span><span class="p">(</span><span class="s">&quot;  %08x %s:%d: %.*s+%x</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pcs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                    <span class="n">info</span><span class="p">.</span><span class="n">eip_file</span><span class="p">,</span> <span class="n">info</span><span class="p">.</span><span class="n">eip_line</span><span class="p">,</span>
+                    <span class="n">info</span><span class="p">.</span><span class="n">eip_fn_namelen</span><span class="p">,</span> <span class="n">info</span><span class="p">.</span><span class="n">eip_fn_name</span><span class="p">,</span>
+                    <span class="n">pcs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">info</span><span class="p">.</span><span class="n">eip_fn_addr</span><span class="p">);</span>
+            <span class="k">else</span>
+                <span class="n">cprintf</span><span class="p">(</span><span class="s">&quot;  %08x</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pcs</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="n">panic</span><span class="p">(</span><span class="s">&quot;spin_unlock&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">lk</span><span class="o">-&gt;</span><span class="n">pcs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">lk</span><span class="o">-&gt;</span><span class="n">cpu</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="cp">#endif</span>
+
+    <span class="c1">// The xchg serializes, so that reads before release are </span>
+    <span class="c1">// not reordered after it.  The 1996 PentiumPro manual (Volume 3,</span>
+    <span class="c1">// 7.2) says reads can be carried out speculatively and in</span>
+    <span class="c1">// any order, which implies we need to serialize here.</span>
+    <span class="c1">// But the 2007 Intel 64 Architecture Memory Ordering White</span>
+    <span class="c1">// Paper says that Intel 64 and IA-32 will not move a load</span>
+    <span class="c1">// after a store. So lock-&gt;locked = 0 would work here.</span>
+    <span class="c1">// The xchg being asm volatile ensures gcc emits it after</span>
+    <span class="c1">// the above assignments (and after the critical section).</span>
+    <span class="n">xchg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lk</span><span class="o">-&gt;</span><span class="n">locked</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'spinlockde-shi-xian';
+                var disqus_url = 'http://yangjin-unique.github.io/spinlockde-shi-xian.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+
+</body>
+</html>

@@ -178,6 +178,43 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
             </article>
             <hr/>
             <article>
+                <h2><a href="http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html">多进程IPC机制实现</a></h2>
+                <div class="summary"><p>这是lab4最后一个任务，实现进程间的通信IPC，主要完成kern/syscall.c里面的两个API：
+sys_ipc_recv和sys_ipc_try_send，以及lib/syscall.c的提供给用户的系统调用：ipc_recv和ipc_send。实现代码如下：</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">int</span>
+<span class="nf">sys_ipc_try_send</span><span class="p">(</span><span class="kt">envid_t</span> <span class="n">envid</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">srcva</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">perm</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// LAB 4: Your code here.</span>
+    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">envid2env</span><span class="p">(</span><span class="n">envid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">env</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="cm">/* make sure that dst ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">spinlock的实现</a></h2>
+                <div class="summary"><p>spinlock在多核多线程的场景中使用非常广泛，采用busy_wait_loop忙等待的方式，与信号量相比的优点在于不会进程上下文的切换（进程的调度），节省了进程切换带来的敖贵的系统开销。一般用spinlock时，要保证临界区的代码短小，等待的时间较短。linux内核中很多地方都使用了spinlock，如中断上下文中使用（多核），用户态多进程pthread提供了spinlock的API。spinlock的实现一般采用cpu提供的原子指令（atomic）来实现，如Test-and-Set，Compare-and-Swap。
+JOS内核提供了spinlock，采用CAS（使用x86的xchg指令）方法实现。
+spinlock的定义如下：</p>
+<div class="highlight"><pre><span class="c1">// Mutual exclusion lock.</span>
+<span class="k">struct</span> <span class="n">spinlock</span> <span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="n">locked</span><span class="p">;</span>       <span class="c1">// Is the lock held?</span>
+
+<span class="cp">#ifdef DEBUG_SPINLOCK</span>
+    <span class="c1">// For debugging:</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>            <span class="c1">// Name of lock.</span>
+    <span class="k">struct</span> <span class="n">CpuInfo</span> <span class="o">*</span><span class="n">cpu</span><span class="p">;</span>   <span class="c1">// The CPU holding the lock ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h2>
                 <div class="summary"><h3>一、多核启动</h3>
 <p>lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。
@@ -210,61 +247,6 @@ tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
     <span class="kt">uint32_t</span> <span class="n">reg_esi</span><span class="p">;</span>
     <span class="kt">uint32_t ...</span></pre></div>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeyu-kernel-modede-qie-huan.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h2>
-                <div class="summary"><p>x86有两种类型的中断：</p>
-<p>中断interrupt：主要指外设的中断；
-异常exception：包括faults，traps，aborts，还有软中断（注意软中断也被当做异常处理）；
-x86使用下面两种机制来实现中断处理机制。</p>
-<h4>1. 中断描述符表IDT</h4>
-<p>x86允许256个中断，每个中断有一个中断向量interrupt vector，这个vector值在[0, 255]之间。当中断发生时，cpu使用这个vector来索引IDT，IDT与GDT类似，IDT中每一项都是一个描述符，叫IDT descriptors，有三种类型：
-task gates：用于hardware支持的任务切换；
-interrupt gates；
-trap gates；
-每个描述符长为8字节，结构如下（由于task gate没用到，就不说了）：</p>
-<p>那么中断的过程如下图：</p>
-<p>当中断产生时，cpu使用vector来索引IDT，找到相应的描述符，从描述符中获取下面的东西：
-将描述符里面值赋给eip，也就是将eip指向了中断处理服务例程的指令（就是讲上上面的图中selector和offset组成得到eip）；
-将描述符里面的值赋给cs寄存器，包括特权级DPL，一般中断处理这个都为0，内核态处理 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a></h2>
-                <div class="summary"><p>该练习主要完成内核加载用户进程，包括用户进程环境的初始化，创建用户进程，加载用户进程等。
-主要完成以下几个函数的实现：
-* env_init()：初始化用户进程，配置每个段的优先级特权级；</p>
-<ul>
-<li>
-<p>env_setup_vm()：给每个进程分配一个页目录，并初始化用户地址空间的内核部分；</p>
-</li>
-<li>
-<p>region_alloc()：给用户进程分配物理内存并将物理地址映射到进程的虚拟地址空间；</p>
-</li>
-<li>
-<p>load_icode()：解析用户进程elf文件，并加载到用户地址空间；</p>
-</li>
-<li>
-<p>env_create()：调用env_alloc和load_icode；</p>
-</li>
-<li>
-<p>env_run()：在用户模式下执行进程；</p>
-</li>
-</ul>
-<p>由于此时还没有文件系统，此时是将用户的进程elf文件嵌入到内核的image中，最后生成的
-kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序的elf文件，最后由内核加载
-并执行。</p>
-<p>每个用户进程都有一个相应的结构体：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">Env</span> <span class="p">{</span>
-    <span class="k">struct</span> <span class="n">Trapframe</span> <span class="n">env_tf</span><span class="p">;</span>    <span class="c1">// Saved registers</span>
-    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env_link</span><span class="p">;</span>       <span class="c1">// Next free Env</span>
-    <span class="kt">envid_t</span> <span class="n">env_id</span><span class="p">;</span>         <span class="c1">// Unique environment identifier</span>
-    <span class="kt">envid_t</span> <span class="n">env_parent_id</span><span class="p">;</span>      <span class="c1">// env_id ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3jia-zai-yong-hu-jin-cheng.html">more ...</a>
                 </div>
             </article>
             <hr/>

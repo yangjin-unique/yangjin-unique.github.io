@@ -5,28 +5,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/</loc>
-<lastmod>2015-12-06T21:47:55-00:00</lastmod>
+<lastmod>2015-12-08T20:39:06-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/archives.html</loc>
-<lastmod>2015-12-06T21:47:55-00:00</lastmod>
+<lastmod>2015-12-08T20:39:06-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/tags.html</loc>
-<lastmod>2015-12-06T21:47:55-00:00</lastmod>
+<lastmod>2015-12-08T20:39:06-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://yangjin-unique.github.io/categories.html</loc>
-<lastmod>2015-12-06T21:47:55-00:00</lastmod>
+<lastmod>2015-12-08T20:39:06-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -69,6 +69,20 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://yangjin-unique.github.io/how-to-use-pelican-to-bulid-blog-on-githubio.html</loc>
 <lastmod>2015-11-13T00:00:00+08:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
+<loc>http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html</loc>
+<lastmod>2014-06-16T00:00:00+08:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
+<loc>http://yangjin-unique.github.io/spinlockde-shi-xian.html</loc>
+<lastmod>2014-06-01T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
@@ -194,7 +208,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/category/os.html</loc>
-<lastmod>2014-05-01T00:00:00+08:06</lastmod>
+<lastmod>2014-06-16T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -214,8 +228,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://yangjin-unique.github.io/tag/entrys.html</loc>
-<lastmod>2014-01-16T00:00:00+08:06</lastmod>
+<loc>http://yangjin-unique.github.io/tag/ipc.html</loc>
+<lastmod>2014-06-16T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -230,6 +244,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://yangjin-unique.github.io/tag/page-directory.html</loc>
 <lastmod>2014-02-01T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://yangjin-unique.github.io/tag/entrys.html</loc>
+<lastmod>2014-01-16T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -313,7 +334,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://yangjin-unique.github.io/tag/multi-processor.html</loc>
-<lastmod>2014-05-01T00:00:00+08:06</lastmod>
+<lastmod>2014-06-16T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -445,6 +466,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>http://yangjin-unique.github.io/tag/spinlock.html</loc>
+<lastmod>2014-06-01T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>http://yangjin-unique.github.io/tag/traps.html</loc>
 <lastmod>2014-04-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
@@ -466,8 +494,15 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://yangjin-unique.github.io/tag/tast-state.html</loc>
-<lastmod>2014-04-05T00:00:00+08:06</lastmod>
+<loc>http://yangjin-unique.github.io/tag/multi-process.html</loc>
+<lastmod>2014-06-16T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://yangjin-unique.github.io/tag/page.html</loc>
+<lastmod>2014-02-16T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -508,8 +543,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://yangjin-unique.github.io/tag/page.html</loc>
-<lastmod>2014-02-16T00:00:00+08:06</lastmod>
+<loc>http://yangjin-unique.github.io/tag/tast-state.html</loc>
+<lastmod>2014-04-05T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

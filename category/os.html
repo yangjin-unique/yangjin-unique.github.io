@@ -78,6 +78,43 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html">多进程IPC机制实现</a></h2>
+                <div class="summary"><p>这是lab4最后一个任务，实现进程间的通信IPC，主要完成kern/syscall.c里面的两个API：
+sys_ipc_recv和sys_ipc_try_send，以及lib/syscall.c的提供给用户的系统调用：ipc_recv和ipc_send。实现代码如下：</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">int</span>
+<span class="nf">sys_ipc_try_send</span><span class="p">(</span><span class="kt">envid_t</span> <span class="n">envid</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">srcva</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">perm</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// LAB 4: Your code here.</span>
+    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">envid2env</span><span class="p">(</span><span class="n">envid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">env</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="cm">/* make sure that dst ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">spinlock的实现</a></h2>
+                <div class="summary"><p>spinlock在多核多线程的场景中使用非常广泛，采用busy_wait_loop忙等待的方式，与信号量相比的优点在于不会进程上下文的切换（进程的调度），节省了进程切换带来的敖贵的系统开销。一般用spinlock时，要保证临界区的代码短小，等待的时间较短。linux内核中很多地方都使用了spinlock，如中断上下文中使用（多核），用户态多进程pthread提供了spinlock的API。spinlock的实现一般采用cpu提供的原子指令（atomic）来实现，如Test-and-Set，Compare-and-Swap。
+JOS内核提供了spinlock，采用CAS（使用x86的xchg指令）方法实现。
+spinlock的定义如下：</p>
+<div class="highlight"><pre><span class="c1">// Mutual exclusion lock.</span>
+<span class="k">struct</span> <span class="n">spinlock</span> <span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="n">locked</span><span class="p">;</span>       <span class="c1">// Is the lock held?</span>
+
+<span class="cp">#ifdef DEBUG_SPINLOCK</span>
+    <span class="c1">// For debugging:</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>            <span class="c1">// Name of lock.</span>
+    <span class="k">struct</span> <span class="n">CpuInfo</span> <span class="o">*</span><span class="n">cpu</span><span class="p">;</span>   <span class="c1">// The CPU holding the lock ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h2>
                 <div class="summary"><h3>一、多核启动</h3>
 <p>lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。
@@ -237,49 +274,6 @@ exercise2主要内容是完成y页目录和页表的建立，从而建立起虚�
 <div class="highlight"><pre><span class="x"> </span><span class="err">#</span><span class="x"> Load the physical address of entry_pgdir into cr3.  entry_pgdir</span>
 <span class="x"> </span><span class="err">#</span><span class="x"> is defined in entrypgdir.c ...</span></pre></div>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/entrys.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab1-exercise1.html">lab1 exercise1</a></h2>
-                <div class="summary"><p>lab1主要熟悉qemu x86使用环境，各种实验工具，包括qemu与gdb联合调试等，熟悉pc的bootstrap过程，包括BIOS和bootloader。
-该练习主要是实现一个backtrace函数，解析当前函数调用栈帧，并需要解析出当前函数的文件名、函数名、行号信息，如下面所示：</p>
-<div class="highlight"><pre>K&gt; backtrace
-Stack backtrace:
-  ebp f010ff78  eip f01008ae  args 00000001 f010ff8c 00000000 f0110580 00000000
-         kern/monitor.c:143: monitor+106
-  ebp f010ffd8  eip f0100193  args 00000000 00001aac 00000660 00000000 00000000
-         kern/init.c:49: i386_init+59
-  ebp f010fff8 ...</pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab1-exercise1.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/elfwen-jian.html">ELF文件</a></h2>
-                <div class="summary"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
-<ul>
-<li>
-<p>用于执行的可执行文件(executab   file)，用于提供程序的进程映像，加载的内存执行。  这也是本实验的OS文件类型。</p>
-</li>
-<li>
-<p>用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。</p>
-</li>
-<li>
-<p>共享目标文件(shared object  file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件，
-动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。</p>
-</li>
-</ul>
-<p>ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如：</p>
-<p>*.text</p>
-<p>*.rodata</p>
-<p>*.data</p>
-<h4>1. Elf header结构</h4>
-<p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
-控制结构，其定义在elf.h中：</p>
-<div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
-  <span class="n">uint</span>  <span class="n">magic ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/elfwen-jian.html">more ...</a>
                 </div>
             </article>
             <hr/>
