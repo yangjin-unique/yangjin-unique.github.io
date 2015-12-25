@@ -77,6 +77,28 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/lab3user-modeyu-kernel-modede-qie-huan.html">lab3:user mode与kernel mode的切换</a></h2>
+                <div class="summary"><p>两个模式切换涉及两个很重要的数据结构：Taskstate和TrapFrame，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
+tss-&gt;ts_esp0 = 每个cpu的栈top;
+tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
+<p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。</p>
+<p>TrapFrame用在内核态与用户态相互切换时，当从user mode切换到kernel mode时，cpu会将当前进程的状态信息以TrapFrame的形式
+保存在cpu的内核栈上（内核栈地址由上面的tss给出），而当cpu从kernel mode返回时，会从内核栈上pop出进程的状态信息，然后继续进程的运行。
+下面从两种模式切换时trapframe的作用。</p>
+<h4>1) 从user mode到kernel mode</h4>
+<p>发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中，
+那么cpu是怎么做的呢？
+先看TrapFrame结构：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">PushRegs</span> <span class="p">{</span>
+    <span class="cm">/* registers as pushed by pusha */</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_edi</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">reg_esi</span><span class="p">;</span>
+    <span class="kt">uint32_t ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeyu-kernel-modede-qie-huan.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h2>
                 <div class="summary"><p>x86有两种类型的中断：</p>
 <p>中断interrupt：主要指外设的中断；
@@ -258,22 +280,6 @@ Stack backtrace:
 + symbol-file obj/kern/kernel
 如果出现错误：warning: File "/home/yj/yangjin/xv6/jos/.gdbinit" auto-loading has been declined by ...</p>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/qemuhe-gdbdiao-shi.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/stabshi-yi.html">stab释疑</a></h2>
-                <div class="summary"><p>Reference: https://sourceware.org/gdb/onlinedocs/stabs.html</p>
-<h4>1. stabs简介</h4>
-<p>stabs代表一种信息格式，用来将程序的信息展示给调试器debugger。</p>
-<h4>1.2. Debugging information flow</h4>
-<p>一般编译流程：gcc把.c编译成.s，汇编器把.s转化成.o，链接器把.o和库文件组合生成可执行文件；
-当-g选项打开时，gcc会往.s文件中加入额外的调试信息，然后这些调试信息被加入到.o和可执行文件中。
-这个调试信息包括c源文件的一些信息，如文件名，行号，变量的类型和范围（type, scope），函数名字，
-参数和范围(function names, parameters,scopes)。在最后生成的可执行文件中，会生成一个symbol table
-和string table，debugger就是利用这两个表来获取程序的信息的。</p>
-<p>注意 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/stabshi-yi.html">more ...</a>
                 </div>
             </article>
             <hr/>
