@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Authors - Living@Greatwall</title>
+    <title>kernel - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,7 +10,8 @@
 
 
 
-        <meta name="author" content="Jin" />
+    <meta name="author" content="Jin" />
+    <meta name="keywords" content="kernel" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -76,8 +77,25 @@ Living@Greatwall            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-    <h1>Authors on Living@Greatwall</h1>
-        <li><a href="http://yangjin-unique.github.io/author/jin.html">jin</a> (25)</li>
+            <article>
+                <h2><a href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a></h2>
+                <div class="summary"><p>调试内核的方法很多，debugfs就是其中一种利用虚拟文件系统来调试内核的方法之一，debugfs与profs，sysfs类似，
+是一种虚拟文件系统。默认情况下，debugfs文件系统挂载在/sys/kernel/debug/目录下，也可用手动命令来加载：
+    mount -t debugfs none /<your dir>/debugfs</p>
+<p>下面的示例将建立一个内核模块debugfs_hello，并在该内核模块中调用debugfs的API创建下面3个值：
+/sys/kernel/debug/debugfs_hello/hello
+/sys/kernel/debug/debugfs_hello/add
+/sys/kernel/debug/debugfs_hello/sum
+其中hello是一个可读写的整数值，即用户可用cat和echo命令来查看和修改该；
+add是可写的，当用户调用echo命令向其写入一个值，该值会被内核模块加到sum这个值中；
+sum是只读的，用于计算所有输入给add的值的总和，用户可用cat命令查看该值。</p>
+<div class="highlight"><pre><span class="cp">#include &lt;linux/module.h&gt;</span>
+<span class="cp">#include &lt;linux/kernel.h ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

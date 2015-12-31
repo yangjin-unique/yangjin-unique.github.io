@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>利用Debugfs调试linux kernel - Living@Greatwall</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">
+
+        <meta name="author" content="jin" />
+        <meta name="keywords" content="linux,kernel,debugfs" />
+        <meta name="description" content="调试内核的方法很多，debugfs就是其中一种利用虚拟文件系统来调试内核的方法之一，debugfs与profs，sysfs类似， 是一种虚拟文件系统。默认情况下，debugfs文件系统挂载在/sys/kernel/debug/目录下，也可用手动命令来加载： mount -t debugfs none //debugfs 下面的示例将建立一个内核模块debugfs_hello，并在该内核模块中调用debugfs的API创建下面3个值： /sys/kernel/debug/debugfs_hello/hello /sys/kernel/debug/debugfs_hello/add /sys/kernel/debug/debugfs_hello/sum 其中hello是一个可读写的整数值，即用户可用cat和echo命令来查看和修改该； add是可写的，当用户调用echo命令向其写入一个值，该值会被内核模块加到sum这个值中； sum是只读的，用于计算所有输入给add的值的总和，用户可用cat命令查看该值。 #include &lt;linux/module.h&gt; #include &lt;linux/kernel.h ..." />
+
+        <meta property="og:site_name" content="Living@Greatwall" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="利用Debugfs调试linux kernel"/>
+        <meta property="og:url" content="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html"/>
+        <meta property="og:description" content="调试内核的方法很多，debugfs就是其中一种利用虚拟文件系统来调试内核的方法之一，debugfs与profs，sysfs类似， 是一种虚拟文件系统。默认情况下，debugfs文件系统挂载在/sys/kernel/debug/目录下，也可用手动命令来加载： mount -t debugfs none //debugfs 下面的示例将建立一个内核模块debugfs_hello，并在该内核模块中调用debugfs的API创建下面3个值： /sys/kernel/debug/debugfs_hello/hello /sys/kernel/debug/debugfs_hello/add /sys/kernel/debug/debugfs_hello/sum 其中hello是一个可读写的整数值，即用户可用cat和echo命令来查看和修改该； add是可写的，当用户调用echo命令向其写入一个值，该值会被内核模块加到sum这个值中； sum是只读的，用于计算所有输入给add的值的总和，用户可用cat命令查看该值。 #include &lt;linux/module.h&gt; #include &lt;linux/kernel.h ..."/>
+        <meta property="article:published_time" content="2015-12-28" />
+            <meta property="article:section" content="os" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:tag" content="kernel" />
+            <meta property="article:tag" content="debugfs" />
+            <meta property="article:author" content="jin" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
+Living@Greatwall            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
+                        </li>
+                        <li class="active">
+                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html"
+                       rel="bookmark"
+                       title="Permalink to 利用Debugfs调试linux kernel">
+                        利用Debugfs调试linux kernel
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-12-28T00:00:00+08:00"> Mon 28 December 2015</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://yangjin-unique.github.io/tag/linux.html">linux</a>
+        /
+	<a href="http://yangjin-unique.github.io/tag/kernel.html">kernel</a>
+        /
+	<a href="http://yangjin-unique.github.io/tag/debugfs.html">debugfs</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>调试内核的方法很多，debugfs就是其中一种利用虚拟文件系统来调试内核的方法之一，debugfs与profs，sysfs类似，
+是一种虚拟文件系统。默认情况下，debugfs文件系统挂载在/sys/kernel/debug/目录下，也可用手动命令来加载：
+    mount -t debugfs none /<your dir>/debugfs</p>
+<p>下面的示例将建立一个内核模块debugfs_hello，并在该内核模块中调用debugfs的API创建下面3个值：
+/sys/kernel/debug/debugfs_hello/hello
+/sys/kernel/debug/debugfs_hello/add
+/sys/kernel/debug/debugfs_hello/sum
+其中hello是一个可读写的整数值，即用户可用cat和echo命令来查看和修改该；
+add是可写的，当用户调用echo命令向其写入一个值，该值会被内核模块加到sum这个值中；
+sum是只读的，用于计算所有输入给add的值的总和，用户可用cat命令查看该值。</p>
+<div class="highlight"><pre><span class="cp">#include &lt;linux/module.h&gt;</span>
+<span class="cp">#include &lt;linux/kernel.h&gt;</span>
+<span class="cp">#include &lt;linux/debugfs.h&gt;</span>
+
+<span class="k">static</span> <span class="k">struct</span> <span class="n">dentry</span> <span class="o">*</span><span class="n">dir</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">debugfs_hello</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="n">u32</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">add_write</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">u64</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sum</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">DEFINE_SIMPLE_ATTRIBUTE</span><span class="p">(</span><span class="n">add_ops</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">add_write</span><span class="p">,</span> <span class="s">&quot;%llu</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+<span class="k">static</span> <span class="n">__init</span> <span class="kt">int</span> <span class="nf">hello_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">dentry</span> <span class="o">*</span><span class="n">tmp_dir</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="cm">/* create /sys/kernel/debug/debugfs_hello/ directory */</span>
+    <span class="n">dir</span> <span class="o">=</span> <span class="n">debugfs_create_dir</span><span class="p">(</span><span class="s">&quot;debugfs_hello&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printk</span><span class="p">(</span><span class="n">KERN_ALERT</span> <span class="s">&quot;debugfs_create_dir failed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* create /sys/kernel/debug/debugfs_hello/hello value, mode: rw*/</span>
+    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">debugfs_create_u32</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">,</span> <span class="mo">00666</span><span class="p">,</span> <span class="n">dir</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">debugfs_hello</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tmp_dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printk</span><span class="p">(</span><span class="n">KERN_ALERT</span> <span class="s">&quot;debugfs_create_u32 failed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* create /sys/kernel/debug/debugfs_hello/add value, mode: w*/</span>
+    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">debugfs_create_file</span><span class="p">(</span><span class="s">&quot;add&quot;</span><span class="p">,</span> <span class="mo">0222</span><span class="p">,</span> <span class="n">dir</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">add_ops</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tmp_dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printk</span><span class="p">(</span><span class="n">KERN_ALERT</span> <span class="s">&quot;debugfs_create_file failed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* create /sys/kernel/debug/debugfs_hello/sum value, mode: r*/</span>
+    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">debugfs_create_u32</span><span class="p">(</span><span class="s">&quot;sum&quot;</span><span class="p">,</span> <span class="mo">0444</span><span class="p">,</span> <span class="n">dir</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sum</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tmp_dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printk</span><span class="p">(</span><span class="n">KERN_ALERT</span> <span class="s">&quot;debugfs_create_u32 failed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="k">static</span> <span class="kt">void</span> <span class="n">__exit</span> <span class="nf">hello_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printk</span><span class="p">(</span><span class="n">KERN_INFO</span> <span class="s">&quot;Exit debugfs_hello module</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">debugfs_remove_recursive</span><span class="p">(</span><span class="n">dir</span><span class="p">);</span>
+    <span class="n">dir</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">module_init</span><span class="p">(</span><span class="n">hello_init</span><span class="p">);</span>
+<span class="n">module_exit</span><span class="p">(</span><span class="n">hello_exit</span><span class="p">);</span>
+
+<span class="n">MODULE_LICENSE</span><span class="p">(</span><span class="s">&quot;Dual BSD/GPL&quot;</span><span class="p">);</span>
+<span class="n">MODULE_DESCRIPTION</span><span class="p">(</span><span class="s">&quot;Debugfs hello examle&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Makefile如下，其中第一条是为了避免编译驱动时出现kernel module verification failed: signature and/or required key missing错误：</p>
+<div class="highlight"><pre><span class="n">CONFIG_MODULE_SIG</span><span class="o">=</span><span class="n">n</span>
+
+<span class="n">obj</span><span class="o">-</span><span class="n">m</span> <span class="o">=</span> <span class="n">debugfs_hello</span><span class="p">.</span><span class="n">o</span>
+<span class="n">KVERSION</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">shell</span> <span class="n">uname</span> <span class="o">-</span><span class="n">r</span><span class="p">)</span>
+<span class="n">PWD</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">shell</span> <span class="n">pwd</span><span class="p">)</span>
+<span class="nl">all</span><span class="p">:</span>
+        <span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="err">$</span><span class="p">(</span><span class="n">KVERSION</span><span class="p">)</span><span class="o">/</span><span class="n">build</span> <span class="n">M</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">PWD</span><span class="p">)</span> <span class="n">modules</span>
+<span class="nl">clean</span><span class="p">:</span>
+        <span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="err">$</span><span class="p">(</span><span class="n">KVERSION</span><span class="p">)</span><span class="o">/</span><span class="n">build</span> <span class="n">M</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">PWD</span><span class="p">)</span> <span class="n">clean</span>
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+
+                    var disqus_identifier = 'li-yong-debugfsdiao-shi-linux-kernel';
+                var disqus_url = 'http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://lxr.free-electrons.com" target="_blank">
+                Online Linux Kernel Source Code
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://coolshell.cn" target="_blank">
+                酷壳CoolShell
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Jin
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+
+</body>
+</html>

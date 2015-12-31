@@ -77,6 +77,24 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a></h2>
+                <div class="summary"><p>调试内核的方法很多，debugfs就是其中一种利用虚拟文件系统来调试内核的方法之一，debugfs与profs，sysfs类似，
+是一种虚拟文件系统。默认情况下，debugfs文件系统挂载在/sys/kernel/debug/目录下，也可用手动命令来加载：
+    mount -t debugfs none /<your dir>/debugfs</p>
+<p>下面的示例将建立一个内核模块debugfs_hello，并在该内核模块中调用debugfs的API创建下面3个值：
+/sys/kernel/debug/debugfs_hello/hello
+/sys/kernel/debug/debugfs_hello/add
+/sys/kernel/debug/debugfs_hello/sum
+其中hello是一个可读写的整数值，即用户可用cat和echo命令来查看和修改该；
+add是可写的，当用户调用echo命令向其写入一个值，该值会被内核模块加到sum这个值中；
+sum是只读的，用于计算所有输入给add的值的总和，用户可用cat命令查看该值。</p>
+<div class="highlight"><pre><span class="cp">#include &lt;linux/module.h&gt;</span>
+<span class="cp">#include &lt;linux/kernel.h ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a></h2>
                 <div class="summary"><p>与系统调用，/proc，sysfs等类似，netlink也是一种用于用户进程与内核通信的机制，它是基于BSD套接字协议，
 使用AF_NETLINK地址簇。
@@ -232,20 +250,6 @@ spinlock的定义如下：</p>
     <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>            <span class="c1">// Name of lock.</span>
     <span class="k">struct</span> <span class="n">CpuInfo</span> <span class="o">*</span><span class="n">cpu</span><span class="p">;</span>   <span class="c1">// The CPU holding the lock ...</span></pre></div>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h2>
-                <div class="summary"><h3>一、多核启动</h3>
-<p>lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。
-关于multiprocessor与multicore的区别请看：https://software.intel.com/en-us/blogs/2008/04/17/the-difference-between-multi-core-and-multi-processing。
-multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同一个主板上，cpu之前通过总线通信；而multicore是所有cpus都在同一个chip上，这样cpu之间的通信时延更低，更省电；
-在SMP系统中，正常运行时所有cpu功能一样，但在启动时，cpu分为两类：
-1）Bootstrap processor（BSP）：负责初始化并启动系统；
-2）Application processors（AP）：os启动后被BSP激活。</p>
-<p>在SMP系统中，每个cpu有一个APIC（LAPIC：高级可编程中断管理器）单元，专门负责传送中断信号，见kern/lapic.c，LAPIC给每个cpu分配一个唯一的ID ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">more ...</a>
                 </div>
             </article>
             <hr/>
