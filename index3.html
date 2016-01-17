@@ -77,6 +77,34 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/elfwen-jian.html">ELF文件</a></h2>
+                <div class="summary"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
+<ul>
+<li>
+<p>用于执行的可执行文件(executab   file)，用于提供程序的进程映像，加载的内存执行。  这也是本实验的OS文件类型。</p>
+</li>
+<li>
+<p>用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。</p>
+</li>
+<li>
+<p>共享目标文件(shared object  file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件，
+动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。</p>
+</li>
+</ul>
+<p>ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如：</p>
+<p>*.text</p>
+<p>*.rodata</p>
+<p>*.data</p>
+<h4>1. Elf header结构</h4>
+<p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
+控制结构，其定义在elf.h中：</p>
+<div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
+  <span class="n">uint</span>  <span class="n">magic ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/elfwen-jian.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h2>
                 <div class="summary"><p>这里介绍如何用qemu和gdb联合调试：</p>
 <p>1）在JOS目录下执行make qemu-gdb（或者make qemu-nox-gdb），此时qemu会执行并且等待gdb的连接；
@@ -244,7 +272,7 @@ Living@Greatwall            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
+         <div class="col-xs-10">&copy; 2016 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>linux - Living@Greatwall</title>
+    <title>Makefile - Living@Greatwall</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
 
 
     <meta name="author" content="Jin" />
-    <meta name="keywords" content="linux" />
+    <meta name="keywords" content="Makefile" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Living@Greatwall" />
@@ -52,7 +52,7 @@ Living@Greatwall            </a>
                         <li >
                             <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
                         </li>
-                        <li class="active">
+                        <li >
                             <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
@@ -97,46 +97,6 @@ notdir用于去掉字符串中路径名，如：
     NO_DIR = a.c</p>
 <p>2 ...</p>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/makefilehan-shu.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a></h2>
-                <div class="summary"><p>与系统调用，/proc，sysfs等类似，netlink也是一种用于用户进程与内核通信的机制，它是基于BSD套接字协议，
-使用AF_NETLINK地址簇。
-与系统调用，proc，sysfs文件系统等方式相比，netlink具有简单，支持双向通信的特点，并支持消息多播机制。
-当我们编写内核驱动并需要与用户进程通信时，我们便能利用netlink来实现这个通信机制。hostapd（一个无线
-AP的dameon）中就是采用netlink接口（nl80211）与内核进行通信，下文将通过一个实例来说明如何在自己的内核
-模块中支持netlink通信。</p>
-<h4>1. 编写内核模块</h4>
-<p>首先编写内核模块文件：netlink_hello_mod.c，并增加相应的makefile，代码如下：</p>
-<p>netlink_hello_mod.c:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;linux/module.h&gt;</span>
-<span class="cp">#include &lt;net/sock.h&gt;</span>
-<span class="cp">#include &lt;linux/netlink.h&gt;</span>
-<span class="cp">#include &lt;linux/skbuff.h&gt;</span>
-
-<span class="cp">#define MY_NETLINK_TYPE 31 ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a></h2>
-                <div class="summary"><h4>1. 简介</h4>
-<p>内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元，
-如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的
-sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始
-是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的
-支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。</p>
-<h4>2. 内存管理设计目标</h4>
-<p>衡量内存管理算法优劣的主要指标有如下几点：</p>
-<ul>
-<li>分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性；</li>
-<li>内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等；</li>
-<li>回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等；</li>
-<li>跨平台可移植性 ...</li></ul>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/ptmallocnei-cun-guan-li-jie-xi.html">more ...</a>
                 </div>
             </article>
             <hr/>

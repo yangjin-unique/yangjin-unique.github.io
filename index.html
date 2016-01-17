@@ -77,6 +77,29 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/makefilehan-shu.html">Makefile函数</a></h2>
+                <div class="summary"><p>利用Makefile自带的函数能更一部精简我们的Makefile的编写，下面介绍一下常用的几个函数。</p>
+<h4>1. 通配符函数wildcard</h4>
+<p>Makefile中通配符扩展是在规则中自动进行的，但是如果要对一个变量进行类似的操作时，我们就需要使用这个wildcard
+这个函数来进行扩展，用法如下：
+    $(wildcard pattern...)
+这个函数会将符合这个pattern模式的所有文件以空格为分隔符列出来，例如我们要获取src目录下所有的.c文件，则实现为：
+    SRC = $(wildcard *.c)
+假设src目录下有a.c和b.c两个文件，那么SRC相当于如下：
+    SRC = a.c b.c</p>
+<h4>2. 字符串操作函数</h4>
+<p>常用的有notdir, subst, patsubst, strip, filter, findstring等。
+1) $(notdir text)
+notdir用于去掉字符串中路径名，如：
+    NO_DIR = $(notdir src/a.c)
+也就等同于：
+    NO_DIR = a.c</p>
+<p>2 ...</p>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/makefilehan-shu.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a></h2>
                 <div class="summary"><p>调试内核的方法很多，debugfs就是其中一种利用虚拟文件系统来调试内核的方法之一，debugfs与profs，sysfs类似，
 是一种虚拟文件系统。默认情况下，debugfs文件系统挂载在/sys/kernel/debug/目录下，也可用手动命令来加载：
@@ -236,23 +259,6 @@ sys_ipc_recv和sys_ipc_try_send，以及lib/syscall.c的提供给用户的系统
                 </div>
             </article>
             <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">spinlock的实现</a></h2>
-                <div class="summary"><p>spinlock在多核多线程的场景中使用非常广泛，采用busy_wait_loop忙等待的方式，与信号量相比的优点在于不会进程上下文的切换（进程的调度），节省了进程切换带来的敖贵的系统开销。一般用spinlock时，要保证临界区的代码短小，等待的时间较短。linux内核中很多地方都使用了spinlock，如中断上下文中使用（多核），用户态多进程pthread提供了spinlock的API。spinlock的实现一般采用cpu提供的原子指令（atomic）来实现，如Test-and-Set，Compare-and-Swap。
-JOS内核提供了spinlock，采用CAS（使用x86的xchg指令）方法实现。
-spinlock的定义如下：</p>
-<div class="highlight"><pre><span class="c1">// Mutual exclusion lock.</span>
-<span class="k">struct</span> <span class="n">spinlock</span> <span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="n">locked</span><span class="p">;</span>       <span class="c1">// Is the lock held?</span>
-
-<span class="cp">#ifdef DEBUG_SPINLOCK</span>
-    <span class="c1">// For debugging:</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>            <span class="c1">// Name of lock.</span>
-    <span class="k">struct</span> <span class="n">CpuInfo</span> <span class="o">*</span><span class="n">cpu</span><span class="p">;</span>   <span class="c1">// The CPU holding the lock ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
 
         <ul class="pagination">
                 <li class="prev disabled"><a href="#">&laquo;</a></li>
@@ -305,7 +311,7 @@ spinlock的定义如下：</p>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
+         <div class="col-xs-10">&copy; 2016 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
