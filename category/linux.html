@@ -89,12 +89,18 @@ Living@Greatwall            </a>
 假设src目录下有a.c和b.c两个文件，那么SRC相当于如下：
     SRC = a.c b.c</p>
 <h4>2. 字符串操作函数</h4>
-<p>常用的有notdir, subst, patsubst, strip, filter, findstring等。
-1) $(notdir text)
-notdir用于去掉字符串中路径名，如：
-    NO_DIR = $(notdir src/a.c)
-也就等同于：
-    NO_DIR = a.c</p>
+<p>常用的有notdir, subst, patsubst, strip, filter, findstring等。</p>
+<p>1) $(notdir text)
+notdir用于去掉字符串中路径名，如：</p>
+<div class="highlight"><pre>NO_DIR = $(notdir src/a.c)
+</pre></div>
+
+
+<p>也就等同于：</p>
+<div class="highlight"><pre>NO_DIR = a.c
+</pre></div>
+
+
 <p>2 ...</p>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/makefilehan-shu.html">more ...</a>
                 </div>

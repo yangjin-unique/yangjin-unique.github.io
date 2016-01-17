@@ -121,22 +121,40 @@ Living@Greatwall            </a>
 假设src目录下有a.c和b.c两个文件，那么SRC相当于如下：
     SRC = a.c b.c</p>
 <h4>2. 字符串操作函数</h4>
-<p>常用的有notdir, subst, patsubst, strip, filter, findstring等。
-1) $(notdir text)
-notdir用于去掉字符串中路径名，如：
-    NO_DIR = $(notdir src/a.c)
-也就等同于：
-    NO_DIR = a.c</p>
+<p>常用的有notdir, subst, patsubst, strip, filter, findstring等。</p>
+<p>1) $(notdir text)
+notdir用于去掉字符串中路径名，如：</p>
+<div class="highlight"><pre>NO_DIR = $(notdir src/a.c)
+</pre></div>
+
+
+<p>也就等同于：</p>
+<div class="highlight"><pre>NO_DIR = a.c
+</pre></div>
+
+
 <p>2) $(patsubst pattern, replacement, text)
-patsubst用于将字符串text中符合pattern的字串替换为replacement字串，如：
-    OBJS = $(patsubst %.c,%.o, a.c b.c)
-则相当于：
-    OBJS = a.o b.o</p>
+patsubst用于将字符串text中符合pattern的字串替换为replacement字串，如：</p>
+<div class="highlight"><pre>OBJS = $(patsubst %.c,%.o, a.c b.c)
+</pre></div>
+
+
+<p>则相当于：</p>
+<div class="highlight"><pre>OBJS = a.o b.o
+</pre></div>
+
+
 <p>3) $(subst from, to, text)
-subst用于将text中from字串替换为to字串，如：
-    OBJS = $(subst ee,EE, feet on the street)
-也就相当于：
-    OBJS = fEEt on the strEEt</p>
+subst用于将text中from字串替换为to字串，如：</p>
+<div class="highlight"><pre>OBJS = $(subst ee,EE, feet on the street)
+</pre></div>
+
+
+<p>也就相当于：</p>
+<div class="highlight"><pre>OBJS = fEEt on the strEEt
+</pre></div>
+
+
 <p>下面来通过一个例子来说明如何利用上面的函数来精简我们的Makefile。假设我们有个项目prj，c源代码都放在src目录中，
 头文件都放在include目录下，我们想让生成的目标文件都在objs目录下，文件组织如下：</p>
 <div class="highlight"><pre>+++prj/
@@ -155,8 +173,8 @@ subst用于将text中from字串替换为to字串，如：
 
 
 <p>这要我们就很方便的得到了SRC和OBJS。</p>
-<p>References:
-https://www.gnu.org/software/make/manual/</p>
+<h4>References:</h4>
+<p>https://www.gnu.org/software/make/manual/</p>
             </div>
             <!-- /.entry-content -->
     <hr/>
