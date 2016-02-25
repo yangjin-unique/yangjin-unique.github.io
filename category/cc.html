@@ -78,6 +78,37 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a></h2>
+                <div class="summary"><p>这是cmu经典课程csapp的实验之一，主要任务是对课程提供的bufbomb程序进行buffer overflow攻击，以帮助我们深入理解x86 IA-32体系结构的函数调用惯例和栈组织结构，从而认识到这种攻击方法的本质，对我们编写安全的系统级代码非常有好处。这些实验同时也展示了如何攻击操作系统和网络服务器的安全弱点。</p>
+<p>实验提供了以下3个可执行文件：
+- bufbomb: 这是我们要攻击的目标程序；
+- makecookie：根据用户id生成一个唯一的cookie，这个主要是防止抄袭作业:)；
+- hex2raw：将16进制的ascii值转换称对于的ascii字符；</p>
+<p>bufbomb程序会从标准输入中读取一个字符串，调用getbuf函数：</p>
+<div class="highlight"><pre><span class="cm">/* Buffer size for getbuf */</span>
+<span class="cp">#define NORMAL_BUFFER_SIZE 32</span>
+
+<span class="kt">int</span> <span class="nf">getbuf</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="n">NORMAL_BUFFER_SIZE</span><span class="p">];</span>
+    <span class="n">Gets</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>显然如果用户输入的字符串长度大于31时，就会破坏bufbomb的栈，如果在输入的字符串中带有特殊的地址和指令，就达到了攻击目的。下面的几个实验任务都是需要在这个字符串中嵌入特殊的指令和地址来完成实验任务。</p>
+<h3>Test 1: Candle</h3>
+<p>bufbomb中函数test会调用getbuf，如下：</p>
+<div class="highlight"><pre> <span class="kt">void</span> <span class="nf">test</span><span class="p">()</span>
+ <span class="p">{</span>
+     <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+     <span class="cm">/* Put canary ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">const修饰变了能否被修改</a></h2>
                 <div class="summary"><p>今天无意中想到一个问题，const修饰的变量能否被修改，虽然修改const变量是个不好的习惯，
 但是仍想去验证一下这个问题。
@@ -154,7 +185,7 @@ const还用于修饰成员函数，表示该成员函数不能修改成员变量
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
+         <div class="col-xs-10">&copy; 2016 Jin
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

@@ -77,6 +77,37 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a></h2>
+                <div class="summary"><p>这是cmu经典课程csapp的实验之一，主要任务是对课程提供的bufbomb程序进行buffer overflow攻击，以帮助我们深入理解x86 IA-32体系结构的函数调用惯例和栈组织结构，从而认识到这种攻击方法的本质，对我们编写安全的系统级代码非常有好处。这些实验同时也展示了如何攻击操作系统和网络服务器的安全弱点。</p>
+<p>实验提供了以下3个可执行文件：
+- bufbomb: 这是我们要攻击的目标程序；
+- makecookie：根据用户id生成一个唯一的cookie，这个主要是防止抄袭作业:)；
+- hex2raw：将16进制的ascii值转换称对于的ascii字符；</p>
+<p>bufbomb程序会从标准输入中读取一个字符串，调用getbuf函数：</p>
+<div class="highlight"><pre><span class="cm">/* Buffer size for getbuf */</span>
+<span class="cp">#define NORMAL_BUFFER_SIZE 32</span>
+
+<span class="kt">int</span> <span class="nf">getbuf</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="n">NORMAL_BUFFER_SIZE</span><span class="p">];</span>
+    <span class="n">Gets</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>显然如果用户输入的字符串长度大于31时，就会破坏bufbomb的栈，如果在输入的字符串中带有特殊的地址和指令，就达到了攻击目的。下面的几个实验任务都是需要在这个字符串中嵌入特殊的指令和地址来完成实验任务。</p>
+<h3>Test 1: Candle</h3>
+<p>bufbomb中函数test会调用getbuf，如下：</p>
+<div class="highlight"><pre> <span class="kt">void</span> <span class="nf">test</span><span class="p">()</span>
+ <span class="p">{</span>
+     <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+     <span class="cm">/* Put canary ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/makefilehan-shu.html">Makefile函数</a></h2>
                 <div class="summary"><p>利用Makefile自带的函数能更一部精简我们的Makefile的编写，下面介绍一下常用的几个函数。</p>
 <h4>1. 通配符函数wildcard</h4>
@@ -242,26 +273,6 @@ sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库�
 <p>这个可在虚拟环境下安装，也可以就在本机环境下安装，</p>
 <div class="highlight"><pre>$: sudo ...</pre></div>
                     <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/how-to-use-pelican-to-bulid-blog-on-githubio.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html">多进程IPC机制实现</a></h2>
-                <div class="summary"><p>这是lab4最后一个任务，实现进程间的通信IPC，主要完成kern/syscall.c里面的两个API：
-sys_ipc_recv和sys_ipc_try_send，以及lib/syscall.c的提供给用户的系统调用：ipc_recv和ipc_send。实现代码如下：</p>
-<div class="highlight"><pre><span class="k">static</span> <span class="kt">int</span>
-<span class="nf">sys_ipc_try_send</span><span class="p">(</span><span class="kt">envid_t</span> <span class="n">envid</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">srcva</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">perm</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// LAB 4: Your code here.</span>
-    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
-
-    <span class="k">if</span> <span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">envid2env</span><span class="p">(</span><span class="n">envid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">env</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="cm">/* make sure that dst ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html">more ...</a>
                 </div>
             </article>
             <hr/>

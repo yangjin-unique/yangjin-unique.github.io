@@ -77,6 +77,21 @@ Living@Greatwall            </a>
     <div class="row">
         <div class="col-sm-9">
             <article>
+                <h2><a href="http://yangjin-unique.github.io/lab1-exercise1.html">lab1 exercise1</a></h2>
+                <div class="summary"><p>lab1主要熟悉qemu x86使用环境，各种实验工具，包括qemu与gdb联合调试等，熟悉pc的bootstrap过程，包括BIOS和bootloader。
+该练习主要是实现一个backtrace函数，解析当前函数调用栈帧，并需要解析出当前函数的文件名、函数名、行号信息，如下面所示：</p>
+<div class="highlight"><pre>K&gt; backtrace
+Stack backtrace:
+  ebp f010ff78  eip f01008ae  args 00000001 f010ff8c 00000000 f0110580 00000000
+         kern/monitor.c:143: monitor+106
+  ebp f010ffd8  eip f0100193  args 00000000 00001aac 00000660 00000000 00000000
+         kern/init.c:49: i386_init+59
+  ebp f010fff8 ...</pre></div>
+                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab1-exercise1.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="http://yangjin-unique.github.io/elfwen-jian.html">ELF文件</a></h2>
                 <div class="summary"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
 <ul>
