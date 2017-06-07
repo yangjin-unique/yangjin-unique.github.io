@@ -1,175 +1,135 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-    <title>netlink - Living@Greatwall</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Tag: netlink &mdash; Living@Greatwall</title>
+  <meta name="author" content="Jin">
 
 
 
 
-    <meta name="author" content="Jin" />
-    <meta name="keywords" content="netlink" />
-
-    <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Living@Greatwall" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Living@Greatwall"/>
-        <meta property="og:url" content="http://yangjin-unique.github.io"/>
-        <meta property="og:description" content="Living@Greatwall"/>
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/favicon.png" rel="icon">
 
-    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
 
-
-
-
-
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
 </head>
+
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
-Living@Greatwall            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a></h2>
-                <div class="summary"><p>与系统调用，/proc，sysfs等类似，netlink也是一种用于用户进程与内核通信的机制，它是基于BSD套接字协议，
-使用AF_NETLINK地址簇。
-与系统调用，proc，sysfs文件系统等方式相比，netlink具有简单，支持双向通信的特点，并支持消息多播机制。
-当我们编写内核驱动并需要与用户进程通信时，我们便能利用netlink来实现这个通信机制。hostapd（一个无线
-AP的dameon）中就是采用netlink接口（nl80211）与内核进行通信，下文将通过一个实例来说明如何在自己的内核
-模块中支持netlink通信。</p>
-<h4>1. 编写内核模块</h4>
-<p>首先编写内核模块文件：netlink_hello_mod.c，并增加相应的makefile，代码如下：</p>
-<p>netlink_hello_mod.c:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;linux/module.h&gt;</span>
-<span class="cp">#include &lt;net/sock.h&gt;</span>
-<span class="cp">#include &lt;linux/netlink.h&gt;</span>
-<span class="cp">#include &lt;linux/skbuff.h&gt;</span>
-
-<span class="cp">#define MY_NETLINK_TYPE 31 ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-
-<section class="well well-sm">
-    <ul class="list-group list-group-flush">
+  <header role="banner"><hgroup>
+  <h1><a href="/">Living@Greatwall</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
 
 
+<ul class="main-navigation">
+      <li >
+        <a href="/category/cc.html">C&c++</a>
+      </li>
+      <li >
+        <a href="/category/linux.html">Linux</a>
+      </li>
+      <li >
+        <a href="/category/os.html">Os</a>
+      </li>
+      <li >
+        <a href="/category/python.html">Python</a>
+      </li>
+      <li >
+        <a href="/category/tools.html">Tools</a>
+      </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+	<article role="article">
+    	<header>
+    		<h1 class="entry-title">Tag: netlink</h1>
+    	</header>
 
-
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://lxr.free-electrons.com" target="_blank">
-                Online Linux Kernel Source Code
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://coolshell.cn" target="_blank">
-                酷壳CoolShell
-            </a>
-        </li>
-      </ul>
-    </li>
-    </ul>
-</section>
-            </aside>
-        </div>
-    </div>
+    	<div id="blog-archives">
+            <h2>2015</h2>
+                    <article>
+                        <h1><a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a></h1>
+                        <time datetime="2015-12-18 00:00:00+08:00" pubdate>
+                            <span class="month">Dec</span>
+                            <span class="day">18</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/linux.html'>linux</a>
+                            </span>
+                        </footer>
+                    </article>
+	    </div>
+    </article>
 </div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="/category/cc.html">c&c++</a></li>
+        <li><a href="/category/linux.html">linux</a></li>
+        <li><a href="/category/os.html">os</a></li>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/tools.html">tools</a></li>
+    </ul>
+  </section>
+ 
 
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+  <section>
+  <h1>Tags</h1>
+    <a href="/tag/kernel.html">kernel</a>,    <a href="/tag/user-mode.html">user mode</a>,    <a href="/tag/page-directory.html">page directory</a>,    <a href="/tag/ipc.html">IPC</a>,    <a href="/tag/syscall.html">Syscall</a>,    <a href="/tag/elf.html">elf</a>,    <a href="/tag/hack.html">hack</a>,    <a href="/tag/trap.html">trap</a>,    <a href="/tag/header.html">header</a>,    <a href="/tag/gdb.html">gdb</a>,    <a href="/tag/jos.html">JOS</a>,    <a href="/tag/linux.html">linux</a>,    <a href="/tag/page-table.html">page table</a>,    <a href="/tag/qemu.html">qemu</a>,    <a href="/tag/const.html">const</a>,    <a href="/tag/bios.html">BIOS</a>,    <a href="/tag/debug.html">debug</a>,    <a href="/tag/makefile.html">Makefile</a>,    <a href="/tag/spinlock.html">spinlock</a>,    <a href="/tag/trapframe.html">TrapFrame</a>,    <a href="/tag/multi-processor.html">Multi-processor</a>,    <a href="/tag/task-swtich.html">task swtich</a>,    <a href="/tag/ostinato.html">ostinato</a>,    <a href="/tag/linux-kernel.html">linux kernel</a>,    <a href="/tag/c-c-gcc-wshadow-block-scope.html">C C++ gcc Wshadow block scope</a>,    <a href="/tag/linker.html">linker</a>,    <a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>,    <a href="/tag/x86.html">x86</a>,    <a href="/tag/debugfs.html">debugfs</a>,    <a href="/tag/python.html">python</a>,    <a href="/tag/interrupts.html">interrupts</a>,    <a href="/tag/c.html">C</a>,    <a href="/tag/traffic-generator-analyzer.html">traffic generator analyzer</a>,    <a href="/tag/linelear-address.html">linelear address</a>,    <a href="/tag/stab.html">stab</a>,    <a href="/tag/address-translation.html">address translation</a>,    <a href="/tag/interrupt.html">interrupt</a>,    <a href="/tag/copy-on-write.html">Copy-on-Write</a>,    <a href="/tag/translation.html">translation</a>,    <a href="/tag/bootloader.html">bootloader</a>,    <a href="/tag/stack.html">stack</a>,    <a href="/tag/traps.html">traps</a>,    <a href="/tag/netlink.html">netlink</a>,    <a href="/tag/qt.html">qt</a>,    <a href="/tag/entrys.html">entry.S</a>,    <a href="/tag/os.html">os</a>,    <a href="/tag/multi-process.html">multi-process</a>,    <a href="/tag/page.html">page</a>,    <a href="/tag/logical-address.html">logical address</a>,    <a href="/tag/fork.html">fork</a>,    <a href="/tag/kernel-mode.html">kernel mode</a>,    <a href="/tag/exceptions.html">exceptions</a>,    <a href="/tag/physical-memory-management.html">physical memory management</a>,    <a href="/tag/security.html">security</a>,    <a href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a href="/tag/tast-state.html">tast state</a>,    <a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>  </section>
 
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
-    <!-- Disqus -->
-    <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li><a href="http://lxr.free-electrons.com" target="_blank">Online Linux Kernel Source Code</a></li>
+            <li><a href="http://coolshell.cn" target="_blank">酷壳CoolShell</a></li>
+        </ul>
+    </section>
 
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function () {
-            var s = document.createElement('script');
-            s.async = true;
-            s.type = 'text/javascript';
-            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-        }());
-    </script>
-    <!-- End Disqus Code -->
-
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2015  Jin &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    var disqus_shortname = 'yangjin-unique';
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+  </script>
 </body>
 </html>

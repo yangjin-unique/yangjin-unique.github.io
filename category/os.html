@@ -1,365 +1,369 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-    <title>os - Living@Greatwall</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Category: os &mdash; Living@Greatwall</title>
+  <meta name="author" content="Jin">
 
 
 
 
-    <meta name="author" content="Jin" />
-    <meta name="keywords" content="os" />
-
-    <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Living@Greatwall" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Living@Greatwall"/>
-        <meta property="og:url" content="http://yangjin-unique.github.io"/>
-        <meta property="og:description" content="Living@Greatwall"/>
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/favicon.png" rel="icon">
 
-    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
 
-
-
-
-
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
 </head>
+
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
-Living@Greatwall            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
-                        </li>
-                        <li class="active">
-                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a></h2>
-                <div class="summary"><p>调试内核的方法很多，debugfs就是其中一种利用虚拟文件系统来调试内核的方法之一，debugfs与profs，sysfs类似，
-是一种虚拟文件系统。默认情况下，debugfs文件系统挂载在/sys/kernel/debug/目录下，也可用手动命令来加载：
-    mount -t debugfs none /<your dir>/debugfs</p>
-<p>下面的示例将建立一个内核模块debugfs_hello，并在该内核模块中调用debugfs的API创建下面3个值：
-/sys/kernel/debug/debugfs_hello/hello
-/sys/kernel/debug/debugfs_hello/add
-/sys/kernel/debug/debugfs_hello/sum
-其中hello是一个可读写的整数值，即用户可用cat和echo命令来查看和修改该；
-add是可写的，当用户调用echo命令向其写入一个值，该值会被内核模块加到sum这个值中；
-sum是只读的，用于计算所有输入给add的值的总和，用户可用cat命令查看该值。</p>
-<div class="highlight"><pre><span class="cp">#include &lt;linux/module.h&gt;</span>
-<span class="cp">#include &lt;linux/kernel.h ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html">多进程IPC机制实现</a></h2>
-                <div class="summary"><p>这是lab4最后一个任务，实现进程间的通信IPC，主要完成kern/syscall.c里面的两个API：
-sys_ipc_recv和sys_ipc_try_send，以及lib/syscall.c的提供给用户的系统调用：ipc_recv和ipc_send。实现代码如下：</p>
-<div class="highlight"><pre><span class="k">static</span> <span class="kt">int</span>
-<span class="nf">sys_ipc_try_send</span><span class="p">(</span><span class="kt">envid_t</span> <span class="n">envid</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">srcva</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">perm</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// LAB 4: Your code here.</span>
-    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
-
-    <span class="k">if</span> <span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">envid2env</span><span class="p">(</span><span class="n">envid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">env</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="cm">/* make sure that dst ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/duo-jin-cheng-ipcji-zhi-shi-xian.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">spinlock的实现</a></h2>
-                <div class="summary"><p>spinlock在多核多线程的场景中使用非常广泛，采用busy_wait_loop忙等待的方式，与信号量相比的优点在于不会进程上下文的切换（进程的调度），节省了进程切换带来的敖贵的系统开销。一般用spinlock时，要保证临界区的代码短小，等待的时间较短。linux内核中很多地方都使用了spinlock，如中断上下文中使用（多核），用户态多进程pthread提供了spinlock的API。spinlock的实现一般采用cpu提供的原子指令（atomic）来实现，如Test-and-Set，Compare-and-Swap。
-JOS内核提供了spinlock，采用CAS（使用x86的xchg指令）方法实现。
-spinlock的定义如下：</p>
-<div class="highlight"><pre><span class="c1">// Mutual exclusion lock.</span>
-<span class="k">struct</span> <span class="n">spinlock</span> <span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="n">locked</span><span class="p">;</span>       <span class="c1">// Is the lock held?</span>
-
-<span class="cp">#ifdef DEBUG_SPINLOCK</span>
-    <span class="c1">// For debugging:</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>            <span class="c1">// Name of lock.</span>
-    <span class="k">struct</span> <span class="n">CpuInfo</span> <span class="o">*</span><span class="n">cpu</span><span class="p">;</span>   <span class="c1">// The CPU holding the lock ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/spinlockde-shi-xian.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h2>
-                <div class="summary"><h3>一、多核启动</h3>
-<p>lab4将JOS扩展到多核上，让JOS支持SMP（symmetric multiprocessing，一个multiprocessor模型）。
-关于multiprocessor与multicore的区别请看：https://software.intel.com/en-us/blogs/2008/04/17/the-difference-between-multi-core-and-multi-processing。
-multiprocessor（multiCPUS）中每个cpu属于不同的chip，然后插在同一个主板上，cpu之前通过总线通信；而multicore是所有cpus都在同一个chip上，这样cpu之间的通信时延更低，更省电；
-在SMP系统中，正常运行时所有cpu功能一样，但在启动时，cpu分为两类：
-1）Bootstrap processor（BSP）：负责初始化并启动系统；
-2）Application processors（AP）：os启动后被BSP激活。</p>
-<p>在SMP系统中，每个cpu有一个APIC（LAPIC：高级可编程中断管理器）单元，专门负责传送中断信号，见kern/lapic.c，LAPIC给每个cpu分配一个唯一的ID ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab4multiprocessorzhi-chi-forkshi-xian.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3user-modeyu-kernel-modede-qie-huan.html">lab3:user mode与kernel mode的切换</a></h2>
-                <div class="summary"><p>两个模式切换涉及两个很重要的数据结构：Taskstate和TrapFrame，Taskstate前面已提到，这个在cpu初始化时会调用trap_init_percpu将设置这个结构体中的栈寄存器和段寄存器：
-tss-&gt;ts_esp0 = 每个cpu的栈top;
-tss-&gt;ts_ss0 = GD_KD; 内核的数据段选择子</p>
-<p>每个cpu都有一个这样的结构：thiscpu-&gt;cpu_ts，这个是为了当从用户态切换到内核态时，让cpu能找到内核栈和数据段的地址。</p>
-<p>TrapFrame用在内核态与用户态相互切换时，当从user mode切换到kernel mode时，cpu会将当前进程的状态信息以TrapFrame的形式
-保存在cpu的内核栈上（内核栈地址由上面的tss给出），而当cpu从kernel mode返回时，会从内核栈上pop出进程的状态信息，然后继续进程的运行。
-下面从两种模式切换时trapframe的作用。</p>
-<h4>1) 从user mode到kernel mode</h4>
-<p>发生这种切换时，内核也必须保存当前用户进程的状态，以便返回时可以继续执行，用户进程的状态就保存在TrapFrame结构中，
-那么cpu是怎么做的呢？
-先看TrapFrame结构：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">PushRegs</span> <span class="p">{</span>
-    <span class="cm">/* registers as pushed by pusha */</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_edi</span><span class="p">;</span>
-    <span class="kt">uint32_t</span> <span class="n">reg_esi</span><span class="p">;</span>
-    <span class="kt">uint32_t ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3user-modeyu-kernel-modede-qie-huan.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h2>
-                <div class="summary"><p>x86有两种类型的中断：</p>
-<p>中断interrupt：主要指外设的中断；
-异常exception：包括faults，traps，aborts，还有软中断（注意软中断也被当做异常处理）；
-x86使用下面两种机制来实现中断处理机制。</p>
-<h4>1. 中断描述符表IDT</h4>
-<p>x86允许256个中断，每个中断有一个中断向量interrupt vector，这个vector值在[0, 255]之间。当中断发生时，cpu使用这个vector来索引IDT，IDT与GDT类似，IDT中每一项都是一个描述符，叫IDT descriptors，有三种类型：
-task gates：用于hardware支持的任务切换；
-interrupt gates；
-trap gates；
-每个描述符长为8字节，结构如下（由于task gate没用到，就不说了）：</p>
-<p>那么中断的过程如下图：</p>
-<p>当中断产生时，cpu使用vector来索引IDT，找到相应的描述符，从描述符中获取下面的东西：
-将描述符里面值赋给eip，也就是将eip指向了中断处理服务例程的指令（就是讲上上面的图中selector和offset组成得到eip）；
-将描述符里面的值赋给cs寄存器，包括特权级DPL，一般中断处理这个都为0，内核态处理 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3-interrupts-exceptions-traps-syscall.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a></h2>
-                <div class="summary"><p>该练习主要完成内核加载用户进程，包括用户进程环境的初始化，创建用户进程，加载用户进程等。
-主要完成以下几个函数的实现：
-* env_init()：初始化用户进程，配置每个段的优先级特权级；</p>
-<ul>
-<li>
-<p>env_setup_vm()：给每个进程分配一个页目录，并初始化用户地址空间的内核部分；</p>
-</li>
-<li>
-<p>region_alloc()：给用户进程分配物理内存并将物理地址映射到进程的虚拟地址空间；</p>
-</li>
-<li>
-<p>load_icode()：解析用户进程elf文件，并加载到用户地址空间；</p>
-</li>
-<li>
-<p>env_create()：调用env_alloc和load_icode；</p>
-</li>
-<li>
-<p>env_run()：在用户模式下执行进程；</p>
-</li>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Living@Greatwall</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
 </ul>
-<p>由于此时还没有文件系统，此时是将用户的进程elf文件嵌入到内核的image中，最后生成的
-kernel.sym包含一些特殊的符号，这个符号实际上就是用户程序的elf文件，最后由内核加载
-并执行。</p>
-<p>每个用户进程都有一个相应的结构体：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">Env</span> <span class="p">{</span>
-    <span class="k">struct</span> <span class="n">Trapframe</span> <span class="n">env_tf</span><span class="p">;</span>    <span class="c1">// Saved registers</span>
-    <span class="k">struct</span> <span class="n">Env</span> <span class="o">*</span><span class="n">env_link</span><span class="p">;</span>       <span class="c1">// Next free Env</span>
-    <span class="kt">envid_t</span> <span class="n">env_id</span><span class="p">;</span>         <span class="c1">// Unique environment identifier</span>
-    <span class="kt">envid_t</span> <span class="n">env_parent_id</span><span class="p">;</span>      <span class="c1">// env_id ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab3jia-zai-yong-hu-jin-cheng.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h2>
-                <div class="summary"><p>这部分内容主要是完成物理页的初始化，完成物理页pages数组的映射，并初始化page_free_list。exercise1的内存布局如图，
-前面（entry.S）提到内核的c代码被链接到了到0xF0100000处（下图中KERNBASE=0xF0000000），而entry.S最后使能了分页机制，
-也就是进入内核的c代码后，所有的地址都是虚拟地址，也就是左边的地址空间，但是内核的c代码的物理内存仍在0x100000处，
-所以要建立一个映射，也就是图中的映射。该练习主要完成一下几个函数：</p>
-<p>boot_alloc()</p>
-<p>mem_init() (only up to the call to check_page_free_list(1))</p>
-<p>page_init()</p>
-<p>page_alloc()</p>
-<p>page_free()</p>
-<h4>1. boot_alloc</h4>
-<p>是开始阶段的内存分配，注意它是从end（内核所占空间的结尾）开始分配内存，后面的虚拟地址都是可用的，这个函数是以页为分配单位，就算n不足4KB，也会分配一页。</p>
-<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span>
-<span class="nf">boot_alloc</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">nextfree ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab2-exercise1physical-memory-management.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a></h2>
-                <div class="summary"><p>lab2的exercise1主要完成物理页的管理，建立一个简单的内存管理机制，后面的练习需要用到内存分配都是这里完成的，小结一下exercise1的要点：
-完成物理内存的管理机制：主要是建立pages[]与物理页的一一映射（包括设置可用和不可用的物理页，pages数组的index就是物理内存地址pa的高22位）；
-exercise2主要内容是完成y页目录和页表的建立，从而建立起虚拟地址空间与物理地址空间的映射，主要是实现以下几个函数：</p>
-<ul>
-<li>pgdir_walk()</li>
-<li>boot_map_region()</li>
-<li>page_lookup()</li>
-<li>page_remove()</li>
-<li>page_insert()</li>
-</ul>
-<h4>1. pgdir_walk</h4>
-<p>给定一个页目录，该函数返回一个虚拟地址对应的在页目录中的页表项page table entry（PTE）的地址。
-当该虚拟地址对应的页表不存在时，会创建一个页表。后面几个函数的实现都会依赖该函数.</p>
-<div class="highlight"><pre><span class="kt">pte_t</span> <span class="o">*</span>
-<span class="nf">pgdir_walk</span><span class="p">(</span><span class="kt">pde_t</span> <span class="o">*</span><span class="n">pgdir</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">va</span><span class="p">,</span> <span class="kt">int</span> <span class="n">create</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// Fill this function in</span>
-    <span class="kt">pde_t</span> <span class="n">pde</span><span class="p">;</span>
-    <span class="kt">pte_t</span> <span class="o">*</span><span class="n">pte</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">PageInfo</span> <span class="o">*</span><span class="n">page</span><span class="p">;</span>
-
-    <span class="n">pde</span>  <span class="o">=</span> <span class="n">pgdir ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/lab2-exercise2ye-biao.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/x86-address-translation.html">x86 Address Translation</a></h2>
-                <div class="summary"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/x86-address-translation.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-
-        <ul class="pagination">
-                <li class="prev disabled"><a href="#">&laquo;</a></li>
-                    <li class="active"><a
-                            href="http://yangjin-unique.github.io/category/os.html">1</a></li>
-                    <li class=""><a
-                            href="http://yangjin-unique.github.io/category/os2.html">2</a></li>
-                <li class="next"><a
-                        href="http://yangjin-unique.github.io/category/os2.html">&raquo;</a></li>
-        </ul>
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-
-<section class="well well-sm">
-    <ul class="list-group list-group-flush">
 
 
+<ul class="main-navigation">
+      <li >
+        <a href="/category/cc.html">C&c++</a>
+      </li>
+      <li >
+        <a href="/category/linux.html">Linux</a>
+      </li>
+      <li class="active">
+        <a href="/category/os.html">Os</a>
+      </li>
+      <li >
+        <a href="/category/python.html">Python</a>
+      </li>
+      <li >
+        <a href="/category/tools.html">Tools</a>
+      </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+	<article role="article">
+    	<header>
+    		<h1 class="entry-title">Category: os</h1>
+    	</header>
 
-
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://lxr.free-electrons.com" target="_blank">
-                Online Linux Kernel Source Code
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://coolshell.cn" target="_blank">
-                酷壳CoolShell
-            </a>
-        </li>
-      </ul>
-    </li>
-    </ul>
-</section>
-            </aside>
-        </div>
-    </div>
+    	<div id="blog-archives">
+            <h2>2015</h2>
+                    <article>
+                        <h1><a href="/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a></h1>
+                        <time datetime="2015-12-28 00:00:00+08:00" pubdate>
+                            <span class="month">Dec</span>
+                            <span class="day">28</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+            <h2>2014</h2>
+                    <article>
+                        <h1><a href="/duo-jin-cheng-ipcji-zhi-shi-xian.html">多进程IPC机制实现</a></h1>
+                        <time datetime="2014-06-16 00:00:00+08:00" pubdate>
+                            <span class="month">Jun</span>
+                            <span class="day">16</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/spinlockde-shi-xian.html">spinlock的实现</a></h1>
+                        <time datetime="2014-06-01 00:00:00+08:00" pubdate>
+                            <span class="month">Jun</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h1>
+                        <time datetime="2014-05-01 00:00:00+08:00" pubdate>
+                            <span class="month">May</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab3user-modeyu-kernel-modede-qie-huan.html">lab3:user mode与kernel mode的切换</a></h1>
+                        <time datetime="2014-04-05 00:00:00+08:00" pubdate>
+                            <span class="month">Apr</span>
+                            <span class="day">05</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h1>
+                        <time datetime="2014-04-01 00:00:00+08:00" pubdate>
+                            <span class="month">Apr</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a></h1>
+                        <time datetime="2014-03-01 00:00:00+08:00" pubdate>
+                            <span class="month">Mar</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h1>
+                        <time datetime="2014-02-16 00:00:00+08:00" pubdate>
+                            <span class="month">Feb</span>
+                            <span class="day">16</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a></h1>
+                        <time datetime="2014-02-01 00:00:00+08:00" pubdate>
+                            <span class="month">Feb</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/x86-address-translation.html">x86 Address Translation</a></h1>
+                        <time datetime="2014-01-17 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">17</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/entrys.html">entry.S</a></h1>
+                        <time datetime="2014-01-16 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">16</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab1-exercise1.html">lab1 exercise1</a></h1>
+                        <time datetime="2014-01-16 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">16</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/elfwen-jian.html">ELF文件</a></h1>
+                        <time datetime="2014-01-15 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">15</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h1>
+                        <time datetime="2014-01-15 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">15</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/stabshi-yi.html">stab释疑</a></h1>
+                        <time datetime="2014-01-15 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">15</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h1>
+                        <time datetime="2014-01-15 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">15</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab1-bootloader.html">lab1: bootloader</a></h1>
+                        <time datetime="2014-01-13 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">13</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/x86ji-cun-qi-ji-chu.html">x86寄存器基础</a></h1>
+                        <time datetime="2014-01-13 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">13</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+	    </div>
+    </article>
 </div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2015 Jin
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a>
+      </li>
+      <li class="post">
+          <a href="/duo-jin-cheng-ipcji-zhi-shi-xian.html">多进程IPC机制实现</a>
+      </li>
+      <li class="post">
+          <a href="/spinlockde-shi-xian.html">spinlock的实现</a>
+      </li>
+      <li class="post">
+          <a href="/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a>
+      </li>
+      <li class="post">
+          <a href="/lab3user-modeyu-kernel-modede-qie-huan.html">lab3:user mode与kernel mode的切换</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="/category/cc.html">c&c++</a></li>
+        <li><a href="/category/linux.html">linux</a></li>
+        <li><a href="/category/os.html">os</a></li>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/tools.html">tools</a></li>
+    </ul>
+  </section>
+ 
 
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+  <section>
+  <h1>Tags</h1>
+    <a href="/tag/kernel.html">kernel</a>,    <a href="/tag/user-mode.html">user mode</a>,    <a href="/tag/page-directory.html">page directory</a>,    <a href="/tag/ipc.html">IPC</a>,    <a href="/tag/syscall.html">Syscall</a>,    <a href="/tag/elf.html">elf</a>,    <a href="/tag/hack.html">hack</a>,    <a href="/tag/trap.html">trap</a>,    <a href="/tag/header.html">header</a>,    <a href="/tag/gdb.html">gdb</a>,    <a href="/tag/jos.html">JOS</a>,    <a href="/tag/linux.html">linux</a>,    <a href="/tag/page-table.html">page table</a>,    <a href="/tag/qemu.html">qemu</a>,    <a href="/tag/const.html">const</a>,    <a href="/tag/bios.html">BIOS</a>,    <a href="/tag/debug.html">debug</a>,    <a href="/tag/makefile.html">Makefile</a>,    <a href="/tag/spinlock.html">spinlock</a>,    <a href="/tag/trapframe.html">TrapFrame</a>,    <a href="/tag/multi-processor.html">Multi-processor</a>,    <a href="/tag/task-swtich.html">task swtich</a>,    <a href="/tag/ostinato.html">ostinato</a>,    <a href="/tag/linux-kernel.html">linux kernel</a>,    <a href="/tag/c-c-gcc-wshadow-block-scope.html">C C++ gcc Wshadow block scope</a>,    <a href="/tag/linker.html">linker</a>,    <a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>,    <a href="/tag/x86.html">x86</a>,    <a href="/tag/debugfs.html">debugfs</a>,    <a href="/tag/python.html">python</a>,    <a href="/tag/interrupts.html">interrupts</a>,    <a href="/tag/c.html">C</a>,    <a href="/tag/traffic-generator-analyzer.html">traffic generator analyzer</a>,    <a href="/tag/linelear-address.html">linelear address</a>,    <a href="/tag/stab.html">stab</a>,    <a href="/tag/address-translation.html">address translation</a>,    <a href="/tag/interrupt.html">interrupt</a>,    <a href="/tag/copy-on-write.html">Copy-on-Write</a>,    <a href="/tag/translation.html">translation</a>,    <a href="/tag/bootloader.html">bootloader</a>,    <a href="/tag/stack.html">stack</a>,    <a href="/tag/traps.html">traps</a>,    <a href="/tag/netlink.html">netlink</a>,    <a href="/tag/qt.html">qt</a>,    <a href="/tag/entrys.html">entry.S</a>,    <a href="/tag/os.html">os</a>,    <a href="/tag/multi-process.html">multi-process</a>,    <a href="/tag/page.html">page</a>,    <a href="/tag/logical-address.html">logical address</a>,    <a href="/tag/fork.html">fork</a>,    <a href="/tag/kernel-mode.html">kernel mode</a>,    <a href="/tag/exceptions.html">exceptions</a>,    <a href="/tag/physical-memory-management.html">physical memory management</a>,    <a href="/tag/security.html">security</a>,    <a href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a href="/tag/tast-state.html">tast state</a>,    <a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>  </section>
 
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
-    <!-- Disqus -->
-    <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li><a href="http://lxr.free-electrons.com" target="_blank">Online Linux Kernel Source Code</a></li>
+            <li><a href="http://coolshell.cn" target="_blank">酷壳CoolShell</a></li>
+        </ul>
+    </section>
 
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function () {
-            var s = document.createElement('script');
-            s.async = true;
-            s.type = 'text/javascript';
-            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-        }());
-    </script>
-    <!-- End Disqus Code -->
-
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2014&ndash;2015  Jin &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    var disqus_shortname = 'yangjin-unique';
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+  </script>
 </body>
 </html>

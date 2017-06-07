@@ -1,126 +1,70 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-    <title>lab1: bootloader - Living@Greatwall</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-
-<link rel="canonical" href="http://yangjin-unique.github.io/lab1-bootloader.html">
-
-        <meta name="author" content="jin" />
-        <meta name="keywords" content="os,bootloader,JOS,BIOS" />
-        <meta name="description" content="非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好， 从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。 一、BIOS工作 1. bios启动后会读取bootloader bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成： 主引导记录：也就是bootloader，大小占446字节； 分区表：占64字节； * 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。 2.上电后的第一条指令地址为0xFFFFFFF0 这是启动后的第一条执行指令，EPROM，而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动设备 （如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00； 实时模式与保护模式的区别 ..." />
-
-        <meta property="og:site_name" content="Living@Greatwall" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="lab1: bootloader"/>
-        <meta property="og:url" content="http://yangjin-unique.github.io/lab1-bootloader.html"/>
-        <meta property="og:description" content="非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好， 从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。 一、BIOS工作 1. bios启动后会读取bootloader bootloader处于主引导扇区MBR（大小为512字节），主引导扇区由3部分组成： 主引导记录：也就是bootloader，大小占446字节； 分区表：占64字节； * 硬盘有效标志：0xAA55，也就是练习一的第二个问题，BIOS读取MBR时，会检查这两个幻数，如果不正确，则被认为是没有分区的硬盘。注意sign.c文件就是用来生成一个bootloader的工具。 2.上电后的第一条指令地址为0xFFFFFFF0 这是启动后的第一条执行指令，EPROM，而在该地址处只存放了一条跳转指令，跳到BIOS程序的起始点；BIOS完成自检和初始化后，会选择一个启动设备 （如软盘，硬盘等），并且读取该设备的主引导扇区到内存的0x7c00地址处，然后跳到0x7c00出执行bootloader，此时bootloader所在的地址为：0x7c00 -- 0x7d00； 实时模式与保护模式的区别 ..."/>
-        <meta property="article:published_time" content="2014-01-13" />
-            <meta property="article:section" content="os" />
-            <meta property="article:tag" content="os" />
-            <meta property="article:tag" content="bootloader" />
-            <meta property="article:tag" content="JOS" />
-            <meta property="article:tag" content="BIOS" />
-            <meta property="article:author" content="jin" />
-
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+  <meta charset="utf-8">
+  <title>lab1: bootloader &mdash; Living@Greatwall</title>
+  <meta name="author" content="Jin">
 
 
 
 
 
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="/favicon.png" rel="icon">
+
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
 </head>
+
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
-Living@Greatwall            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
-                        </li>
-                        <li class="active">
-                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="http://yangjin-unique.github.io/lab1-bootloader.html"
-                       rel="bookmark"
-                       title="Permalink to lab1: bootloader">
-                        lab1: bootloader
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2014-01-13T00:00:00+08:00"> Mon 13 January 2014</time>
-    </span>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Living@Greatwall</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
 
 
+<ul class="main-navigation">
+      <li >
+        <a href="/category/cc.html">C&c++</a>
+      </li>
+      <li >
+        <a href="/category/linux.html">Linux</a>
+      </li>
+      <li class="active">
+        <a href="/category/os.html">Os</a>
+      </li>
+      <li >
+        <a href="/category/python.html">Python</a>
+      </li>
+      <li >
+        <a href="/category/tools.html">Tools</a>
+      </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">lab1: bootloader</h1>
+    <p class="meta">
+<time datetime="2014-01-13T00:00:00+08:00" pubdate>Mon 13 January 2014</time>    </p>
+</header>
 
-
-
-<span class="label label-default">Tags</span>
-	<a href="http://yangjin-unique.github.io/tag/os.html">os</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/bootloader.html">bootloader</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/jos.html">JOS</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/bios.html">BIOS</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                </div>
-                <p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
+  <div class="entry-content"><p>非计算机科班出生，OS学的不好，以前都学的是概念和理论知识，并没有动手实现一个操作系统。后来发现MIT有一门很有名的OS课程6.828，所以利用业余时间学了学。这门课程设计的很好，
 从头到尾写一个操作系统，一共有7个实验，一步一步深入，OS名字叫JOS，本文纪录一下lab1的知识。</p>
 <h3>一、BIOS工作</h3>
 <h4>1. bios启动后会读取bootloader</h4>
@@ -150,18 +94,18 @@ Living@Greatwall            </a>
 <li>使能和进入保护模式；</li>
 </ul>
 <p>具体代码如下：</p>
-<div class="highlight"><pre><span class="x">lgdt    gdtdesc </span><span class="err">#</span><span class="x">将gdtdesc值加载给GDT</span>
-<span class="x">movl    %cr0, %eax</span>
-<span class="x">orl    </span><span class="p">$</span><span class="nv">CR0_PE_ON</span><span class="x">, %eax</span>
-<span class="x">movl    %eax, %cr0 </span><span class="err">#</span><span class="x">上面3条指令用于将cr0寄存器的CR0_PE置1，从而打开保护模式；</span>
+<div class="highlight"><pre><span></span>lgdt    gdtdesc #将gdtdesc值加载给GDT
+movl    %cr0, %eax
+orl    $CR0_PE_ON, %eax
+movl    %eax, %cr0 #上面3条指令用于将cr0寄存器的CR0_PE置1，从而打开保护模式；
 </pre></div>
 
 
 <h4>3. bootloader设置栈（由bootasm.S汇编来完成）</h4>
 <p>bootloader选择0x7c00作为栈顶（bootloader自己所占的地址为0x7c00到0x7d00,栈是向低地址生长，所以不会破坏bootloader），
 代码：</p>
-<div class="highlight"><pre><span class="x">movl    </span><span class="p">$</span><span class="nv">start</span><span class="x">, %esp</span>
-<span class="x">call bootmain</span>
+<div class="highlight"><pre><span></span>movl    $start, %esp
+call bootmain
 </pre></div>
 
 
@@ -169,12 +113,12 @@ Living@Greatwall            </a>
 <h4>4. bootmain加载内核</h4>
 <p>内核是个elf文件，位于磁盘的第二个扇区，bootmain先将elf文件的头4096个字节加载到地址0x10000处（64K），然后继续读取elf的内容。
 代码：</p>
-<div class="highlight"><pre>readseg(ELFHDR, SECTSIZE*8, 0):ELFHDR值为0x10000；
+<div class="highlight"><pre><span></span>readseg(ELFHDR, SECTSIZE*8, 0):ELFHDR值为0x10000；
 </pre></div>
 
 
 <p>读取所有的内核img后，调用下面代码进入内核执行阶段：</p>
-<div class="highlight"><pre>(void *)(ELFHDR-&gt;e_entry)().
+<div class="highlight"><pre><span></span>(void *)(ELFHDR-&gt;e_entry)().
 </pre></div>
 
 
@@ -203,113 +147,91 @@ X86使用中断描述符表IDT，IDT有三类描述符：</p>
 <h4>9. JOS初始化时（kern_init）会初始化中断描述符表IDT，是如何进行初始化的？</h4>
 <p>中断描述符表共有256项，对应256个中断，每一个表项为8字节，包括段选择字、段偏移地址、门类型（中断门还是陷阱门）、DPL。idt_init中会调用SETGATE初始化这256项。注意IDT可以放在任意地址，因为初始化表项后，内核调用lidt指令来加载这个描述符表。
 每个中断处理程序的入口地址由每个表项中的段选择字和段偏移地址来决定。实际上每个入口函数都在vector.S中定义（由vector.c生成的），也就是全局变量__vector[]。每个入口函数内容基本一致，都是jump 到__alltraps中执行（trapentry.S中），这里会完成中断时所必须的堆栈操作（也就是保存当前任务的环境）。然后在调用trap函数，最后由trap_dispatch根据中断号来完成各个中断的任务。
-所以每次中断发生时，调用路线为：从IDT中调用对应的入口 --&gt; __alltraps --&gt; trap --&gt; trap_dispatch。</p>
-            </div>
-            <!-- /.entry-content -->
-    <hr/>
-    <section class="comments" id="comments">
-        <h2>Comments</h2>
+所以每次中断发生时，调用路线为：从IDT中调用对应的入口 --&gt; __alltraps --&gt; trap --&gt; trap_dispatch。</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        jin
+    </span>
+  </span>
+<time datetime="2014-01-13T00:00:00+08:00" pubdate>Mon 13 January 2014</time>  <span class="categories">
+    <a class='category' href='/category/os.html'>os</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/os.html">os</a>,    <a class="category" href="/tag/bootloader.html">bootloader</a>,    <a class="category" href="/tag/jos.html">JOS</a>,    <a class="category" href="/tag/bios.html">BIOS</a>  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
 
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
-
-                    var disqus_identifier = 'lab1-bootloader';
-                var disqus_url = 'http://yangjin-unique.github.io/lab1-bootloader.html';
-
-            var disqus_config = function () {
-                this.language = "en";
-            };
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function () {
-                var dsq = document.createElement('script');
-                dsq.type = 'text/javascript';
-                dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
-            Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-    </section>
-        </article>
-    </section>
-
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-
-<section class="well well-sm">
-    <ul class="list-group list-group-flush">
-
-
-
-
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://lxr.free-electrons.com" target="_blank">
-                Online Linux Kernel Source Code
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://coolshell.cn" target="_blank">
-                酷壳CoolShell
-            </a>
-        </li>
-      </ul>
-    </li>
-    </ul>
-</section>
-            </aside>
-        </div>
-    </div>
 </div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2016 Jin
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a>
+      </li>
+      <li class="post">
+          <a href="/makefilehan-shu.html">Makefile函数</a>
+      </li>
+      <li class="post">
+          <a href="/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a>
+      </li>
+      <li class="post">
+          <a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a>
+      </li>
+      <li class="post">
+          <a href="/googles-python-class.html">Google's Python Class</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="/category/cc.html">c&c++</a></li>
+        <li><a href="/category/linux.html">linux</a></li>
+        <li><a href="/category/os.html">os</a></li>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/tools.html">tools</a></li>
+    </ul>
+  </section>
+ 
 
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+  <section>
+  <h1>Tags</h1>
+    <a href="/tag/kernel.html">kernel</a>,    <a href="/tag/user-mode.html">user mode</a>,    <a href="/tag/page-directory.html">page directory</a>,    <a href="/tag/ipc.html">IPC</a>,    <a href="/tag/syscall.html">Syscall</a>,    <a href="/tag/elf.html">elf</a>,    <a href="/tag/hack.html">hack</a>,    <a href="/tag/trap.html">trap</a>,    <a href="/tag/header.html">header</a>,    <a href="/tag/gdb.html">gdb</a>,    <a href="/tag/jos.html">JOS</a>,    <a href="/tag/linux.html">linux</a>,    <a href="/tag/page-table.html">page table</a>,    <a href="/tag/qemu.html">qemu</a>,    <a href="/tag/const.html">const</a>,    <a href="/tag/bios.html">BIOS</a>,    <a href="/tag/debug.html">debug</a>,    <a href="/tag/makefile.html">Makefile</a>,    <a href="/tag/spinlock.html">spinlock</a>,    <a href="/tag/trapframe.html">TrapFrame</a>,    <a href="/tag/multi-processor.html">Multi-processor</a>,    <a href="/tag/task-swtich.html">task swtich</a>,    <a href="/tag/ostinato.html">ostinato</a>,    <a href="/tag/linux-kernel.html">linux kernel</a>,    <a href="/tag/c-c-gcc-wshadow-block-scope.html">C C++ gcc Wshadow block scope</a>,    <a href="/tag/linker.html">linker</a>,    <a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>,    <a href="/tag/x86.html">x86</a>,    <a href="/tag/debugfs.html">debugfs</a>,    <a href="/tag/python.html">python</a>,    <a href="/tag/interrupts.html">interrupts</a>,    <a href="/tag/c.html">C</a>,    <a href="/tag/traffic-generator-analyzer.html">traffic generator analyzer</a>,    <a href="/tag/linelear-address.html">linelear address</a>,    <a href="/tag/stab.html">stab</a>,    <a href="/tag/address-translation.html">address translation</a>,    <a href="/tag/interrupt.html">interrupt</a>,    <a href="/tag/copy-on-write.html">Copy-on-Write</a>,    <a href="/tag/translation.html">translation</a>,    <a href="/tag/bootloader.html">bootloader</a>,    <a href="/tag/stack.html">stack</a>,    <a href="/tag/traps.html">traps</a>,    <a href="/tag/netlink.html">netlink</a>,    <a href="/tag/qt.html">qt</a>,    <a href="/tag/entrys.html">entry.S</a>,    <a href="/tag/os.html">os</a>,    <a href="/tag/multi-process.html">multi-process</a>,    <a href="/tag/page.html">page</a>,    <a href="/tag/logical-address.html">logical address</a>,    <a href="/tag/fork.html">fork</a>,    <a href="/tag/kernel-mode.html">kernel mode</a>,    <a href="/tag/exceptions.html">exceptions</a>,    <a href="/tag/physical-memory-management.html">physical memory management</a>,    <a href="/tag/security.html">security</a>,    <a href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a href="/tag/tast-state.html">tast state</a>,    <a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>  </section>
 
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
-    <!-- Disqus -->
-    <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li><a href="http://lxr.free-electrons.com" target="_blank">Online Linux Kernel Source Code</a></li>
+            <li><a href="http://coolshell.cn" target="_blank">酷壳CoolShell</a></li>
+        </ul>
+    </section>
 
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function () {
-            var s = document.createElement('script');
-            s.async = true;
-            s.type = 'text/javascript';
-            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-        }());
-    </script>
-    <!-- End Disqus Code -->
-
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2014&ndash;2016  Jin &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    var disqus_shortname = 'yangjin-unique';
+    var disqus_identifier = '/lab1-bootloader.html';
+    var disqus_url = '/lab1-bootloader.html';
+    var disqus_title = 'lab1: bootloader';
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+  </script>
 </body>
 </html>

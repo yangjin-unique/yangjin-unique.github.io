@@ -1,129 +1,70 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-    <title>ELF文件 - Living@Greatwall</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-
-<link rel="canonical" href="http://yangjin-unique.github.io/elfwen-jian.html">
-
-        <meta name="author" content="jin" />
-        <meta name="keywords" content="os,bootloader,elf,header,linker" />
-        <meta name="description" content="ELF(Executable and linking format)文件格式是Linux系统下的一种常用目标文件(object file)格式，有三种主要类型: 用于执行的可执行文件(executab file)，用于提供程序的进程映像，加载的内存执行。 这也是本实验的OS文件类型。 用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。 共享目标文件(shared object file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件， 动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。 ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如： *.text *.rodata *.data 1. Elf header结构 这里只分析与本实验相关的ELF可执行文件类型。ELF header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的 控制结构，其定义在elf.h中： struct elfhdr { uint magic ..." />
-
-        <meta property="og:site_name" content="Living@Greatwall" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="ELF文件"/>
-        <meta property="og:url" content="http://yangjin-unique.github.io/elfwen-jian.html"/>
-        <meta property="og:description" content="ELF(Executable and linking format)文件格式是Linux系统下的一种常用目标文件(object file)格式，有三种主要类型: 用于执行的可执行文件(executab file)，用于提供程序的进程映像，加载的内存执行。 这也是本实验的OS文件类型。 用于连接的可重定位文件(relocatable file)，可与其它目标文件一起创建可执行文件和共享目标文件。 共享目标文件(shared object file),连接器可将它与其它可重定位文件和共享目标文件连接成其它的目标文件， 动态连接器又可将它与可执行文件和其它共享目标文件结合起来创建一个进程映像。 ELF文件是由一个ELF header和紧接着的几个program header（长度不等），这些program header指明了每个段的大小和内容，如： *.text *.rodata *.data 1. Elf header结构 这里只分析与本实验相关的ELF可执行文件类型。ELF header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的 控制结构，其定义在elf.h中： struct elfhdr { uint magic ..."/>
-        <meta property="article:published_time" content="2014-01-15" />
-            <meta property="article:section" content="os" />
-            <meta property="article:tag" content="os" />
-            <meta property="article:tag" content="bootloader" />
-            <meta property="article:tag" content="elf" />
-            <meta property="article:tag" content="header" />
-            <meta property="article:tag" content="linker" />
-            <meta property="article:author" content="jin" />
-
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="http://yangjin-unique.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="http://yangjin-unique.github.io/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://yangjin-unique.github.io/theme/css/style.css" type="text/css"/>
+  <meta charset="utf-8">
+  <title>ELF文件 &mdash; Living@Greatwall</title>
+  <meta name="author" content="Jin">
 
 
 
 
 
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="/favicon.png" rel="icon">
+
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
 </head>
+
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://yangjin-unique.github.io/" class="navbar-brand">
-Living@Greatwall            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/cc.html">C&c++</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/linux.html">Linux</a>
-                        </li>
-                        <li class="active">
-                            <a href="http://yangjin-unique.github.io/category/os.html">Os</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/python.html">Python</a>
-                        </li>
-                        <li >
-                            <a href="http://yangjin-unique.github.io/category/tools.html">Tools</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://yangjin-unique.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="http://yangjin-unique.github.io/elfwen-jian.html"
-                       rel="bookmark"
-                       title="Permalink to ELF文件">
-                        ELF文件
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2014-01-15T00:00:00+08:00"> Wed 15 January 2014</time>
-    </span>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Living@Greatwall</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
 
 
+<ul class="main-navigation">
+      <li >
+        <a href="/category/cc.html">C&c++</a>
+      </li>
+      <li >
+        <a href="/category/linux.html">Linux</a>
+      </li>
+      <li class="active">
+        <a href="/category/os.html">Os</a>
+      </li>
+      <li >
+        <a href="/category/python.html">Python</a>
+      </li>
+      <li >
+        <a href="/category/tools.html">Tools</a>
+      </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">ELF文件</h1>
+    <p class="meta">
+<time datetime="2014-01-15T00:00:00+08:00" pubdate>Wed 15 January 2014</time>    </p>
+</header>
 
-
-
-<span class="label label-default">Tags</span>
-	<a href="http://yangjin-unique.github.io/tag/os.html">os</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/bootloader.html">bootloader</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/elf.html">elf</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/header.html">header</a>
-        /
-	<a href="http://yangjin-unique.github.io/tag/linker.html">linker</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                </div>
-                <p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
+  <div class="entry-content"><p>ELF(Executable  and linking format)文件格式是Linux系统下的一种常用目标文件(object    file)格式，有三种主要类型:</p>
 <ul>
 <li>
 <p>用于执行的可执行文件(executab   file)，用于提供程序的进程映像，加载的内存执行。  这也是本实验的OS文件类型。</p>
@@ -143,7 +84,7 @@ Living@Greatwall            </a>
 <h4>1. Elf header结构</h4>
 <p>这里只分析与本实验相关的ELF可执行文件类型。ELF  header在文件开始处描述了整个文件的组织。ELF的文件头包含整个执行文件的
 控制结构，其定义在elf.h中：</p>
-<div class="highlight"><pre><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="k">struct</span>  <span class="n">elfhdr</span>  <span class="p">{</span>
   <span class="n">uint</span>  <span class="n">magic</span><span class="p">;</span>   <span class="c1">// must    equal   ELF_MAGIC</span>
   <span class="n">uchar</span> <span class="n">elf</span><span class="p">[</span><span class="mi">12</span><span class="p">];</span>
   <span class="n">ushort</span>    <span class="n">type</span><span class="p">;</span>
@@ -210,7 +151,7 @@ section name string table</p>
 </ul>
 <h4>2. Section header结构</h4>
 <p>Section header表主要是用于定位文件的每个段，section结构如下：</p>
-<div class="highlight"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
     <span class="n">Elf32_Word</span>   <span class="n">sh_name</span><span class="p">;</span>
     <span class="n">Elf32_Word</span>   <span class="n">sh_type</span><span class="p">;</span>
     <span class="n">Elf32_Word</span>   <span class="n">sh_flags</span><span class="p">;</span>
@@ -282,7 +223,7 @@ member contains 0 if the section does not hold a table of fixed-size entries.</p
 所必需的其它信息。目标文件的“段”包含一个或者多个section，也就是“段内容（Segment Contents）”。
 程序头部仅对于可执行文件和共享目标文件有意义。可执行目标文件在ELF头部的e_phentsize和e_phnum成员中给出其自身程序头部的大小。
 程序头部的数据结构如下表所示：</p>
-<div class="highlight"><pre><span class="k">struct</span>  <span class="n">proghdr</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="k">struct</span>  <span class="n">proghdr</span> <span class="p">{</span>
   <span class="n">uint</span>  <span class="n">type</span><span class="p">;</span>    <span class="c1">// 段类型</span>
   <span class="n">uint</span>  <span class="n">offset</span><span class="p">;</span>  <span class="c1">// 段相对文件头的偏移值</span>
   <span class="n">uint</span>  <span class="n">va</span><span class="p">;</span>  <span class="c1">// 段的第一个字节将被放到内存中的虚拟地址</span>
@@ -300,14 +241,14 @@ member contains 0 if the section does not hold a table of fixed-size entries.</p
 下面的图是官方文档给出的可执行文件和共享目标文件加载的两个例子：
 1）可执行文件
 下图是一个elf文件的典型结构：
-<img alt="img4" src="../images/4.png" />
+<img alt="img4" src="../images/4.png">
 下面是给出了text和data段的program header的成员值：
-<img alt="img5" src="../images/5.png" />
+<img alt="img5" src="../images/5.png">
 下面这个图就是进程加载后的映像：
-<img alt="img6" src="../images/6.png" /></p>
+<img alt="img6" src="../images/6.png"></p>
 <p>2）共享目标文件
 下图给出了4个进程同时加载这个共享目标文件到各自的地址空间，可以看出，加载的地址并不意义，但是相对地址保持不变：
-<img alt="img7" src="../images/7.png" /></p>
+<img alt="img7" src="../images/7.png"></p>
 <h4>4. OS如何加载elf文件</h4>
 <p>OS创建进程映像（也就是加载elf可执行文件）需要将文件的各个段（program header）拷贝到相应的进程虚拟地址空间，此时并不需</p>
 <h3>[补充材料]</h3>
@@ -321,113 +262,91 @@ Link Addr和LoadAddr不同会导致：直接跳转位置错误直接内存访问
 <h3>References:</h3>
 <ol>
 <li><a href="https://refspecs.linuxbase.org/elf/elf.pdf">Executable and Linking Format (ELF) SpecificationVersion 1.2</a></li>
-</ol>
-            </div>
-            <!-- /.entry-content -->
-    <hr/>
-    <section class="comments" id="comments">
-        <h2>Comments</h2>
+</ol></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        jin
+    </span>
+  </span>
+<time datetime="2014-01-15T00:00:00+08:00" pubdate>Wed 15 January 2014</time>  <span class="categories">
+    <a class='category' href='/category/os.html'>os</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/os.html">os</a>,    <a class="category" href="/tag/bootloader.html">bootloader</a>,    <a class="category" href="/tag/elf.html">elf</a>,    <a class="category" href="/tag/header.html">header</a>,    <a class="category" href="/tag/linker.html">linker</a>  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
 
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
-
-                    var disqus_identifier = 'elfwen-jian';
-                var disqus_url = 'http://yangjin-unique.github.io/elfwen-jian.html';
-
-            var disqus_config = function () {
-                this.language = "en";
-            };
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function () {
-                var dsq = document.createElement('script');
-                dsq.type = 'text/javascript';
-                dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
-            Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-    </section>
-        </article>
-    </section>
-
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-
-<section class="well well-sm">
-    <ul class="list-group list-group-flush">
-
-
-
-
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://lxr.free-electrons.com" target="_blank">
-                Online Linux Kernel Source Code
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://coolshell.cn" target="_blank">
-                酷壳CoolShell
-            </a>
-        </li>
-      </ul>
-    </li>
-    </ul>
-</section>
-            </aside>
-        </div>
-    </div>
 </div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2016 Jin
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="http://yangjin-unique.github.io/theme/js/jquery.min.js"></script>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a>
+      </li>
+      <li class="post">
+          <a href="/makefilehan-shu.html">Makefile函数</a>
+      </li>
+      <li class="post">
+          <a href="/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a>
+      </li>
+      <li class="post">
+          <a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a>
+      </li>
+      <li class="post">
+          <a href="/googles-python-class.html">Google's Python Class</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="/category/cc.html">c&c++</a></li>
+        <li><a href="/category/linux.html">linux</a></li>
+        <li><a href="/category/os.html">os</a></li>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/tools.html">tools</a></li>
+    </ul>
+  </section>
+ 
 
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://yangjin-unique.github.io/theme/js/bootstrap.min.js"></script>
+  <section>
+  <h1>Tags</h1>
+    <a href="/tag/kernel.html">kernel</a>,    <a href="/tag/user-mode.html">user mode</a>,    <a href="/tag/page-directory.html">page directory</a>,    <a href="/tag/ipc.html">IPC</a>,    <a href="/tag/syscall.html">Syscall</a>,    <a href="/tag/elf.html">elf</a>,    <a href="/tag/hack.html">hack</a>,    <a href="/tag/trap.html">trap</a>,    <a href="/tag/header.html">header</a>,    <a href="/tag/gdb.html">gdb</a>,    <a href="/tag/jos.html">JOS</a>,    <a href="/tag/linux.html">linux</a>,    <a href="/tag/page-table.html">page table</a>,    <a href="/tag/qemu.html">qemu</a>,    <a href="/tag/const.html">const</a>,    <a href="/tag/bios.html">BIOS</a>,    <a href="/tag/debug.html">debug</a>,    <a href="/tag/makefile.html">Makefile</a>,    <a href="/tag/spinlock.html">spinlock</a>,    <a href="/tag/trapframe.html">TrapFrame</a>,    <a href="/tag/multi-processor.html">Multi-processor</a>,    <a href="/tag/task-swtich.html">task swtich</a>,    <a href="/tag/ostinato.html">ostinato</a>,    <a href="/tag/linux-kernel.html">linux kernel</a>,    <a href="/tag/c-c-gcc-wshadow-block-scope.html">C C++ gcc Wshadow block scope</a>,    <a href="/tag/linker.html">linker</a>,    <a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>,    <a href="/tag/x86.html">x86</a>,    <a href="/tag/debugfs.html">debugfs</a>,    <a href="/tag/python.html">python</a>,    <a href="/tag/interrupts.html">interrupts</a>,    <a href="/tag/c.html">C</a>,    <a href="/tag/traffic-generator-analyzer.html">traffic generator analyzer</a>,    <a href="/tag/linelear-address.html">linelear address</a>,    <a href="/tag/stab.html">stab</a>,    <a href="/tag/address-translation.html">address translation</a>,    <a href="/tag/interrupt.html">interrupt</a>,    <a href="/tag/copy-on-write.html">Copy-on-Write</a>,    <a href="/tag/translation.html">translation</a>,    <a href="/tag/bootloader.html">bootloader</a>,    <a href="/tag/stack.html">stack</a>,    <a href="/tag/traps.html">traps</a>,    <a href="/tag/netlink.html">netlink</a>,    <a href="/tag/qt.html">qt</a>,    <a href="/tag/entrys.html">entry.S</a>,    <a href="/tag/os.html">os</a>,    <a href="/tag/multi-process.html">multi-process</a>,    <a href="/tag/page.html">page</a>,    <a href="/tag/logical-address.html">logical address</a>,    <a href="/tag/fork.html">fork</a>,    <a href="/tag/kernel-mode.html">kernel mode</a>,    <a href="/tag/exceptions.html">exceptions</a>,    <a href="/tag/physical-memory-management.html">physical memory management</a>,    <a href="/tag/security.html">security</a>,    <a href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a href="/tag/tast-state.html">tast state</a>,    <a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>  </section>
 
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://yangjin-unique.github.io/theme/js/respond.min.js"></script>
 
-    <!-- Disqus -->
-    <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'yangjin-unique'; // required: replace example with your forum shortname
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li><a href="http://lxr.free-electrons.com" target="_blank">Online Linux Kernel Source Code</a></li>
+            <li><a href="http://coolshell.cn" target="_blank">酷壳CoolShell</a></li>
+        </ul>
+    </section>
 
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function () {
-            var s = document.createElement('script');
-            s.async = true;
-            s.type = 'text/javascript';
-            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-        }());
-    </script>
-    <!-- End Disqus Code -->
-
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2014&ndash;2016  Jin &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    var disqus_shortname = 'yangjin-unique';
+    var disqus_identifier = '/elfwen-jian.html';
+    var disqus_url = '/elfwen-jian.html';
+    var disqus_title = 'ELF文件';
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+  </script>
 </body>
 </html>
