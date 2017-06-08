@@ -58,6 +58,32 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="/how-to-use-pelican-to-bulid-blog-on-githubio.html">How to use Pelican to bulid blog on github.io</a>
+      </h1>
+    <p class="meta">
+<time datetime="2015-11-13T00:00:00+08:00" pubdate>Fri 13 November 2015</time>    </p>
+</header>
+
+  <div class="entry-content"><p>一直想建立一个自己的blog，以前用过csdn，不过自从用了云笔记，就很久没更新blog了。看现在很流行用github搭建blog，所以决定玩一下，加上学过一点python，就选择了pelican这个python写的工具，顺便练练python。</p>
+<h4>1. virtualenv的使用</h4>
+<p>python开发的常用工具，使用这个工具可以隔离本项目依赖的环境设置，这样就能避免干扰其他项目的环境变量设置。virtualenv的使用参考：http://docs.python-guide.org/en/latest/dev/virtualenvs/.
+常用命令：</p>
+<ul>
+<li>virtualenv venv：建立一个虚拟环境，会在当前目录中建立一个venv的目录，里面包含了这个虚拟环境所有的配置信息；</li>
+<li>virtualenv -p /usr/bin/python2.7 venv：指定venv环境使用python解释器；</li>
+<li>source venv/bin/activate：激活该虚拟环境，每次使用该命令进入虚拟环境；</li>
+<li>deactivate：退出虚拟环境；</li>
+</ul>
+<h4>2. 安装pelican</h4>
+<p>这个可在虚拟环境下安装，也可以就在本机环境下安装，</p>
+<div class="highlight"><pre><span></span>$: sudo …</pre></div></div>
+  <footer>
+    <a rel="full-article" href="/how-to-use-pelican-to-bulid-blog-on-githubio.html">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="/duo-jin-cheng-ipcji-zhi-shi-xian.html">多进程IPC机制实现</a>
       </h1>
     <p class="meta">
@@ -299,29 +325,6 @@ exercise2主要内容是完成y页目录和页表的建立，从而建立起虚�
 
   <div class="entry-content"><p><a href="../images/x86_translation_and_registers.pdf">Press here</a></p></div>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="/entrys.html">entry.S</a>
-      </h1>
-    <p class="meta">
-<time datetime="2014-01-16T00:00:00+08:00" pubdate>Thu 16 January 2014</time>    </p>
-</header>
-
-  <div class="entry-content"><p>lab1提到bootloader的c文件最后会加载内核到物理地址0x10000处（64K）处，然后再执行内核的入口entry.S函数。</p>
-<p>这里要特别注意：在此之前，所有的都是直接操作物理地址（怎么做到的？实时模式就不用说了，16位寻址1MB，
-进入保护模式后，32位，bootloader把所有段寄存器设成0，除了esp，这个必须设置到正确的物理地址。
-而且分页机制也没有使能，所以线性地址就是物理地址）。</p>
-<p>在编译image时，kernel.ld会将内核的c代码的（entry.S仍在物理地址空间执行）起始地址链接到0xF0100000，也就是当内核执行c代码main时，
-所有的指令的寻址都是以这个为基础，但是内核的实际物理地址是在0x100000，所以进入内核后第一件事就是要建立一个映射：
-将起始地址为0xF0100000映射到物理地址0x100000（为以后的c代码执行准备好）。</p>
-<p>内核入口函数entry.S中（仍在物理地址空间0x100000执行），一开始就是做这件事，使能分页机制（设置CR0）：</p>
-<div class="highlight"><pre><span></span> # Load the physical address of entry_pgdir into cr3.  entry_pgdir
- # is defined in entrypgdir.c …</pre></div></div>
-  <footer>
-    <a rel="full-article" href="/entrys.html">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="/index3.html">&larr; Older</a>
 
@@ -333,6 +336,9 @@ exercise2主要内容是完成y页目录和页表的建立，从而建立起虚�
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
+          <a href="/xing-neng-ce-shi-gong-ju-locust.html">性能测试工具-locust</a>
+      </li>
+      <li class="post">
           <a href="/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a>
       </li>
       <li class="post">
@@ -343,9 +349,6 @@ exercise2主要内容是完成y页目录和页表的建立，从而建立起虚�
       </li>
       <li class="post">
           <a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a>
-      </li>
-      <li class="post">
-          <a href="/googles-python-class.html">Google's Python Class</a>
       </li>
     </ul>
   </section>
@@ -364,7 +367,7 @@ exercise2主要内容是完成y页目录和页表的建立，从而建立起虚�
 
   <section>
   <h1>Tags</h1>
-    <a href="/tag/kernel.html">kernel</a>,    <a href="/tag/user-mode.html">user mode</a>,    <a href="/tag/page-directory.html">page directory</a>,    <a href="/tag/ipc.html">IPC</a>,    <a href="/tag/syscall.html">Syscall</a>,    <a href="/tag/elf.html">elf</a>,    <a href="/tag/hack.html">hack</a>,    <a href="/tag/trap.html">trap</a>,    <a href="/tag/header.html">header</a>,    <a href="/tag/gdb.html">gdb</a>,    <a href="/tag/jos.html">JOS</a>,    <a href="/tag/linux.html">linux</a>,    <a href="/tag/page-table.html">page table</a>,    <a href="/tag/qemu.html">qemu</a>,    <a href="/tag/const.html">const</a>,    <a href="/tag/bios.html">BIOS</a>,    <a href="/tag/debug.html">debug</a>,    <a href="/tag/makefile.html">Makefile</a>,    <a href="/tag/spinlock.html">spinlock</a>,    <a href="/tag/trapframe.html">TrapFrame</a>,    <a href="/tag/multi-processor.html">Multi-processor</a>,    <a href="/tag/task-swtich.html">task swtich</a>,    <a href="/tag/ostinato.html">ostinato</a>,    <a href="/tag/linux-kernel.html">linux kernel</a>,    <a href="/tag/c-c-gcc-wshadow-block-scope.html">C C++ gcc Wshadow block scope</a>,    <a href="/tag/linker.html">linker</a>,    <a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>,    <a href="/tag/x86.html">x86</a>,    <a href="/tag/debugfs.html">debugfs</a>,    <a href="/tag/python.html">python</a>,    <a href="/tag/interrupts.html">interrupts</a>,    <a href="/tag/c.html">C</a>,    <a href="/tag/traffic-generator-analyzer.html">traffic generator analyzer</a>,    <a href="/tag/linelear-address.html">linelear address</a>,    <a href="/tag/stab.html">stab</a>,    <a href="/tag/address-translation.html">address translation</a>,    <a href="/tag/interrupt.html">interrupt</a>,    <a href="/tag/copy-on-write.html">Copy-on-Write</a>,    <a href="/tag/translation.html">translation</a>,    <a href="/tag/bootloader.html">bootloader</a>,    <a href="/tag/stack.html">stack</a>,    <a href="/tag/traps.html">traps</a>,    <a href="/tag/netlink.html">netlink</a>,    <a href="/tag/qt.html">qt</a>,    <a href="/tag/entrys.html">entry.S</a>,    <a href="/tag/os.html">os</a>,    <a href="/tag/multi-process.html">multi-process</a>,    <a href="/tag/page.html">page</a>,    <a href="/tag/logical-address.html">logical address</a>,    <a href="/tag/fork.html">fork</a>,    <a href="/tag/kernel-mode.html">kernel mode</a>,    <a href="/tag/exceptions.html">exceptions</a>,    <a href="/tag/physical-memory-management.html">physical memory management</a>,    <a href="/tag/security.html">security</a>,    <a href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a href="/tag/tast-state.html">tast state</a>,    <a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>  </section>
+    <a href="/tag/kernel.html">kernel</a>,    <a href="/tag/user-mode.html">user mode</a>,    <a href="/tag/page-directory.html">page directory</a>,    <a href="/tag/ipc.html">IPC</a>,    <a href="/tag/syscall.html">Syscall</a>,    <a href="/tag/elf.html">elf</a>,    <a href="/tag/hack.html">hack</a>,    <a href="/tag/trap.html">trap</a>,    <a href="/tag/header.html">header</a>,    <a href="/tag/gdb.html">gdb</a>,    <a href="/tag/gevent.html">gevent</a>,    <a href="/tag/linux.html">linux</a>,    <a href="/tag/page-table.html">page table</a>,    <a href="/tag/qemu.html">qemu</a>,    <a href="/tag/const.html">const</a>,    <a href="/tag/bios.html">BIOS</a>,    <a href="/tag/debug.html">debug</a>,    <a href="/tag/makefile.html">Makefile</a>,    <a href="/tag/spinlock.html">spinlock</a>,    <a href="/tag/trapframe.html">TrapFrame</a>,    <a href="/tag/multi-processor.html">Multi-processor</a>,    <a href="/tag/task-swtich.html">task swtich</a>,    <a href="/tag/ostinato.html">ostinato</a>,    <a href="/tag/linux-kernel.html">linux kernel</a>,    <a href="/tag/c-c-gcc-wshadow-block-scope.html">C C++ gcc Wshadow block scope</a>,    <a href="/tag/linker.html">linker</a>,    <a href="/tag/pelican-blog-python-virtualenv-githubio.html">pelican blog python virtualenv githubio</a>,    <a href="/tag/x86.html">x86</a>,    <a href="/tag/jos.html">JOS</a>,    <a href="/tag/debugfs.html">debugfs</a>,    <a href="/tag/python.html">python</a>,    <a href="/tag/interrupts.html">interrupts</a>,    <a href="/tag/traps.html">traps</a>,    <a href="/tag/c.html">C</a>,    <a href="/tag/traffic-generator-analyzer.html">traffic generator analyzer</a>,    <a href="/tag/linelear-address.html">linelear address</a>,    <a href="/tag/stab.html">stab</a>,    <a href="/tag/address-translation.html">address translation</a>,    <a href="/tag/interrupt.html">interrupt</a>,    <a href="/tag/copy-on-write.html">Copy-on-Write</a>,    <a href="/tag/translation.html">translation</a>,    <a href="/tag/bootloader.html">bootloader</a>,    <a href="/tag/stack.html">stack</a>,    <a href="/tag/ce-shi.html">测试</a>,    <a href="/tag/netlink.html">netlink</a>,    <a href="/tag/qt.html">qt</a>,    <a href="/tag/entrys.html">entry.S</a>,    <a href="/tag/os.html">os</a>,    <a href="/tag/multi-process.html">multi-process</a>,    <a href="/tag/locust.html">locust</a>,    <a href="/tag/page.html">page</a>,    <a href="/tag/logical-address.html">logical address</a>,    <a href="/tag/fork.html">fork</a>,    <a href="/tag/kernel-mode.html">kernel mode</a>,    <a href="/tag/exceptions.html">exceptions</a>,    <a href="/tag/physical-memory-management.html">physical memory management</a>,    <a href="/tag/security.html">security</a>,    <a href="/tag/buffer-overflow-attack.html">buffer overflow attack</a>,    <a href="/tag/tast-state.html">tast state</a>,    <a href="/tag/linux-glibc-malloc-ptmalloc.html">linux glibc malloc ptmalloc</a>  </section>
 
 
     <section>
@@ -379,7 +382,7 @@ exercise2主要内容是完成y页目录和页表的建立，从而建立起虚�
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2014&ndash;2016  Jin &mdash;
+    Copyright &copy;  2014&ndash;2017  Jin &mdash;
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
   <script src="/theme/js/modernizr-2.0.js"></script>

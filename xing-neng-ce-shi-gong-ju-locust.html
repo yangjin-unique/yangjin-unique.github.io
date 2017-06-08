@@ -4,8 +4,10 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Tag: TrapFrame &mdash; Living@Greatwall</title>
+  <title>性能测试工具-locust &mdash; Living@Greatwall</title>
   <meta name="author" content="Jin">
+
+
 
 
 
@@ -48,42 +50,58 @@
       <li >
         <a href="/category/python.html">Python</a>
       </li>
-      <li >
+      <li class="active">
         <a href="/category/tools.html">Tools</a>
       </li>
 </ul></nav>
   <div id="main">
     <div id="content">
 <div>
-	<article role="article">
-    	<header>
-    		<h1 class="entry-title">Tag: TrapFrame</h1>
-    	</header>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">性能测试工具-locust</h1>
+    <p class="meta">
+<time datetime="2017-06-10T00:00:00+08:00" pubdate>Sat 10 June 2017</time>    </p>
+</header>
 
-    	<div id="blog-archives">
-            <h2>2014</h2>
-                    <article>
-                        <h1><a href="/lab3user-modeyu-kernel-modede-qie-huan.html">lab3:user mode与kernel mode的切换</a></h1>
-                        <time datetime="2014-04-05 00:00:00+08:00" pubdate>
-                            <span class="month">Apr</span>
-                            <span class="day">05</span>
-                            <span class="year">2014</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/os.html'>os</a>
-                            </span>
-                        </footer>
-                    </article>
-	    </div>
-    </article>
+  <div class="entry-content"><p>locust是一款开源的性能测试工具，采用python编写，适应于web性能测试，以及各种C/S结构的系统性能测试（这也是我为什么要用这个的原因，非常适用于自己构建的c/s系统，比loadrunner更适合定制化需求，只需自己实现客户端即可）。</p>
+<p>locust测试框架中，测试场景完全是采用纯python语言来描述的，其在模拟并发方面是使用gevent的非阻塞IO和协程来实现的，并发较高。locust支持单进程部署和多进程分布式（master-slave模式）部署，单进程下只能充分利用一个core的能力，多进程分布式下能充分利用多核或者多个机器的能力。
+官网地址: <strong><a href="http://locust.io/">locust</a></strong></p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        jin
+    </span>
+  </span>
+<time datetime="2017-06-10T00:00:00+08:00" pubdate>Sat 10 June 2017</time>  <span class="categories">
+    <a class='category' href='/category/tools.html'>tools</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/ce-shi.html">测试</a>,    <a class="category" href="/tag/locust.html">locust</a>,    <a class="category" href="/tag/python.html">python</a>,    <a class="category" href="/tag/gevent.html">gevent</a>  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
 </div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
-          <a href="/lab3user-modeyu-kernel-modede-qie-huan.html">lab3:user mode与kernel mode的切换</a>
+          <a href="/xing-neng-ce-shi-gong-ju-locust.html">性能测试工具-locust</a>
+      </li>
+      <li class="post">
+          <a href="/buffer-overflow-attackshi-yan.html">Buffer Overflow Attack实验</a>
+      </li>
+      <li class="post">
+          <a href="/makefilehan-shu.html">Makefile函数</a>
+      </li>
+      <li class="post">
+          <a href="/li-yong-debugfsdiao-shi-linux-kernel.html">利用Debugfs调试linux kernel</a>
+      </li>
+      <li class="post">
+          <a href="/ru-he-zai-linuxnei-he-mo-kuai-zhong-jia-ru-netlinktong-xin-jie-kou.html">如何在linux内核模块中加入netlink通信接口</a>
       </li>
     </ul>
   </section>
@@ -117,7 +135,7 @@
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2014  Jin &mdash;
+    Copyright &copy;  2014&ndash;2017  Jin &mdash;
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
   <script src="/theme/js/modernizr-2.0.js"></script>
@@ -125,6 +143,9 @@
   <script src="/theme/js/octopress.js" type="text/javascript"></script>
   <script type="text/javascript">
     var disqus_shortname = 'yangjin-unique';
+    var disqus_identifier = '/xing-neng-ce-shi-gong-ju-locust.html';
+    var disqus_url = '/xing-neng-ce-shi-gong-ju-locust.html';
+    var disqus_title = '性能测试工具-locust';
     (function() {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
       dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';

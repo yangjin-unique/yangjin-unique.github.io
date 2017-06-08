@@ -5,30 +5,37 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/</loc>
-<lastmod>2017-06-07T18:10:52-00:00</lastmod>
+<lastmod>2017-06-08T11:35:58-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>/archives.html</loc>
-<lastmod>2017-06-07T18:10:52-00:00</lastmod>
+<lastmod>2017-06-08T11:35:58-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>/tags.html</loc>
-<lastmod>2017-06-07T18:10:52-00:00</lastmod>
+<lastmod>2017-06-08T11:35:58-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>/categories.html</loc>
-<lastmod>2017-06-07T18:10:52-00:00</lastmod>
+<lastmod>2017-06-08T11:35:58-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
+</url>
+
+<url>
+<loc>/xing-neng-ce-shi-gong-ju-locust.html</loc>
+<lastmod>2017-06-10T00:00:00+08:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
 </url>
 
 <url>
@@ -250,7 +257,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/category/tools.html</loc>
-<lastmod>2015-11-28T00:00:00+08:06</lastmod>
+<lastmod>2017-06-10T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -326,8 +333,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>/tag/jos.html</loc>
-<lastmod>2014-01-13T00:00:00+08:06</lastmod>
+<loc>/tag/gevent.html</loc>
+<lastmod>2017-06-10T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -452,6 +459,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>/tag/jos.html</loc>
+<lastmod>2014-01-13T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>/tag/debugfs.html</loc>
 <lastmod>2015-12-28T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
@@ -460,13 +474,20 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/tag/python.html</loc>
-<lastmod>2015-11-28T00:00:00+08:06</lastmod>
+<lastmod>2017-06-10T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>/tag/interrupts.html</loc>
+<lastmod>2014-04-01T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>/tag/traps.html</loc>
 <lastmod>2014-04-01T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
@@ -543,8 +564,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>/tag/traps.html</loc>
-<lastmod>2014-04-01T00:00:00+08:06</lastmod>
+<loc>/tag/ce-shi.html</loc>
+<lastmod>2017-06-10T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -580,6 +601,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>/tag/multi-process.html</loc>
 <lastmod>2014-06-16T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>/tag/locust.html</loc>
+<lastmod>2017-06-10T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -656,7 +684,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/author/jin.html</loc>
-<lastmod>2016-02-19T00:00:00+08:06</lastmod>
+<lastmod>2017-06-10T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
